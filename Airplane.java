@@ -19,7 +19,6 @@ class Airline {
             System.out.println(
                     "1." + r1 + "  2." + r2 + "  3." + r3 + "  4." + r4 + "  5." + r5 + "  6." + r6 + "  7." + r7);
             System.out.println();
-
             System.out.println("Enter a route name");
             boolean check_route = true;
             while (check_route) {
