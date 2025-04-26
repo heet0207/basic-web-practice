@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Inside Name Animation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffe6e6;
+            font-family: Arial, sans-serif;
+        }
+
+        .name-container {
+            font-size: 48px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .name-container .heart {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            background-color: red;
+            transform: rotate(-45deg);
+            margin-left: 10px;
+            animation: heartbeat 1.5s forwards;
+        }
+
+        .name-container .heart::before,
+        .name-container .heart::after {
+            content: "";
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+        .name-container .heart::before {
+            top: -30px;
+            left: 0;
+        }
+
+        .name-container .heart::after {
+            left: 30px;
+            top: 0;
+        }
+
+        @keyframes heartbeat {
+            0% {
+                transform: scale(0) rotate(-45deg);
+            }
+            50% {
+                transform: scale(1.2) rotate(-45deg);
+            }
+            100% {
+                transform: scale(1) rotate(-45deg);
+            }
+        }
+
+        .name-container span {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="name-container">
+        <span>Heet</span> <!-- Place the name here -->
+        <div class="heart"></div>
+    </div>
+</body>
+</html>

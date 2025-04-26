@@ -10,6 +10,7 @@ class Airline {
     String r1 = "AHMEDABAD", r2 = "MUMBAI", r3 = "DELHI", r4 = "BENGALURU", r5 = "KOLKATA", r6 = "HYDERABAD",
             r7 = "CHENNAI";
 
+    @SuppressWarnings("resource")
     void book_ticket() {
         Scanner sc = new Scanner(System.in);
 
@@ -92,32 +93,21 @@ class Airline {
                     year = sc.nextInt();
 
                     switch (month) {
-                        case 1:
-                        case 3:
-                        case 5:
-                        case 7:
-                        case 8:
-                        case 10:
-                        case 12:
+                        case 1, 3, 5, 7, 8, 10, 12 -> {
                             if ((date >= 1 && date <= 31) && year >= 2024) {
                                 check = false;
                             } else {
                                 System.out.println("You have entered innvalid date");
                             }
-                            break;
-
-                        case 4:
-                        case 6:
-                        case 9:
-                        case 11:
+                        }
+                        case 4, 6, 9, 11 -> {
                             if ((date >= 1 && date <= 30) && year >= 2024) {
                                 check = false;
                             } else {
                                 System.out.println("You have entered innvalid date");
                             }
-                            break;
-
-                        case 2:
+                        }
+                        case 2 -> {
                             if (((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0)) && year >= 2024) {
                                 if (date >= 1 && date <= 29) {
                                     check = false;
@@ -129,10 +119,8 @@ class Airline {
                             } else {
                                 System.out.println("You have entered innvalid year");
                             }
-                            break;
-                        default:
-                            System.out.println("You have entered Invalid month  Please enter carefully");
-                            break;
+                        }
+                        default -> System.out.println("You have entered Invalid month  Please enter carefully");
                     }
 
                 }
@@ -148,11 +136,11 @@ class Airline {
                 System.out.println();
                 int k = 1;
                 char ch = 'A';
-                for (int i = 1; i <= 10; i++)// This for loop make a flight seats pattern
+                for (int j = 1; j <= 10; j++)// This for loop make a flight seats pattern
                 {
 
                     System.out.print(ch + "  ");
-                    for (int j = 1; j <= 8; j++) {
+                    for (int m = 1; m <= 8; m++) {
                         if (k > 30) {
                             k = 1;
                         }
@@ -177,6 +165,7 @@ class Airline {
         }
     }
 
+    @SuppressWarnings("resource")
     void details() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter First name");
@@ -188,6 +177,7 @@ class Airline {
 
     }
 
+    @SuppressWarnings("resource")
     void seat_selection() {
         Scanner sc = new Scanner(System.in);
         boolean seat = true;
@@ -239,43 +229,44 @@ class Airline {
         }
     }
 
+    @SuppressWarnings("resource")
     void price_set() {
         Scanner sc = new Scanner(System.in);
         switch (TO) {
-            case "MUMBAI":
+            case "MUMBAI" -> {
                 flight_price = 3500;
                 Duration = "1h 30m | non stop";
-                break;
+            }
 
-            case "DELHI":
+            case "DELHI" -> {
                 flight_price = 4000;
                 Duration = "1h 45m | non stop";
-                break;
+            }
 
-            case "BENGALURU":
+            case "BENGALURU" -> {
                 flight_price = 7000;
                 Duration = "3h 15m | non stop";
-                break;
+            }
 
-            case "KOLKATA":
+            case "KOLKATA" -> {
                 flight_price = 9000;
                 Duration = "5h 50m | 1 stop(DEL)";
-                break;
+            }
 
-            case "HYDERABAD":
+            case "HYDERABAD" -> {
                 flight_price = 6500;
                 Duration = "1h 40m | non stop";
-                break;
+            }
 
-            case "CHENNAI":
+            case "CHENNAI" -> {
                 flight_price = 8000;
                 Duration = "5h 45m | 1 stop(BOM)";
-                break;
+            }
 
-            default:
+            default -> {
                 flight_price = 4500;
                 Duration = "2h 45m | non stop";
-                break;
+            }
         }
         System.out.println(FROM + " TO " + TO + " Ticket Price per person : " + flight_price + "/-");
         total_price = flight_price * person;
@@ -289,22 +280,24 @@ class Airline {
         while (insurance_choice) {
             System.out.println("Press 1 for Yes \nPress 2 for No\n\nEnter your choice.");
             travel_insurance = sc.nextInt();
-            if (travel_insurance == 1) {
-                System.out.println("If you will cancel your ticket, You will get " + total_price + "/- Refund");
-                total_price = total_price + 800;
-                insurance_choice = false;
-            } else if (travel_insurance == 2) {
-
-                System.out.println("If you will cancel your ticket, You will get "
-                        + (total_price - ((35 * total_price) / 100)) + "/- Refund");
-                insurance_choice = false;
-            } else {
-                System.out.println("You have entered invalid choice , please enter correct choice");
+            switch (travel_insurance) {
+                case 1 -> {
+                    System.out.println("If you will cancel your ticket, You will get " + total_price + "/- Refund");
+                    total_price = total_price + 800;
+                    insurance_choice = false;
+                }
+                case 2 -> {
+                    System.out.println("If you will cancel your ticket, You will get "
+                            + (total_price - ((35 * total_price) / 100)) + "/- Refund");
+                    insurance_choice = false;
+                }
+                default -> System.out.println("You have entered invalid choice , please enter correct choice");
             }
         }
         payment();
     }
 
+    @SuppressWarnings({"resource", "UnnecessaryContinue"})
     void payment() {
         Scanner sc = new Scanner(System.in);
         System.out.println(
@@ -318,8 +311,7 @@ class Airline {
         int n = 0;
         while (payment_method) {
             switch (pay) {
-                case 1:
-
+                case 1 -> {
                     while (credit) {
 
                         System.out.println("Enter your credit card number");
@@ -353,9 +345,9 @@ class Airline {
                             System.out.println("You have entered insufficient amount , please enter sufficient amount");
                         }
                     }
-                    break;
+                }
 
-                case 2:
+                case 2 -> {
                     // int n = 0;
                     while (debite_check) {
 
@@ -411,9 +403,9 @@ class Airline {
                             System.out.println("You have entered insufficient amount , please enter sufficient amount");
                         }
                     }
-                    break;
+                }
 
-                case 3:
+                case 3 -> {
                     while (UPI) {
                         System.out.println("Enter your UPI ID");
                         String UPI_ID = sc.next();
@@ -434,11 +426,9 @@ class Airline {
                     } else {
                         System.out.println("You have entered insufficient amount , please enter sufficient amount");
                     }
-                    break;
+                }
 
-                default:
-                    System.out.println("Invalid choice, please Enter a valid choice");
-                    break;
+                default -> System.out.println("Invalid choice, please Enter a valid choice");
             }
         }
 
@@ -468,6 +458,7 @@ class Airline {
         }
     }
 
+    @SuppressWarnings("resource")
     void cancle_ticket() {
         Scanner sc = new Scanner(System.in);
         if (ticket_booked && ticket_status == 1) {
@@ -478,7 +469,7 @@ class Airline {
                 System.out.println("Press 1 for Yes\nPress 2 for No");
                 int cancle_choice = sc.nextInt();
                 switch (cancle_choice) {
-                    case 1:
+                    case 1 -> {
                         if (travel_insurance == 1) {
                             System.out.println("Okay, you will get " + (total_price - 800) + "/- Refund");
                             ++ticket_status;
@@ -489,15 +480,9 @@ class Airline {
                             ++ticket_status;
                             cancle_check = false;
                         }
-                        break;
-
-                    case 2:
-                        cancle_check = false;
-                        break;
-
-                    default:
-                        System.out.println("\nPlease, Enter a correct choice");
-                        break;
+                    }
+                    case 2 -> cancle_check = false;
+                    default -> System.out.println("\nPlease, Enter a correct choice");
                 }
             }
         } else {
@@ -506,7 +491,9 @@ class Airline {
     }
 }
 
+@SuppressWarnings("unused")
 class Airplane {
+    @SuppressWarnings("resource")
     public static void main(String args[]) {
         String UID, Password, Confirm_Password;
         Scanner sc = new Scanner(System.in);
@@ -558,26 +545,18 @@ class Airplane {
             int choice = sc.nextInt();
 
             switch (choice) {
-                case 1:
-                    air.book_ticket();
-                    break;
+                case 1 -> air.book_ticket();
 
-                case 2:
-                    air.show_ticket();
-                    break;
+                case 2 -> air.show_ticket();
 
-                case 3:
-                    air.cancle_ticket();
-                    break;
+                case 3 -> air.cancle_ticket();
 
-                case 4:
+                case 4 -> {
                     b = false;
                     System.out.println("Thank You for visiting");
-                    break;
+                }
 
-                default:
-                    System.out.println("You have Entered invalid choice, Please enter correct choice.");
-                    break;
+                default -> System.out.println("You have Entered invalid choice, Please enter correct choice.");
             }
         }
     }
