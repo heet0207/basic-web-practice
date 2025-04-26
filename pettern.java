@@ -3,16 +3,19 @@ import java.util.Scanner;
 class pettern {
     @SuppressWarnings({ "ConvertToTryWithResources", "unused" })
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the number of rows: ");
-        int rows = sc.nextInt();
-        sc.close();
-        for (int i = 1; i <= rows; i++) {
-            for (int j = 1; j <= i; j++) {
-               int P = i * j;
-                System.out.print( "* ");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter Rows Number");
+        int N = scanner.nextInt();
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= N; j++) {
+                if (i == 1 || i == N || j == 1 || j == N) {
+                    System.out.print("* ");
+                } else {
+                    System.out.print("  ");
+                }
             }
             System.out.println();
         }
+        System.out.println("Enter Rows Number");
     }
 }

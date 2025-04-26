@@ -20,6 +20,7 @@ class Airline {
             System.out.println(
                     "1." + r1 + "  2." + r2 + "  3." + r3 + "  4." + r4 + "  5." + r5 + "  6." + r6 + "  7." + r7);
             System.out.println();
+
             System.out.println("Enter a route name");
             boolean check_route = true;
             while (check_route) {
@@ -32,8 +33,7 @@ class Airline {
                         || TO.equals(r7)) {
                     check_route = false;
                 } else {
-                    System.out
-                            .println("You have entered invalid route, Please enter Carefully as per Available Routes");
+                    System.out.println("You have entered invalid route, Please enter Carefully as per Available Routes");
                 }
             }
             check_route = true;
@@ -48,8 +48,7 @@ class Airline {
                         || FROM.equals(r6) || FROM.equals(r7)) {
                     check_route = false;
                 } else {
-                    System.out
-                            .println("You have entered invalid route, Please enter Carefully as per Available Routes");
+                    System.out.println("You have entered invalid route, Please enter Carefully as per Available Routes");
                 }
             }
 
@@ -136,11 +135,11 @@ class Airline {
                 System.out.println();
                 int k = 1;
                 char ch = 'A';
-                for (int j = 1; j <= 10; j++)// This for loop make a flight seats pattern
+                for (int row = 1; row <= 10; row++)// This for loop makes a flight seats pattern
                 {
 
                     System.out.print(ch + "  ");
-                    for (int m = 1; m <= 8; m++) {
+                    for (int j = 1; j <= 8; j++) {
                         if (k > 30) {
                             k = 1;
                         }
@@ -177,8 +176,8 @@ class Airline {
 
     }
 
-    @SuppressWarnings("resource")
     void seat_selection() {
+        @SuppressWarnings("resource")
         Scanner sc = new Scanner(System.in);
         boolean seat = true;
         System.out.println("For example, A01, A02, A03...");
@@ -190,11 +189,10 @@ class Airline {
             seat_no = seat_no.replaceAll("\\s+", "");// All spaces remove from seat_no
             seat_no = seat_no.toUpperCase();
 
-            char ch = seat_no.charAt(0);// 1st character store in char ch i.e. A,B,C,D,....
+            char ch = seat_no.charAt(0);// 1st character store is char ch i.e. A,B,C,D,....
             String s1 = Character.toString(ch);// 1st character converted in String
             String s2[] = seat_no.split(s1);// Split from 1st character
-            String s3 = s2[1];// After splitting, 1st character stored in s2[0] and number like 01,02...
-                              // stored in s[3] and that number will stored in String s3
+            String s3 = s2[1];
 
             if (seat_no.charAt(0) == 'A' || seat_no.charAt(0) == 'F') {
                 s3 = s3.replaceFirst("0", "");// remove 0 from 01 or 02 0r 03... and stored in String s3
@@ -297,144 +295,53 @@ class Airline {
         payment();
     }
 
-    @SuppressWarnings({"resource", "UnnecessaryContinue"})
+    @SuppressWarnings("resource")
     void payment() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println(
-                "\nHere total 3 types of payment method avaliable\nPress 1 for credit card\nPress 2 for Debit card\nPress 3 for UPI");
-        int pay = sc.nextInt();
+    Scanner sc = new Scanner(System.in);
+    System.out.println("\n Payment\nPress 1 for credit card");
+    int pay = sc.nextInt();
 
-        boolean credit = true;
-        boolean debite = true;
-        boolean UPI = true;
-        boolean debite_check = true;
-        int n = 0;
-        while (payment_method) {
-            switch (pay) {
-                case 1 -> {
-                    while (credit) {
-
-                        System.out.println("Enter your credit card number");
-                        String credit_no = sc.next();
-                        if (credit_no.length() == 16) {
-                            for (i = 0; i < 16; i++) {
-                                if (credit_no.charAt(i) >= '0' && credit_no.charAt(i) <= '9') {
-                                    if (i == 15) {
-                                        credit = false;
-                                    }
-                                    continue;
-                                } else {
-                                    System.out.println("Please enter correct Credit card no.");
-                                    break;
-                                }
+    boolean credit = true;
+    while (payment_method) {
+        switch (pay) {
+            case 1 -> {
+                while (credit) {
+                    System.out.println("Enter your credit card number");
+                    String credit_no = sc.next();
+                    if (credit_no.length() == 16) {
+                        boolean valid = true;
+                        for (int j = 0; j < 16; j++) {
+                            if (!(credit_no.charAt(j) >= '0' && credit_no.charAt(j) <= '9')) {
+                                valid = false;
+                                break;
                             }
-                        } else {
-                            System.out.println("Credit card no. length must be of 16 digits only");
                         }
-                    }
-                    if (i == 16) {
-                        System.out.println("You have to pay " + total_price + "/- to book a ticket");
-                        System.out.println("Enter ammount to pay ticket price");
-                        ammount = sc.nextInt();
-                        if (ammount == total_price) {
-                            System.out.println("Transaction successfull");
-                            payment_method = false;
-                            ticket_booked = true;
-                            ticket_status = 1;
+                        if (valid) {
+                            credit = false;
                         } else {
-                            System.out.println("You have entered insufficient amount , please enter sufficient amount");
+                            System.out.println("Please enter correct Credit card no.");
                         }
-                    }
-                }
-
-                case 2 -> {
-                    // int n = 0;
-                    while (debite_check) {
-
-                        System.out.println("Enter your Debit card number");
-                        String debite_no = sc.next();
-                        if (debite_no.length() == 12) {
-                            for (int k = 0; k < 12; k++) {
-                                if (debite_no.charAt(k) >= '0' && debite_no.charAt(k) <= '9') {
-                                    if (k == 11) {
-                                        debite_check = false;
-                                    }
-                                    continue;
-                                } else {
-                                    System.out.println("Please enter correct Debit card no.");
-                                    break;
-                                }
-                            }
-                        } else {
-                            System.out.println("Debit card no. length must be of 12 digits only");
-                        }
-                    }
-                    while (debite) {
-
-                        System.out.println("Enter your Debit card Password");
-                        String debite_password = sc.next();
-                        n = debite_password.length();
-                        if (n == 6 || n == 4) {
-                            for (i = 0; i < n; i++) {
-                                if (debite_password.charAt(i) >= '0' && debite_password.charAt(i) <= '9') {
-                                    if (i == (n - 1)) {
-                                        debite = false;
-                                    }
-                                    continue;
-                                } else {
-                                    System.out.println("Please enter correct Debit card password");
-                                    break;
-                                }
-                            }
-                        } else {
-                            System.out.println("Debit card password length must be of 4 or 6 digits only");
-                        }
-                    }
-                    if (i == n) {
-                        System.out.println("You have to pay " + total_price + "/- to book a ticket");
-                        System.out.println("Enter ammount for pay ticket price");
-                        ammount = sc.nextInt();
-                        if (ammount == total_price) {
-                            System.out.println("Transaction succesfull");
-                            payment_method = false;
-                            ticket_booked = true;
-                            ticket_status = 1;
-                        } else {
-                            System.out.println("You have entered insufficient amount , please enter sufficient amount");
-                        }
-                    }
-                }
-
-                case 3 -> {
-                    while (UPI) {
-                        System.out.println("Enter your UPI ID");
-                        String UPI_ID = sc.next();
-                        if (UPI_ID.length() >= 5) {
-                            UPI = false;
-                        } else {
-                            System.out.println("You have entered incorrect UPI id , please enter carefully");
-                        }
-                    }
-                    System.out.println("You have to pay " + total_price + "/- to book a ticket");
-                    System.out.println("Enter amount for pay ticket price");
-                    ammount = sc.nextInt();
-                    if (ammount == total_price) {
-                        System.out.println("Transaction succesfull");
-                        payment_method = false;
-                        ticket_booked = true;
-                        ticket_status = 1;
                     } else {
-                        System.out.println("You have entered insufficient amount , please enter sufficient amount");
+                        System.out.println("Credit card no. length must be of 16 digits only");
                     }
                 }
-
-                default -> System.out.println("Invalid choice, please Enter a valid choice");
+                System.out.println("You have to pay " + total_price + "/- to book a ticket");
+                System.out.println("Enter amount to pay ticket price");
+                ammount = sc.nextInt();
+                if (ammount == total_price) {
+                    System.out.println("Transaction successful");
+                    payment_method = false;
+                    ticket_booked = true;
+                    ticket_status = 1;
+                } else {
+                    System.out.println("You have entered an insufficient amount, please enter sufficient amount");
+                }
             }
+            default -> System.out.println("Invalid payment method");
         }
-
     }
-
-    void show_ticket() {
+}
+void show_ticket() {
         System.out.println();
         if (ticket_booked && ticket_status == 1) {
             System.out.print("------------------TICKET CONFIRMATION------------------\n");
@@ -457,6 +364,7 @@ class Airline {
             System.out.println("You haven't booked Ticket, please book your ticket first.");
         }
     }
+
 
     @SuppressWarnings("resource")
     void cancle_ticket() {
@@ -481,7 +389,9 @@ class Airline {
                             cancle_check = false;
                         }
                     }
+
                     case 2 -> cancle_check = false;
+
                     default -> System.out.println("\nPlease, Enter a correct choice");
                 }
             }
@@ -492,7 +402,7 @@ class Airline {
 }
 
 @SuppressWarnings("unused")
-class Airplane {
+class Air {
     @SuppressWarnings("resource")
     public static void main(String args[]) {
         String UID, Password, Confirm_Password;
@@ -531,8 +441,7 @@ class Airplane {
             }
         }
 
-        System.out
-                .println("\n--------------------WELCOME TO THE INDIAN AIRLINE RESERVATION SYSTEM--------------------");
+        System.out.println("\n--------------------WELCOME TO THE INDIAN AIRLINE RESERVATION SYSTEM--------------------");
 
         boolean b = true;
         while (b) {

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JIO SAVAN Clone</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: white;
+        }
+
+       
+        .header {
+            background-color: #ff0000;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .header input {
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            width: 50%;
+        }
+
+        
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #1c1c1c;
+            padding: 10px 0;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px;
+        }
+
+        .navbar a:hover {
+            color: #ff0000;
+        }
+
+       
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .carousel img {
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        
+        .playlists {
+            padding: 20px;
+        }
+
+        .playlists h2 {
+            margin-bottom: 20px;
+        }
+
+        .playlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .playlist {
+            background-color: #1c1c1c;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .playlist img {
+            width: 100%;
+            height: 150px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .playlist h3 {
+            margin: 10px 0 5px;
+            font-size: 16px;
+        }
+
+        .playlist p {
+            font-size: 14px;
+            color: #b3b3b3;
+        }
+    </style>
+</head>
+<body>
+   
+    <div class="header">
+        <h1>HTML MUSIC</h1>
+        <input type="text" placeholder="Search for songs, artists, albums...">
+    </div>
+
+   
+    <div class="navbar">
+        <a href="#">Home</a>
+        <a href="#">Trending</a>
+        <a href="#">Radio</a>
+        <a href="#">My Music</a>
+        <a href="#">Settings</a>
+    </div>
+
+   
+    <div class="carousel">
+        <img src="image 5.jpeg" alt="Featured Song 1">
+        <img src="image 6.jpg" alt="Featured Song 2">
+        <img src="image 7.jpg" alt="Featured Song 3">
+        <img src="image 8.jpg" alt="Featured Song 4">
+    </div>
+
+   
+    <div class="playlists">
+        <h2>Top Playlists</h2>
+        <div class="playlist-grid">
+            <div class="playlist">
+                <img src="image 4.jpg" alt="Playlist 1">
+                <h3>Bollywood Hits</h3>
+                <p>50 Songs</p>
+            </div>
+            <div class="playlist">
+                <img src="image 1.jpg" alt="Playlist 2">
+                <h3>Romantic Melodies</h3>
+                <p>40 Songs</p>
+            </div>
+            <div class="playlist">
+                <img src="image 2.webp" alt="Playlist 3">
+                <h3>Party Vibes</h3>
+                <p>30 Songs</p>
+            </div>
+            <div class="playlist">
+                <img src="image 3.jpg" alt="Playlist 4">
+                <h3>Retro Classics</h3>
+                <p>25 Songs</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

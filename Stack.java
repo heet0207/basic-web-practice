@@ -45,7 +45,7 @@ class Stack1{
         for(int i = TOP; i >= 0; i--){
             System.out.println(s[i]);
         }
-        System.out.println();
+       
     }
 }
 
@@ -63,6 +63,7 @@ class Stack{
         while(b){
             System.out.println("1.Push  2.Pop  3.Peep  4.Change  5.Display 6.Exit");
             int choice = scanner.nextInt();
+            System.out.println();
 
 
             switch(choice){
