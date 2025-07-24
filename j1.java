@@ -2,8 +2,7 @@ import java.sql.*;
 
 class j1 {
     public static void main(String[] args) throws Throwable {
-        Class.forName("com.mysql.n
-        jdbc.Driver");
+        Class.forName("com.mysql.njdbc.Driver");
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/1eshrvk", "root", "");
 
         System.out.println(con != null ? "Connection Successful" : "Connection Failed");
