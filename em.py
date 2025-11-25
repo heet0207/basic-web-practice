@@ -29,7 +29,7 @@ else:
 if city == 1 :
     HRA = basic_pay*0.3
 elif city == 2 :
-    HRA = basic_Pay*0.2
+    HRA = basic_pay*0.2
 elif city == 3 :
     HRA = basic_pay*0.1
 else :

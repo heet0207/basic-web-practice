@@ -1,0 +1,119 @@
+/* Basic Reset and Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0; /* Light background for the page */
+}
+
+/* Main Container - Sets up the two-column layout */
+.resume-container {
+    display: flex;
+    width: 900px; /* Adjust to preferred size */
+    margin: 40px auto; /* Center the resume on the page */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Sidebar Styling (Left Column - Teal/Green) */
+.sidebar {
+    width: 35%; /* Controls the width of the left column */
+    background-color: #5F9EA0; /* A teal/cadet blue color */
+    color: white;
+    padding: 30px 20px;
+}
+
+/* Main Content Styling (Right Column - Pink/Beige) */
+.main-content {
+    width: 65%; /* Controls the width of the right column */
+    background-color: #F8E0E0; /* A soft pink/beige color */
+    padding: 30px 40px;
+}
+
+/* Profile Photo Styling */
+.profile-photo-area {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.profile-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover;
+    border: 5px solid white; /* White border around the circle */
+}
+
+/* Sidebar Section Headings */
+.sidebar h3 {
+    font-size: 1.2em;
+    border-bottom: 1px solid white;
+    padding-bottom: 5px;
+    margin-top: 30px;
+    text-transform: uppercase;
+}
+
+.sidebar p {
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.sidebar span {
+    margin-right: 5px;
+}
+
+/* Header Styling (Top Right) */
+.header h1 {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 0;
+}
+
+.header .subtitle {
+    font-size: 1.2em;
+    color: #555;
+    margin-top: 5px;
+    margin-bottom: 30px;
+}
+
+/* Main Content Section Styling */
+.info-section {
+    margin-bottom: 20px;
+}
+
+.info-section h4 {
+    color: #5F9EA0; /* Use the sidebar color for headings */
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    display: flex; /* To align the arrow and text */
+    align-items: center;
+}
+
+.info-section ul {
+    list-style: none; /* Removes default bullets */
+    padding-left: 10px; /* Adjust to move text under the arrow */
+    margin-top: 5px;
+}
+
+.info-section li {
+    margin-bottom: 5px;
+    font-size: 0.95em;
+    line-height: 1.3;
+}
+
+/* Custom Arrow Style */
+.arrow {
+    font-size: 1.2em;
+    margin-right: 10px;
+    color: #5F9EA0;
+}
+
+/* Link Styling */
+.info-section a {
+    color: #333;
+    text-decoration: none; /* Removes underline */
+}
+
+.info-section a:hover {
+    text-decoration: underline;
+}
