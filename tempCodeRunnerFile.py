@@ -1,6 +1,8 @@
-f=open('s.txt','r',encoding='utf-8')
-data=f.readlines()
-for i in data:
-    if i[0].isupper():
-        print(i)
-f.close()
+try :
+    k=2/3
+except Exception as e:
+    print("Exception caught in main:", e)
+else:
+    print(k)
+finally:
+    print("Execution completed.")

@@ -64,3 +64,19 @@ l='D:/Web Dev/practice/'
 p=os.path.join(l,f)
 os.remove(p)
 
+import os
+p=os.mkdir("D:/Web Dev/test")
+f=open('t2.txt','w')
+d=f.write("Hello World")
+f.close()
+l='D:/Web Dev/test/'
+a=os.path.join(l,'t2.txt')
+os.remove(a)
+os.rmdir("D:/Web Dev/test")
+print(os.listdir())
+
+
+import call
+import importlib
+importlib.reload(call)
+print(call.sub(2,3))
