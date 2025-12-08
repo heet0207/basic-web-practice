@@ -1,3 +1,46 @@
+class rectangle:
+    def __init__(self,len,width):
+        self.len=len
+        self.width=width
+    def area(self):
+        area=self.len*self.width
+        print("Area=",area)
+r=rectangle(5,4)
+r.area()
+
+
+class student:
+    def __init__(self,name,mark):
+        self.name=name
+        self.mark=mark
+    def display(self):
+        print("Name:",self.name)
+        print("mark :",self.mark)
+    def set_mark(self,mark):
+        self.mark=mark
+    def get_mark(self):
+        return self.mark
+st=student("Alice",20)
+st.display()
+st.set_mark(25)
+print('Name :',st.name,'&',"Updated mark:",st.get_mark())
+
+
+class circle:
+    def __init__(self,radius):
+        self.radius=radius
+    def area(self):
+        area=3.14*self.radius*self.radius
+        print("Area of circle:",area)
+    def perimeters(self):
+        perimeter=2*3.14*self.radius
+        print("Perimeter of circle:",perimeter)
+c=circle(3)
+c.area()
+c.perimeters()
+
+
+
 class Store:
     def __init__(self):
         self.items = {}

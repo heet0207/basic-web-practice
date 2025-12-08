@@ -47,12 +47,13 @@ class WeddingDatabaseApp {
     }
 
     // Case 1
+    @SuppressWarnings("CallToPrintStackTrace")
     private static void insertData(Connection conn) {
         String sql = "INSERT INTO happyWedding (id, name, age, salary, photo, description) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql);
-             FileInputStream photo = new FileInputStream("D:/Sasuke.jpg");
-             FileReader desc = new FileReader("D://github-recovery-codes.txt")) {
+            FileInputStream photo = new FileInputStream("D:/Sasuke.jpg");
+            FileReader desc = new FileReader("D://github-recovery-codes.txt")) {
 
             ps.setInt(1, 1); // id
             ps.setString(2, "Ravi"); // name
@@ -69,6 +70,7 @@ class WeddingDatabaseApp {
     }
 
     // Case 2
+    @SuppressWarnings("CallToPrintStackTrace")
     private static void updateData(Connection conn, Scanner sc) {
         System.out.print("Enter name: ");
         String name = sc.next();
@@ -88,6 +90,7 @@ class WeddingDatabaseApp {
     }
 
     // Case 3
+    @SuppressWarnings("CallToPrintStackTrace")
     private static void deleteData(Connection conn, Scanner sc) {
         System.out.print("Enter ID to delete: ");
         int id = sc.nextInt();
@@ -115,6 +118,7 @@ class WeddingDatabaseApp {
     }
 
     // Case 4
+    @SuppressWarnings("CallToPrintStackTrace")
     private static void readData(Connection conn, Scanner sc) {
         System.out.print("Enter age: ");
         int age = sc.nextInt();
@@ -138,6 +142,7 @@ class WeddingDatabaseApp {
     }
 
     // Case 5
+    @SuppressWarnings("CallToPrintStackTrace")
     private static void getTableInfo(Connection conn, Scanner sc) {
         System.out.print("Enter column index (starting from 1): ");
         int index = sc.nextInt();
