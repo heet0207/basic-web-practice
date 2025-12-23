@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <script>
+            let a1=true
+            if (a1){
+                console.log('Welcome User')
+            }
+
+
+            let age=16
+            if(age >= 18){
+                console.log("Allowed")
+            }
+            else{
+                console.log('Not Allowed')
+            }
+
+
+            let s1=82
+            if (s1 >=90){
+                console.log('Grade A')
+            }
+            else if (s1 >=75){
+                console.log('Grade B')
+            }
+            else{
+                console.log('Grade C')
+            }
+
+
+            let r1='Admin'
+            switch(r1){
+                case 'Admin' :
+                    console.log('Full Access')
+                    break;
+                case 'Editor' :
+                    console.log('Edit Access')
+                    break;
+                case 'Viewer' :
+                    console.log('Read Only')
+                    break;
+                default :
+                    console.log('No Access')
+            }
+
+
+            let age1=20
+            let result =age1 > 18 ? 'Adult' : 'Minor'
+            console.log(result)
+
+
+            for(let i =1;i<=5;i++){
+                console.log(i)
+            }
+
+            let j=-1
+            while(j<=5){
+                console.log(j)
+                j++
+            }
+
+            let k=6
+            do{
+                console.log(k+'Do..While')
+                k++
+            }while(k<=5)
+
+
+            let f1=['apple','Orange','Mango']
+            for (let f2 of f1){
+                console.log(f2)
+            }
+
+
+            let user={name:'abc',age:'20',city:'Delhi'}
+            for(let key in user){
+                console.log(key+ ': ' + user[key])
+            }
+
+            let s2=['abc','pqr','xyz']
+            for(let x in s2){
+                console.log(x)
+                console.log(s2[x])
+            }
+</script>
+    </head>
+</html>

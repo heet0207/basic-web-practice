@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <script>
+            // push()
+            let f1=['Apple','Orange']
+            f1.push('Mango')
+            console.log(f1)
+
+            //pop()
+            let n1=[10,20,30]
+            console.log(n1)
+            let r1=n1.pop()
+            console.log('Remove Number : ' +r1)
+            console.log(n1)
+
+            //map() --> Transform each element & return a new array.
+            let n2=[1,2,3,4]
+            let r2=n2.map(n =>n*n)
+            console.log('Old Array :' + n2)
+            console.log('New Array :' + r2)
+
+            //filter()
+            let age=[12,18,25,14]
+            let a1=age.filter(a2=>a2>=18)
+            console.log(age)
+            console.log('Age: '+a1)
+
+            //foreach() --> Does Not Return new Array
+            let n3=['ABC','XYZ','PQR']
+            n3.forEach(b1=>{console.log('Hello.... ' + n3)})
+
+            //includes()
+            let c1=['red','green','blue']
+            console.log(c1.includes('green'))
+            console.log(c1.includes('pink'))
+
+            //find()
+            let a2=[{id:1,name:'ABC'},{id:2,name:'XYZ'},{id:3,name:'PQR'}]
+            let d1=a2.find(c=>c.id===2)
+            console.log(d1)
+</script>
+    </head>
+</html>
