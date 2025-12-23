@@ -9,7 +9,7 @@ class pizza:
             self.cost+=50
         elif self.size=='medium':
             self.cost+=100
-        elif self.size=='Large':
+        elif self.size=='large':
             self.cost+=200
         else:
             print('Enter valid size')
@@ -32,13 +32,13 @@ class Order:
             toppings=[]
             cheese=[]
             print('Customize Pizza',i+1)
-            size=(input('Enter the size of pizza'))
-            t=int(input('Enter No. of topping'))
+            size=(input('Enter the size of pizza :'))
+            t=int(input('Enter No. of topping :'))
             for i in range(t):
-                toppings.append(input('Enter topping:'))
-            c=int(input('Enter no of cheese:'))
+                toppings.append(input('Enter topping :'))
+            c=int(input('Enter no of cheese :'))
             for i in range(c):
-                cheese.append(input('Enter cheese names'))
+                cheese.append(input('Enter cheese names :'))
             self.pizzas.append(pizza(size,toppings,cheese))
     def bill(self):
         self.total=0
@@ -50,5 +50,6 @@ class Order:
             count+=1
         print('Total bill amount:',self.total)
 order1=Order('As',1)
-order1.order(2)
+p=int(input('Enter number of0 Pizza '))
+order1.order(p)
 order1.bill()

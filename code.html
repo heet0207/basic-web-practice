@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Invitation Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rasa:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================
+           1. THE STAGE (CSS SETUP)
+           ============================ */
+        body {
+            margin: 0;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Rasa', serif;
+            overflow: hidden;
+        }
+
+        /* The Vertical Video Container (9:16 Aspect Ratio) */
+        #video-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px; /* Mobile width */
+            aspect-ratio: 9 / 16;
+            background: #fffdd0; /* Cream background base */
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            border-radius: 8px;
+        }
+
+        /* Common Scene Styling */
+        .scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .scene.active {
+            opacity: 1;
+            z-index: 10;
+        }
+
+        /* ============================
+           2. TEXT & GOLD EFFECTS
+           ============================ */
+        
+        /* The "Real Gold" Text Effect */
+        .gold-text {
+            font-weight: 700;
+            color: #b8860b; /* Fallback */
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .maroon-text {
+            color: #5e0e0e;
+            font-weight: 700;
+        }
+
+        h1 { font-size: 2.5rem; margin: 10px 0; line-height: 1.2; }
+        h2 { font-size: 1.8rem; margin: 5px 0; }
+        p { font-size: 1.2rem; margin: 5px 0; color: #2e2e2e; }
+
+        /* ============================
+           3. ASSET CLASSES
+           ============================ */
+        .full-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .frame-overlay {
+            position: absolute;
+            width: 90%;
+            height: auto;
+            pointer-events: none;
+            z-index: 5;
+            border: 5px solid #b8860b; /* Fallback border if no image */
+        }
+        
+        .ganesha-img {
+            width: 150px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* ============================
+           4. ANIMATIONS
+           ============================ */
+        
+        @keyframes zoomIn {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-zoom { animation: zoomIn 10s linear forwards; }
+        .animate-up { animation: fadeInUp 1.5s ease-out forwards; }
+
+        /* Controls */
+        #play-btn {
+            position: absolute;
+            z-index: 100;
+            padding: 15px 30px;
+            font-size: 20px;
+            background: #b8860b;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <button id="play-btn" onclick="startVideo()">▶ Play Invitation</button>
+
+    <div id="video-container">
+        
+        <audio id="bg-music" loop>
+            <source src="assets/audio.mp3" type="audio/mpeg">
+        </audio>
+
+        <div id="scene-1" class="scene">
+            <img src="https://via.placeholder.com/1080x1920/dba446/ffffff?text=Clouds+Background" class="full-bg animate-zoom">
+            
+            <img src="https://via.placeholder.com/300x300/ff0000/ffffff?text=Ganesha" class="ganesha-img">
+            
+            <div class="animate-up">
+                <p class="maroon-text" style="font-size: 1.5rem;">
+                    વક્રતુંડ મહાકાય સૂર્યકોટિ સમપ્રભ:<br>
+                    નિર્વિઘ્નં કુરુ મે દેવ સર્વકાર્યેષુ સર્વદા
+                </p>
+            </div>
+        </div>
+
+        <div id="scene-2" class="scene">
+            <div class="frame-overlay" style="height: 80%; top: 10%; border: 10px solid gold;"></div>
+            
+            <h2 class="maroon-text animate-up" style="animation-delay: 0.5s">સસ્નેહ નિમંત્રણ</h2>
+            <h1 class="gold-text animate-up" style="font-size: 3rem; animation-delay: 1s">વાઘેલા પરિવાર</h1>
+            <p class="animate-up" style="animation-delay: 1.5s">આપ સૌને ભાવભર્યું નિમંત્રણ પાઠવે છે.</p>
+        </div>
+
+        <div id="scene-3" class="scene">
+            <img src="https://via.placeholder.com/1080x1920/333/fff?text=Couple+Photo" class="full-bg animate-zoom">
+        </div>
+
+        <div id="scene-4" class="scene">
+            <img src="https://via.placeholder.com/1080x1920/fffdd0/000?text=Floral+Border" class="full-bg">
+            
+            <h1 class="maroon-text animate-up">ચિ. સાગર</h1>
+            <img src="https://via.placeholder.com/100x100?text=Kankavati" style="width: 50px; margin: 10px;">
+            <h2 class="gold-text">સંગે</h2>
+            <h1 class="maroon-text animate-up">ચિ. કવિતા</h1>
+        </div>
+
+        <div id="scene-5" class="scene">
+            <h2 class="gold-text">:: માંગલ્ય પ્રસંગો ::</h2>
+            <br>
+            <div class="animate-up">
+                <h3 class="maroon-text">:: મંડપ મુહૂર્ત ::</h3>
+                <p>તા. ૨૫-૧૨-૨૦૨૫, ગુરુવાર</p>
+                <p>સવારે ૯:૦૦ કલાકે</p>
+            </div>
+            <br>
+            <div class="animate-up" style="animation-delay: 1s">
+                <h3 class="maroon-text">:: જાન પ્રસ્થાન ::</h3>
+                <p>તા. ૨૬-૧૨-૨૦૨૫, શુક્રવાર</p>
+            </div>
+        </div>
+
+        <div id="scene-6" class="scene">
+            <h2 class="maroon-text">:: અવસરનું આંગણું ::</h2>
+            <p style="width: 80%;">શ્રી રામજીભાઈ વાઘેલાનું નિવાસ સ્થાન,<br>અમદાવાદ.</p>
+            <br><br>
+            <h1 class="gold-text">લી. વાઘેલા પરિવાર</h1>
+        </div>
+
+    </div>
+
+    <script>
+        function startVideo() {
+            // Hide button
+            document.getElementById('play-btn').style.display = 'none';
+            
+            // Play Audio
+            var audio = document.getElementById('bg-music');
+            audio.play();
+
+            // Timeline Logic (Milliseconds)
+            // Scene 1: Start immediately
+            showScene('scene-1');
+
+            // Scene 2: 5 Seconds
+            setTimeout(() => showScene('scene-2'), 5000);
+
+            // Scene 3: 12 Seconds
+            setTimeout(() => showScene('scene-3'), 12000);
+
+            // Scene 4: 15 Seconds
+            setTimeout(() => showScene('scene-4'), 15000);
+
+            // Scene 5: 29 Seconds
+            setTimeout(() => showScene('scene-5'), 29000);
+
+            // Scene 6: 40 Seconds
+            setTimeout(() => showScene('scene-6'), 40000);
+        }
+
+        function showScene(id) {
+            // Remove active class from all scenes
+            const scenes = document.querySelectorAll('.scene');
+            scenes.forEach(s => s.classList.remove('active'));
+
+            // Add active class to current scene
+            const current = document.getElementById(id);
+            current.classList.add('active');
+        }
+    </script>
+</body>
+</html>

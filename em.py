@@ -115,5 +115,109 @@ class Order:
             count+=1
         print('Total bill amount:',self.total)
 order1=Order('As',1)
-order1.order(2)
+p=int(input('Enter number of0 Pizza '))
+order1.order(p)
 order1.bill()
+
+
+class Student:
+    def __init__(self):
+        # constructor
+        self.students = []
+
+    # accept student details
+    def accept(self):
+        n = int(input("Enter number of students: "))
+        for i in range(n):
+            print("\nEnter details of student", i + 1)
+            name = input("Enter Name: ")
+            roll = int(input("Enter Roll Number: "))
+            marks1 = int(input("Enter Marks of Subject 1: "))
+            marks2 = int(input("Enter Marks of Subject 2: "))
+
+            self.students.append({
+                "name": name,
+                "roll": roll,
+                "marks1": marks1,
+                "marks2": marks2
+            })
+
+    # display all students
+    def display(self):
+        if not self.students:
+            print("No student records found.")
+            return
+
+        print("\nList of Students")
+        for s in self.students:
+            print("Name :", s["name"])
+            print("RollNo :", s["roll"])
+            print("Marks1 :", s["marks1"])
+            print("Marks2 :", s["marks2"])
+            print()
+
+    # search student by roll number
+    def search(self):
+        roll = int(input("Enter roll number to search: "))
+        for s in self.students:
+            if s["roll"] == roll:
+                print("\nStudent Found")
+                print("Name :", s["name"])
+                print("RollNo :", s["roll"])
+                print("Marks1 :", s["marks1"])
+                print("Marks2 :", s["marks2"])
+                return
+        print("Student not found.")
+
+    # delete student by roll number
+    def delete(self):
+        roll = int(input("Enter roll number to delete: "))
+        for s in self.students:
+            if s["roll"] == roll:
+                self.students.remove(s)
+                print("Student deleted successfully.")
+                return
+        print("Student not found.")
+
+    # update roll number
+    def update(self):
+        old_roll = int(input("Enter old roll number: "))
+        new_roll = int(input("Enter new roll number: "))
+
+        for s in self.students:
+            if s["roll"] == old_roll:
+                s["roll"] = new_roll
+                print("Roll number updated successfully.")
+                return
+        print("Student not found.")
+
+
+# Main Program
+obj = Student()
+
+while True:
+    print("\n--- Student Management System ---")
+    print("1. Accept")
+    print("2. Display")
+    print("3. Search")
+    print("4. Delete")
+    print("5. Update")
+    print("6. Exit")
+
+    choice = int(input("Enter your choice: "))
+
+    if choice == 1:
+        obj.accept()
+    elif choice == 2:
+        obj.display()
+    elif choice == 3:
+        obj.search()
+    elif choice == 4:
+        obj.delete()
+    elif choice == 5:
+        obj.update()
+    elif choice == 6:
+        print("Exiting program...")
+        break
+    else:
+        print("Invalid choice. Try again.")
