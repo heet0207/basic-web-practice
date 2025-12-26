@@ -1,4 +1,7 @@
 # Custom Dictionary Words
 Akshay
 Chauhan
+getaddress
+getage
+Noida
 Programmiz
