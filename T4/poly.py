@@ -9,6 +9,6 @@ n2='Programming'
 print(n1+n2)
 
 #function Polymorphism
-print(len('Programming'))
+print(len('Programmiz'))
 print(len(['Python','Java','C']))
 print(len({'Name':'As','Age':23}))
