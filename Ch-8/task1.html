@@ -1,0 +1,61 @@
+<!-- Create a function registerUser() that uses pop-up boxes to gather and validate user input for a
+new user registration.
+The function should:
+1. Use a while loop to repeatedly prompt the user for a username using the prompt() pop-up box.
+The loop should continue to run as long as the user's input is an empty string, null, or undefined.
+2. Once a valid username is provided, use another while loop to prompt the user for a password.
+This loop should continue until the user provides a password that is at least 8 characters long.
+3. After a valid password is entered, use the confirm() pop-up box to ask the user, "Are you sure
+you want to register with this username and password?".
+4. If the user clicks "Cancel" on the confirmation box, use alert() to display a message
+"Registration canceled." and end the function.
+5. If the user clicks "OK", use a template literal to display a final alert() message confirming the
+successful registration, showing both the username and the password. -->
+
+<html>
+    <head>
+        <script>
+            function register(){
+                e = confirm('Can you Register OR Not ?')
+                let b =true
+                let n
+                let pw
+                if(e==true){
+                while(b){
+                    n = prompt('Enter Your Name')
+                    if(n==''){
+                        b=true
+                    }
+                    else{
+                        b=false
+                    }
+                }
+                let x= true
+                while(x){
+                pw= prompt('Enter password','password at least 8 characters long.')
+                    if(pw.length >= 8){
+                        x=false
+                    }
+                    else{
+                        x= true
+                    }
+                }
+                res =confirm("Register Or Not")
+                if(res==true){
+                    alert('Username :' + n +'\n'  +'Password :' + pw)
+
+                }
+                else{
+                    alert('Registration canceled')
+                }
+            }
+            else{
+                alert('Registration canceled')
+            }
+            }
+        </script>
+    </head>
+    <body>
+        <button type="button" onclick="register()">Click Me</button>
+    </body>
+</html>
