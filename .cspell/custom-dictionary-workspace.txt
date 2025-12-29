@@ -3,5 +3,6 @@ Akshay
 Chauhan
 getaddress
 getage
+Linearization
 Noida
 Programmiz

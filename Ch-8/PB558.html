@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <script>
+            let product =[{ name: 'Laptop', price: 1200, category: 'Electronics' },
+                        { name: 'T-shirt', price: 25, category: 'Apparel' },
+                        { name: 'Keyboard', price: 75, category: 'Electronics' },
+                        { name: 'Jeans', price: 60, category: 'Apparel' }]
+                        
+            var result=[]
+
+            for(let i=0;i < product.length;i++){
+                if(product[i].category=='Electronics' && product[i].price < 1000){
+                    result.push(product[i].name)
+                }
+            }
+            document.write(result)
+        </script>
+    </head>
+</html>
