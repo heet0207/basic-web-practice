@@ -1,0 +1,34 @@
+<!-- Write A Java Script Program That First Use Is Alert Box To Display a Welcome Massage To The User (Ex:-Welcome User) Than Use Comfirm Box To
+Ask User If They Want To Continue
+1.If The User Say Ok proceed To Ask For Their Name Using Prompt Box & Display a Massage(Ex:-If User Enter ABC Than Display HelloABC) After Displaying THe Massage
+Using Alert Box Prompt The User To Enter Their Age Base On The User Age Use The Conditional Statement If The Are 18 Or Older Display & Alert Massage
+You Are An Adult if User Under 18 display Massage You Are Minnor
+2.If The User Will Cancel At The Display And Alert Goodbye -->
+
+<html>
+    <head>
+        <script>
+            function f(){
+                alert('Welcome User')
+                res = confirm('Do You Want To Continue ?')
+                if(res ==true){
+                    var n =prompt('Enter Your Name')
+                    alert('HELLO'+n)
+                    let a= parseInt(prompt('Enter Your Age'))
+                    if(a >=18){
+                        alert('You Are An Adult')
+                    }
+                    else{
+                        alert('You Are An Minnor')
+                    }
+                }
+                else{
+                alert('Goodbye')
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <button type="button" onclick="f()">Click Me</button>
+    </body>
+</html>

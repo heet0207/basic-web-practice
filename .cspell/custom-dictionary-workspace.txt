@@ -4,5 +4,6 @@ Chauhan
 getaddress
 getage
 Linearization
+Minnor
 Noida
 Programmiz
