@@ -16,14 +16,54 @@
                     x[i].innerHTML='Change All'
                 }
             }
-            //4. 
+            //4. QuerySelector
+            function f2(){
+                document.querySelector('.p').style.color='red'
+                
+            }
+            //5. QuerySelectorAll
+            function f3(){
+                var y =document.querySelectorAll('.p')
+                y[1].innerHTML='Second Parameter'
+
+                for(var i =0;i < y.length;i++){
+                    y[i].style.color='yellow'
+                }
+
+                for(let p of document.querySelectorAll('.p')){
+                    p.style.fontSize='20px'
+                }
+            }
+            //6. innerHTML='value'
+            function f4(){
+                document.getElementById('d2').innerHTML='<b>Hello World</b>'
+            }
+            //7. innerText='value'
+            function f5(){
+                document.getElementById('d3').innerText='<b>Hello World!</b>'
+            }
+            //8. SetAttributes
+            function f6(){
+                document.getElementById('img').setAttribute('src','luffy.jpg')
+            }
         </script>
     </head>
     <body>
         <p id="d1">Hello.....</p>
+        <p id="d2">Hello...Hii...</p>
+        <p id="d3">Hello...Hii...Hyyy</p>
         <p class="c1">Hii.....</p>
         <p class="c1">Hii...Hii...</p>
+        <p class="p">Hello World!</p>
+        <p class="p">Hello, World!</p>
+        <p class="p">Hello,, World!</p>
+        <img id="img">
     <button type="button" onclick="f()">Click</button>
     <button type="button" onclick="f1()">Click</button>
+    <button type="button" onclick="f2()">Click</button>
+    <button type="button" onclick="f3()">Click</button>
+    <button type="button" onclick="f4()">Click</button>
+    <button type="button" onclick="f5()">Click</button>
+    <button type="button" onclick="f6()">Click</button>
     </body>
 </html>
