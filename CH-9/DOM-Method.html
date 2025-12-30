@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <script>
+            //1. document Property
+            document.write('Hello')
+            //2. Get Element By Id
+            function f(){
+            document.getElementById('d1').innerHTML='Hyy'
+            }
+            //3. Get Element By Class Name
+            function f1(){
+                var x= document.getElementsByClassName('c1')
+                // x[0].innerHTML='Changed'
+                // x[1].innerHTML='Changed One Time'
+                for(let i=0;i < x.length;i++){
+                    x[i].innerHTML='Change All'
+                }
+            }
+            //4. 
+        </script>
+    </head>
+    <body>
+        <p id="d1">Hello.....</p>
+        <p class="c1">Hii.....</p>
+        <p class="c1">Hii...Hii...</p>
+    <button type="button" onclick="f()">Click</button>
+    <button type="button" onclick="f1()">Click</button>
+    </body>
+</html>

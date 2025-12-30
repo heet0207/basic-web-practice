@@ -1,0 +1,23 @@
+<!-- Rest & Spread Parameter -->
+<html>
+    <head>
+        <script>
+            // function f(a,b,...c){
+            //     console.log(a)
+            //     console.log(b)
+            //     console.log(c)
+            // }
+            // f(1,2,3,4)
+
+            function f1(a,b,...c){
+                console.log(`${a} ${b}`)
+                console.log(c)
+                console.log(c[0])
+                console.log(c.indexOf('PQR'))
+                console.log(c.indexOf('ABC'))
+            }
+            f1('ABC','XYZ','PQR','MNO','STU')
+        </script>
+    </head>
+
+</html>
