@@ -2,7 +2,7 @@
     <head>
         <script>
             //1. document Property
-            document.write('Hello')
+            document.write('1.document Property')
             //2. Get Element By Id
             function f(){
             document.getElementById('d1').innerHTML='Hyy'
@@ -25,11 +25,9 @@
             function f3(){
                 var y =document.querySelectorAll('.p')
                 y[1].innerHTML='Second Parameter'
-
                 for(var i =0;i < y.length;i++){
                     y[i].style.color='yellow'
                 }
-
                 for(let p of document.querySelectorAll('.p')){
                     p.style.fontSize='20px'
                 }
@@ -46,18 +44,32 @@
             function f6(){
                 document.getElementById('img').setAttribute('src','luffy.jpg')
             }
+            //9. GetAttribute
+            function f7(){
+                alert(document.getElementById('p1').getAttribute('title'))
+            }
+            //10. RemoveAttribute
+            function f8(){
+                alert(document.getElementById('p2').removeAttribute('title'))
+            }
+            //11. Style Manipulation
+            function f9(){
+                alert(document.getElementById('p3').style.color='yellow')
+                alert(document.getElementById('p3').style.backgroundColor='aqua')
+            }
         </script>
     </head>
     <body>
-        <p id="d1">Hello.....</p>
-        <p id="d2">Hello...Hii...</p>
-        <p id="d3">Hello...Hii...Hyyy</p>
-        <p class="c1">Hii.....</p>
-        <p class="c1">Hii...Hii...</p>
-        <p class="p">Hello World!</p>
-        <p class="p">Hello, World!</p>
-        <p class="p">Hello,, World!</p>
+        <p id="d1">2.Get Element By Id</p>
+        <p class="c1">3.Get Element By Class Name</p>
+        <p class="p">4.QuerySelector</p>
+        <p class="p">6.QuerySelectorAll</p>
+        <p id="d2">6.innerHTML='value'</p>
+        <p id="d3">7innerText='value'</p>
         <img id="img">
+        <p id="p1" title="demo Text">9.GetAttribute</p>
+        <p id="p2"title='Demo Text 2'>10.RemoveAttribute</p>
+        <p id="p3">11.Style Manipulation</p>
     <button type="button" onclick="f()">Click</button>
     <button type="button" onclick="f1()">Click</button>
     <button type="button" onclick="f2()">Click</button>
@@ -65,5 +77,8 @@
     <button type="button" onclick="f4()">Click</button>
     <button type="button" onclick="f5()">Click</button>
     <button type="button" onclick="f6()">Click</button>
+    <button type="button" onclick="f7()">Click</button>
+    <button type="button" onclick="f8()">Click</button>
+    <button type="button" onclick="f9()">Click</button>
     </body>
 </html>

@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <script>
+            function f(){
+                var x = document.getElementsByClassName('r1')
+                for(let i =0;i < x.length;i++){
+                    x[i].innerHTML='Change All'
+                    x[i].style.color='red'
+                    x[i].style.backgroundColor='blue'
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h1 class="r1">Hello</h1>
+        <p class="r1">Hyy</p>
+        <pre class="r1">Hello,World!</pre>
+        <button type="button" onclick="f()">Click</button>
+    </body>
+</html>

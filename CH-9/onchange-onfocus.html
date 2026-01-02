@@ -1,0 +1,13 @@
+<html>
+    <head>
+        <script>
+            function f(id){
+                id.value=id.value.toUpperCase()
+            }
+        </script>
+    </head>
+    <body>
+        <input type="text" value="hello" onchange="f(this)">
+        <input type="text" value="hello" onfocus="this.style.backgroundColor='yellow'">
+    </body>
+</html>
