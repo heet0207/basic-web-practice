@@ -1,8 +1,13 @@
 # Custom Dictionary Words
 Abhi
 Akshay
+autopct
+burlywood
 Chauhan
+cmap
+colorbar
 Dhruv
+fontdict
 fontname
 fontsize
 fontstyle
@@ -10,12 +15,16 @@ fontweight
 getaddress
 getage
 grademark
+horizontalalignment
 Linearization
 linestyle
 luffy
 markersize
 Minnor
+nipy
 Noida
 Programmiz
+startangle
+verticalalignment
 xlabel
 ylabel

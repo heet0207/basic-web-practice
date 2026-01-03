@@ -400,3 +400,93 @@ y1=[4,5,6,7]
 plt.scatter(x,y,marker='d',color='y',s=100,alpha=0.3)
 plt.scatter(x,y1,marker='o',color='b',s=100,alpha=0.5)
 plt.show()
+
+import matplotlib.pyplot as plt
+x=[1,2,3,4]
+y=[7,5,4,3]
+y1=[4,5,6,7]
+x1=[3,4,5,6]
+plt.scatter(x,y,marker='d',color='y',s=100,alpha=0.3)
+plt.scatter(x1,y1,marker='o',color='b',s=100,alpha=0.5)
+plt.show()
+
+import matplotlib.pyplot as plt
+help(plt.scatter)
+
+import matplotlib.pyplot as plt
+x=[1,2,3,4]
+y=[7,5,4,3]
+y1=[4,5,6,7]
+x1=[3,4,5,6]
+s=[50,100,200,250]
+plt.scatter(x,y,marker='d',color='y',s=s,alpha=0.3)
+plt.scatter(x1,y1,marker='o',color=['r','g','b','k'],s=s,alpha=0.5)
+plt.show()
+
+import matplotlib.pyplot as plt
+import numpy as np
+x=np.random.randint(100,size=(20))
+print(x)
+y=np.random.randint(100,size=(20))
+color=np.random.randint(100,size=(20))
+size=10*np.random.randint(100,size=(20))
+plt.scatter(x,y,c=color,s=size,cmap='nipy_spectral')
+plt.scatter(x,y,c=color,s=size,cmap='winter')
+plt.xlabel('X axis',loc='left')
+plt.ylabel('Y axis',loc='top')
+plt.title('Scatter Plot')
+plt.colorbar()
+plt.show()
+
+
+import matplotlib.pyplot as plt
+x=['A','B','C']
+y=[1,2,3]
+plt.bar(x,y,color=['r','g','b'],width=0.2)
+plt.show()
+
+import matplotlib.pyplot as plt
+x=['A','B','C']
+y=[1,2,3]
+plt.barh(x,y,color=['r','g','b'],height=0.2)
+plt.show()
+
+import matplotlib.pyplot as plt
+x=['A','B','C']
+y=[3,4,8]
+plt.grid(linewidth=0.5)
+plt.barh(x,y,color='burlywood',height=0.4)
+plt.show()
+
+import matplotlib.pyplot as plt
+x={'A':1,'B':2,'C':3,'D':4}
+a=x.keys()
+b=x.values()
+plt.grid()
+plt.bar(a,b,color='orchid',width=0.4)
+plt.show()
+
+import matplotlib.pyplot as plt
+x=[90,35,15,5]
+plt.pie(x)
+plt.show()
+
+import matplotlib.pyplot as plt
+x=[35,25,15,5]
+plt.pie(x,labels=['A','B','C','D'],explode=[0,0.1,0.2,0.3],colors=['r','k','y','g'],autopct='%1.1f%%',shadow=True,startangle=90)
+plt.legend(title='Categories',loc='best')
+plt.show()
+
+
+import matplotlib.pyplot as plt
+x=[1,2,3,4]
+y=[9,7,4,5]
+plt.plot(x,y,'D:r',linewidth=2,markersize=10)
+# plt.plot(x,y,marker='D',color='b',linestyle=':',linewidth=2,markersize=10)
+# plt.xlabel('Calories (KCAL)',fontsize=34,fontname='Comic Sans MS',color='brown',fontstyle='italic',fontweight='bold')
+# plt.ylabel('Duration (s)',fontsize=34,fontname='Comic Sans MS',color='brown',fontweight='bold',fontstyle='italic')
+f1={'fontsize':34,'fontname':'Comic Sans MS','color':'brown','fontstyle':'italic','fontweight':'bold'}
+plt.xlabel('Calories (KCAL)',horizontalalignment='right')
+plt.ylabel('Duration (s)', verticalalignment='top')
+plt.title('Calories vs Duration',fontdict=f1)
+plt.show()
