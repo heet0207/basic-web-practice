@@ -274,6 +274,7 @@ class non_teach(Staff):
         print('Department :',self.department)
 
 t=teach('Abhi Shah',45000,'Python')
+
 nt=non_teach('Dhruv Patel',40000,'Java')
 
 print('Teaching Staff : ')
@@ -281,3 +282,121 @@ t.display()
 print('Non-Teaching Staff : ')
 nt.display()
 
+
+#NumPy
+import numpy as np
+arr1=np.array([1,2,3])
+arr2=np.array([4,5])
+arr=np.concatenate((arr1,arr2))
+print(arr)
+
+#2D
+import numpy as np
+arr1=np.array([[1,2],[3,4]])
+arr2=np.array([[5,6],[7,8]])
+
+arr=np.concatenate((arr1,arr2),axis=0)
+arr1=np.concatenate((arr1,arr2),axis=1)
+print(arr)
+print(arr1)
+
+#3D
+import numpy as np
+arr1=np.array([[[1,2,3]],[[4,5,6]]])
+arr2=np.array([[[7,8,9]],[[10,11,12]]])
+arr=np.concatenate((arr1,arr2))
+arr11=np.concatenate((arr1,arr2),axis=1)
+arr12=np.concatenate((arr1,arr2),axis=2)
+print(arr)
+print(arr11)
+print(arr12)
+
+import numpy as np
+arr1=np.array([[[1,2,3],[4,5,6]]])
+arr2=np.array([[[7,8,9],[10,11,12]]])
+arr=np.concatenate((arr1,arr2))
+arr11=np.concatenate((arr1,arr2),axis=1)
+arr12=np.concatenate((arr1,arr2),axis=2)
+print(arr)
+print(arr11)
+print(arr12)
+
+#Searching Where
+import numpy as np
+arr=np.array([1,2,3,4,4,3,4])
+x=np.where(arr==4)
+print(x)
+y=np.where(arr%2==0)
+print(y)
+arr=np.array([[1,2,3],[4,5,3]])
+q=np.where(arr==3)
+print(q)
+arr1=np.array([[[5,6]],[[6,8]],[[9,6]]])
+a=np.where(arr1==6)
+print(a)
+
+#random
+import numpy as np
+x=np.random.randint(100)
+print(x)
+y=np.random.rand()
+print(y)
+z=np.random.randint(100,size=(5))
+print(z)
+a=np.random.rand(5)
+print(a)
+b=np.random.randint(100,size=(35))
+print(b)
+c=np.random.rand(3,5)
+print(c)
+d=np.random.choice([3,5,7,9])
+print(d)
+e=np.random.choice([3,5,7,9],size=(3,5))
+print(e)
+
+#plot
+import matplotlib.pyplot as plt
+x=[1,2,3,4]
+y=[9,7,4,5]
+plt.plot(x,y,'D:r',linewidth=2,markersize=10)
+# plt.plot(x,y,marker='D',color='b',linestyle=':',linewidth=2,markersize=10)
+# plt.xlabel('Calories (KCAL)',fontsize=34,fontname='Comic Sans MS',color='brown',fontstyle='italic',fontweight='bold')
+# plt.ylabel('Duration (s)',fontsize=34,fontname='Comic Sans MS',color='brown',fontweight='bold',fontstyle='italic')
+f1={'fontsize':34,'fontname':'Comic Sans MS','color':'brown','fontstyle':'italic','fontweight':'bold'}
+plt.xlabel('Calories (KCAL)', fontdict=f1)
+plt.ylabel('Duration (s)', fontdict=f1)
+plt.title('Calories vs Duration',fontdict=f1)
+plt.show()
+
+import matplotlib.pyplot as plt
+
+x = [1, 2, 3, 4, 5]
+y = [10, 20, 25, 30, 40]
+
+plt.plot(x, y)
+plt.xlabel("X values")
+plt.ylabel("Y values")
+plt.title("Simple Matplotlib Graph")
+plt.show()
+
+import matplotlib.pyplot as plt
+y=[9,7,4,5]
+plt.plot(y,'D:r',linewidth=2,markersize=10)
+plt.show()
+
+import matplotlib.pyplot as plt
+help(plt.plot)
+
+import matplotlib.pyplot as plt
+x=[1,2,3,4]
+y=[7,5,4,3]
+plt.scatter(x,y,marker='d',color='y',s=100,alpha=0.3)
+plt.show()
+
+import matplotlib.pyplot as plt
+x=[1,2,3,4]
+y=[7,5,4,3]
+y1=[4,5,6,7]
+plt.scatter(x,y,marker='d',color='y',s=100,alpha=0.3)
+plt.scatter(x,y1,marker='o',color='b',s=100,alpha=0.5)
+plt.show()

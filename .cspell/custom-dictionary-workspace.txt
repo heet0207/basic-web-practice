@@ -1,11 +1,21 @@
 # Custom Dictionary Words
+Abhi
 Akshay
 Chauhan
+Dhruv
+fontname
+fontsize
+fontstyle
+fontweight
 getaddress
 getage
 grademark
 Linearization
+linestyle
 luffy
+markersize
 Minnor
 Noida
 Programmiz
+xlabel
+ylabel
