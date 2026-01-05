@@ -7,6 +7,7 @@ Chauhan
 cmap
 colorbar
 Dhruv
+edgecolor
 fontdict
 fontname
 fontsize

@@ -1,0 +1,13 @@
+<html>
+    <head>
+        <script>
+            function f(a){
+                a.value=a.value.toLowerCase();
+            }
+        </script>
+    </head>
+    <body>
+        <input type="text" value="HELLO" onblur='f(this)'>
+        <input type="text" oninput="this.value=this.value.toUpperCase()">
+    </body>
+</html>

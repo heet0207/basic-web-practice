@@ -490,3 +490,38 @@ plt.xlabel('Calories (KCAL)',horizontalalignment='right')
 plt.ylabel('Duration (s)', verticalalignment='top')
 plt.title('Calories vs Duration',fontdict=f1)
 plt.show()
+
+import matplotlib.pyplot as plt
+x = [1,2,2,2,3,3,9,5,4,4,8,8,6,7]
+plt.hist(x,bins=4,color='burlywood',edgecolor='black',orientation='horizontal')
+plt.show()
+
+import matplotlib.pyplot as plt
+x=[1,2,3,4]
+y=[4,5,6,7]
+plt.subplot(2,3,1)
+plt.scatter(x,y)
+x=[1,2,3,4]
+y=[4,5,6,7]
+plt.subplot(2,3,2)
+plt.scatter(x,y)
+x=[1,2,3,4]
+y=[4,5,6,7]
+plt.subplot(2,3,3)
+plt.scatter(x,y)
+x=[1,2,3,4]
+y=[4,5,6,7]
+plt.subplot(2,3,4)
+plt.scatter(x,y)
+x=[1,2,3,4]
+y=[4,5,6,7]
+plt.subplot(2,3,5)
+plt.scatter(x,y)
+x=[1,2,3,4]
+y=[4,5,6,7]
+plt.subplot(2,3,6)
+plt.scatter(x,y)
+plt.suptitle('Multiple Scatter Plots')
+plt.show()
+
+import matplotlib.pyplot as plt
