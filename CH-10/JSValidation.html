@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <script>
+            // function f(){
+            //     //Method 1
+            //     obj =document.forms['f1']['t1'].value;
+            //     alert('Username : '+obj);
+            //     //Method 2
+            //     obj1= document.f1.t1.value;
+            //     alert('Username : '+obj1);
+            //     //Method 3
+            //     obj2= document.getElementById('i1').value;
+            //     alert('Username : '+obj2);
+            // }
+            function f1(){
+                var obj=document.forms['x1']['t1'].value;
+                alert(obj.length);
+            }
+
+        </script>
+    </head>
+    <!-- <body>
+        <form onsubmit="return f()" name="f1">
+            Username:<input type="text" id="i1" name="t1"/>
+            <input type="submit" value="Submit"/>
+        </form>
+    </body> -->
+    <body>
+        <form onsubmit="f1()" name="x1">
+            Username : <input type="text" name="t1">
+            <input type="submit" value="Submit"/>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,27 @@
+<!-- Write JavaScript that handles following mouse event.
+1. If mouse left button pressed on browser it displayed message “Left Clicked”.
+2. If mouse right button pressed on browser it displayed message “Right Clicked” -->
+
+<html>
+    <head>
+        <script>
+            function f(e){
+                val =e.button;
+                switch(val){
+                    case 0:
+                        alert("Left Clicked");
+                        break;
+                    case 1:
+                        alert("Middle Clicked");
+                        break;
+                    case 2:
+                        alert("Right Clicked");
+                        break;
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div style="width: 50%; height: 40%; background-color: darkseagreen;" onmousedown="f(event)"></div>
+    </body>
+</html>

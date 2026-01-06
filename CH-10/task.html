@@ -1,0 +1,24 @@
+alert Will pop-up With Text Enter Something If input field is empty on submit button click.
+
+<html>
+    <head>
+        <script>
+            function f(){
+                var obj=document.getElementById('i1').value;
+                if(obj===''){
+                    alert("Enter Something");
+                    return false;
+                }
+                else{
+                    alert("Input Accepted");
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <form onsubmit="return f()">
+            Username : <input type="text" id="i1">
+            <input type="submit"  value="Submit"/>
+        </form>
+    </body>
+</html>

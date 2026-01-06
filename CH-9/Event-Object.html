@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <script>
+            //1. Event.target.value
+            function show(e){
+                alert(e.target.value)
+            }
+            //2. Event Key
+            function f(e){
+                alert(e.key);
+            }
+            //4. Event Type
+            function t(e){
+                alert(e.type);
+            }
+            //5. Event PreventDefault
+            function p(e){
+                e.preventDefault();
+                alert("Stop Submission");
+            }
+        </script>
+    </head>
+    <body>
+        <select onchange="show(event)">
+            <option value="yellow">yellow</option>
+            <option value="aqua">Aqua</option>
+        </select>
+        <button onclick="t(event)">Click</button>
+        <form action="" onsubmit="p(event)">
+            <button type='submit'>Submit</button>
+        </form>
+    </body>
+    <body onkeypress="f(event)">
+    </body>
+</html>

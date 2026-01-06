@@ -1,0 +1,27 @@
+1.if Mouse is Over Heading Should Turn Yellow color,if mouse goes out turn into blue color.
+2.When the button named "Red" is clicked, background color  changes to red. When the button
+named "Blue" is clicked,background color  changes to blue.
+
+<html>
+    <head>
+        <script>
+            function c(id){
+                id.style.color='yellow';
+            }
+            function f1(id){
+                id.style.color='blue';
+            }
+            function red( ){
+                document.body.style.backgroundColor='red';
+            }
+            function blue(){
+                document.body.style.backgroundColor='blue';
+            }
+        </script>
+    </head>
+    <body>
+        <h1 onmouseover="c(this)" onmouseout="f1(this)">Hello</h1>
+        <button onclick="red()">Red</button>
+        <button onclick="blue()">Blue</button>
+    </body>
+</html>
