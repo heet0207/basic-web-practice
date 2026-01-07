@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <script>
+            localStorage.setItem("username", "JohnDoe");
+            const name = localStorage.getItem("username");
+            console.log(name); // Outputs: JohnDoe
+            localStorage.setItem("username",'ABCD'); // Update the value
+            //localStorage.removeItem('username');
+            //localStorage.clear();
+
+            sessionStorage.setItem("username", "John");
+            const sessionName = sessionStorage.getItem("username");
+            console.log(sessionName); // Outputs: John
+            sessionStorage.removeItem('username');
+            sessionStorage.clear();
+
+        </script>
+    </head>
+    
+</html>

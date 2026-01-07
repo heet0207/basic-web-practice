@@ -4,6 +4,7 @@ Akshay
 autopct
 burlywood
 Chauhan
+clearuser
 cmap
 colorbar
 Dhruv
@@ -25,6 +26,8 @@ Minnor
 nipy
 Noida
 Programmiz
+saveuser
+showuser
 startangle
 verticalalignment
 xlabel

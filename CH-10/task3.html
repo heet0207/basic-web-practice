@@ -1,0 +1,52 @@
+Write a Javascript To validate Username & Password.Pwd length Must Be 6 To 12 Characters.
+For Username SHould Not Start With _,@ & any Numbers Also Check Both Must Be blank.
+<br>
+<br>
+<br>
+<html>
+    <head>
+        <script>
+            // function f(){
+            //     var uname=document.getElementById('uname').value;
+            //     var pwd=document.getElementById('pwd').value;
+            //     pat=/[^_@0-9][a-zA-Z0-9_]/i; // username validation
+            //     pat2=/^\d{6,12}$/i; // password length validation
+            //     if(uname=="" || pwd==""){
+            //         alert('Username & Password Must Be Filled');
+            //     }
+            //     else if(!pat.test(uname)){
+            //         alert('Invalid Username');
+            //     }
+            //     else if(!pat2.test(pwd)){
+            //         alert('Password Length Must Be 6 To 12 Characters');
+            //     }
+            //     else{
+            //         alert('Valid Username & Password');
+            //     }
+            // }
+
+            function f(){
+                var uname=document.getElementById('uname').value;
+                var pwd=document.getElementById('pwd').value;
+                pat=/^_|^@|\d/i; // username validation
+                if(uname=="" || pwd==""){
+                    alert('Username & Password Must Be Filled');
+                }
+                else if(pat.test(uname)){
+                    alert('valid Username');
+                }
+                else if(pwd.length<6 || pwd.length>12){
+                    alert('Password Length Must Be 6 To 12 Characters');
+                }
+                else{
+                    alert('Username  : ' + uname + '\n' + 'Password  : ' + pwd);
+                }
+            }
+        </script>
+    </head>
+    <body>
+        Username : <input type="text" name="uname" id="uname">
+        Password :  <input type="password" name="pwd" id="pwd">
+        <input type="submit" value="submit" onclick="f()">
+    </body>
+</html>

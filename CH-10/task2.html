@@ -1,0 +1,22 @@
+Must Contain Only Letters & At least 1 Letter & More Are Allowed
+
+<html>
+    <head>
+        <script>
+            function f(){
+                pat=/^[a-zA-Z]+$/i // only alphabets, at least 1 letter
+                var obj=document.getElementById('i1').value;
+                if(pat.test(obj)){
+                    alert('Perfect')
+                }
+                else{
+                    alert('Not Matched')
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <input type="text" id="i1">
+        <input type="submit" onclick="f()" value="Submit"/>
+    </body>
+</html>

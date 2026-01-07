@@ -1,27 +1,50 @@
-import matplotlib.pyplot as plt
-x=[1,2,3,4]
-y=[4,5,6,7]
-plt.subplot(2,3,1)
-plt.scatter(x,y)
-x=[1,2,3,4]
-y=[4,5,6,7]
-plt.subplot(2,3,2)
-plt.scatter(x,y)
-x=[1,2,3,4]
-y=[4,5,6,7]
-plt.subplot(2,3,3)
-plt.scatter(x,y)
-x=[1,2,3,4]
-y=[4,5,6,7]
-plt.subplot(2,3,4)
-plt.scatter(x,y)
-x=[1,2,3,4]
-y=[4,5,6,7]
-plt.subplot(2,3,5)
-plt.scatter(x,y)
-x=[1,2,3,4]
-y=[4,5,6,7]
-plt.subplot(2,3,6)
-plt.scatter(x,y)
-plt.suptitle('Multiple Scatter Plots')
-plt.show()
+import hashlib
+import time
+
+class Block:
+    def __init__(self, index, data, prev_hash):
+        self.index = index
+        self.timestamp = time.time()
+        self.data = data
+        self.prev_hash = prev_hash
+        self.hash = self.calculate_hash()
+
+    def calculate_hash(self):
+        block_data = f"{self.index}{self.timestamp}{self.data}{self.prev_hash}"
+        return hashlib.sha256(block_data.encode()).hexdigest()
+
+class Blockchain:
+    def __init__(self):
+        self.chain = [self.create_genesis_block()]
+
+    def create_genesis_block(self):
+        return Block(0, "Genesis Block", "0")
+
+    def add_block(self, data):
+        prev_block = self.chain[-1]
+        new_block = Block(len(self.chain), data, prev_block.hash)
+        self.chain.append(new_block)
+
+    def validate_chain(self):
+        for i in range(1, len(self.chain)):
+            curr = self.chain[i]
+            prev = self.chain[i - 1]
+
+            if curr.hash != curr.calculate_hash():
+                return False
+            if curr.prev_hash != prev.hash:
+                return False
+        return True
+
+# Run blockchain
+bc = Blockchain()
+bc.add_block("Transaction A → B ₹500")
+bc.add_block("Transaction B → C ₹200")
+
+print("Blockchain valid?", bc.validate_chain())
+
+for block in bc.chain:
+    print("\nBlock", block.index)
+    print("Data:", block.data)
+    print("Hash:", block.hash)
+    print("Previous Hash:", block.prev_hash)

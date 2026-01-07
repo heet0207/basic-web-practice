@@ -1,0 +1,20 @@
+Create a small HTML Page Use 2 Page In session Storage User=LJ EMail =lj@example.com Retrieve and Display Store Username In console 
+Remove Only email Field In Session Storage & print Remaining Data in Console
+
+<html>
+    <head>
+        <script>
+            sessionStorage.setItem("username", "LJ");
+            sessionStorage.setItem("email", "LJ@example.com");
+            console.log("Before removing email:");
+            console.log("Username: " + sessionStorage.getItem("username"));
+            console.log("Email: " + sessionStorage.getItem("email"));
+            sessionStorage.removeItem("email");
+            sessionStorage.setItem('username','Student'); // to retain username after clear
+            
+            console.log("After removing email:");
+            console.log("Username: " + sessionStorage.getItem("username"));
+
+        </script>
+    </head>
+</html>

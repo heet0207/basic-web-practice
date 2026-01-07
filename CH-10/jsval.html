@@ -2,7 +2,20 @@
     <head>
         <script>
             function f(){
-                pat=/abc/i
+                // pat=/abc/i // exact abc
+                //pat=/[abc]/i // either a or b or c or abc
+                //pat=/[^abc]/i  // except abc
+                //pat=/[0-9]/i // only numbers & alphabets with numbers
+                //pat=/[^0-9]/i // except numbers
+                //pat=/[a-zA-Z]/i // only alphabets
+                //pat=/[^a-zA-Z]/i // except alphabets
+                //pat=/(x|y)/i // either x or y
+                //pat=/^A/i // starts with A
+                //pat=/t$/i // ends with t
+                //pat=/BO*/i // B followed by 0 or more O's
+                //pat=/^\d{10}$/i // exactly 10 digits
+                pat=/\D/i
+
                 var obj=document.getElementById('i1').value
                 if(pat.test(obj)){
                     alert('Perfect')

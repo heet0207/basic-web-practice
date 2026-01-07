@@ -1,0 +1,22 @@
+Create a small HTML Page Where Use Store 3 field In Local Storage Product=Laptop,Price=50K,Discount=10% Retrieve and Display Store Product
+in Console Remove The Discount Field From Local Storage & print Updated Data in Console
+
+<html>
+    <head>
+        <script>
+            localStorage.setItem("product", "Laptop");
+            localStorage.setItem("price", "50K");
+            localStorage.setItem("discount", "10%");
+            console.log("Before removing discount:");
+            console.log("Product: " + localStorage.getItem("product"));
+            console.log("Price: " + localStorage.getItem("price"));
+            console.log("Discount: " + localStorage.getItem("discount"));
+            localStorage.removeItem("discount");
+            console.log("After removing discount:");
+            console.log("Product: " + localStorage.getItem("product"));
+            console.log("Price: " + localStorage.getItem("price"));
+            console.log("Discount: " + localStorage.getItem("discount"));
+            
+        </script>
+    </head>
+</html>

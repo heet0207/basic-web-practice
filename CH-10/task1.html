@@ -1,0 +1,22 @@
+Write An HTML Form Accepting An Integer Having 4 Digits Input Should Not Accept Characters Of Letter Or Symbols.
+<br>
+<html>
+    <head>
+        <script>
+            function f(){
+                pat=/^\d{4}$/i // exactly 4 digits
+                var obj=document.getElementById('i1').value;
+                if(pat.test(obj)){
+                    alert('Perfect')
+                }
+                else{
+                    alert('Not Matched')
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <input type="text" id="i1">
+        <input type="submit" onclick="f()" value="Submit"/>
+    </body>
+</html>
