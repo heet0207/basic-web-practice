@@ -1,6 +1,7 @@
 # Custom Dictionary Words
 Abhi
 Akshay
+Areaplot
 autopct
 burlywood
 Chauhan
@@ -16,19 +17,25 @@ fontstyle
 fontweight
 getaddress
 getage
+getn
 grademark
 horizontalalignment
 Linearization
 linestyle
 luffy
 markersize
+merkle
 Minnor
 nipy
 Noida
 Programmiz
+reslove
 saveuser
+settimeout
 showuser
+sourcery
 startangle
+suptitle
 verticalalignment
 xlabel
 ylabel

@@ -1,0 +1,37 @@
+Create a Form With 3 Field Product,Price,Discount & a Save Button.
+1.When The User Clicks Save button Store The Enter Value Into Localstorage.
+2.After Saving Display a Massage Data Save In Localstorage.
+3.Add Another Button Remove & Discount Field. From Localstorage.
+4.After Remove All Display Remaining Data In console.
+
+<html>
+    <head>
+        <script>
+            function saveData() {
+                const a = document.getElementById("product").value;
+                const b = document.getElementById("price").value;
+                const c = document.getElementById("discount").value;
+                localStorage.setItem("product", a);
+                localStorage.setItem("price", b);
+                localStorage.setItem("discount", c);
+                alert("Data Saved In Localstorage");
+            }
+            function removeData() {
+                localStorage.removeItem("discount");
+                console.log("Remaining Data:");
+                console.log("Product: " + localStorage.getItem("product"));
+                console.log("Price: " + localStorage.getItem("price"));
+            }
+        </script>
+    </head>
+    <body>
+        <form>
+            <h2>Localstorage</h2>
+            Product: <input type="text" id="product" /><br>
+            Price: <input type="text" id="price" /><br>
+            Discount: <input type="text" id="discount" /><br><br>
+            <button type="button" onclick="saveData()">Save</button>
+            <button type="button" onclick="removeData()">Remove</button>
+        </form>
+    </body>
+</html>
