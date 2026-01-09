@@ -152,10 +152,10 @@ def merkle_tree_with_tampering():
 # -------------------------------
 def main():
     print("\n=== Blockchain Transaction Validator ===")
-    print("1. Merkle Tree Validation (with Tampering)")
+    print("1. Merkle Tree Validation (With Tampering)")
     print("2. Consensus Validation")
 
-    choice = input("\nSelect validation type (1 or 2): ")
+    choice = input("\nSelect Validation Type(1 or 2): ")
 
     if choice == "1":
         merkle_tree_with_tampering()
@@ -168,7 +168,7 @@ def main():
         consensus_validation(tx)
 
     else:
-        print("\n❌ Invalid choice.")
+        print("\n❌ Invalid Choice. Exiting.")
 
 # -------------------------------
 # Run Program

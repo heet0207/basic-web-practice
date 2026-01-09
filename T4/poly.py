@@ -530,4 +530,31 @@ import numpy as np
 x=range(1,6)
 y=[1,4,6,8,4]
 plt.fill_between(x,y)
+plt.plot(x,y,color='black')
 plt.show()
+
+import matplotlib.pyplot as plt
+import numpy as np
+time=np.arange(12)
+income=np.array([5,9,6,6,10,7,6,4,4,5,6,4])
+expense=np.array([6,6,8,3,6,9,7,8,6,6,4,8])
+plt.plot(time,income,label='Income',color='green')
+plt.plot(time,expense,label='Expense',color='red')
+plt.fill_between(time,income,expense,where=(income>expense),color='green',alpha=0.25,label='Profit',interpolate=True)
+plt.fill_between(time,income,expense,where=(income<=expense),color='red',alpha=0.25,label='Negative',interpolate=True)
+plt.legend()
+plt.show()
+
+
+#Stack Area Plot
+
+import numpy as np
+import matplotlib.pyplot as plt
+x=range(1,6)
+y1=[1,4,6,8,9]
+y2=[2,2,7,10,12]
+y3=[2,8,5,10,6]
+plt.stackplot(x,y1,y2,y3,labels=['A','B','C'],colors=['r','g','b'])
+plt.legend(loc='upper left')
+plt.show()
+
