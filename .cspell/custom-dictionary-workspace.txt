@@ -20,6 +20,8 @@ getage
 getn
 grademark
 horizontalalignment
+ipynb
+jfif
 Linearization
 linestyle
 luffy
@@ -28,11 +30,14 @@ merkle
 Minnor
 nipy
 Noida
+Parth
 Programmiz
 reslove
 saveuser
+selectbox
 settimeout
 showuser
+Sinroza
 sourcery
 stackplot
 startangle

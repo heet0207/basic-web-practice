@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Court Delight</title>
+    <script src="https://js.stripe.com/v3/"></script> <!-- Stripe JS -->
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #fff; color: #333; }
+        header { background-color: #d00; color: white; text-align: center; padding: 1rem; font-size: 2rem; }
+        nav { background-color: #ffcc00; padding: 0.5rem; text-align: center; }
+        nav a { color: #333; margin: 0 1rem; text-decoration: none; font-weight: bold; }
+        section { padding: 2rem; max-width: 1200px; margin: auto; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+        .menu-item { border: 2px solid #ddd; padding: 1rem; background: #f9f9f9; text-align: center; }
+        .menu-item img { width: 100%; max-width: 300px; height: auto; margin-bottom: 0.5rem; }
+        .vendor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+        .vendor { border: 2px solid #ddd; padding: 1rem; background: #f9f9f9; text-align: center; }
+        .vendor img { width: 100%; max-width: 250px; height: auto; margin-bottom: 0.5rem; }
+        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: #fff; margin: 15% auto; padding: 2rem; border: 1px solid #888; width: 80%; max-width: 500px; text-align: center; }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close:hover { color: black; }
+        .floating-cart { position: fixed; bottom: 2rem; right: 2rem; background-color: #d00; color: white; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.5rem; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        .floating-cart span { position: absolute; top: -5px; right: -5px; background: #ffcc00; color: #333; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; margin: 0.5rem 0; }
+        .remove-btn { background-color: #f00; color: white; border: none; padding: 0.2rem 0.5rem; cursor: pointer; font-size: 0.8rem; }
+        #card-element { border: 1px solid #ddd; padding: 0.5rem; margin: 0.5rem 0; }
+        form { max-width: 600px; margin: auto; }
+        input, textarea { width: 100%; padding: 0.5rem; margin: 0.5rem 0; border: 1px solid #ddd; }
+        button { background-color: #d00; color: white; padding: 0.5rem; border: none; cursor: pointer; font-size: 1rem; margin: 0.5rem; }
+        footer { background-color: #333; color: white; text-align: center; padding: 1rem; }
+        @media (max-width: 768px) { 
+            .menu-grid, .vendor-grid { grid-template-columns: 1fr; } 
+            .floating-cart { width: 50px; height: 50px; font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Food Court Delight</h1>
+        <p>Grab a bite quick!</p>
+    </header>
+    <nav>
+        <a href="#menu">Menu</a>
+        <a href="#vendors">Vendors</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    <section id="menu">
+        <h2>Our Menu</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=200&fit=crop" alt="Juicy Burger">
+                <h3>Burger Bliss</h3>
+                <p>Juicy beef burger with fries. $8.99</p>
+                <button onclick="openAddModal('Burger Bliss', 8.99)">Add to Cart</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=300&h=200&fit=crop" alt="Spicy Tacos">
+                <h3>Taco Fiesta</h3>
+                <p>Spicy chicken tacos with salsa. $7.50</p>
+                <button onclick="openAddModal('Taco Fiesta', 7.50)">Add to Cart</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=300&h=200&fit=crop" alt="Ice Cream Sundae">
+                <h3>Dessert Heaven</h3>
+                <p>Chocolate ice cream sundae. $5.00</p>
+                <button onclick="openAddModal('Dessert Heaven', 5.00)">Add to Cart</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&h=200&fit=crop" alt="Cheesy Pizza">
+                <h3>Pizza Paradise</h3>
+                <p>Cheesy pepperoni pizza with garlic bread. $10.99</p>
+                <button onclick="openAddModal('Pizza Paradise', 10.99)">Add to Cart</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300&h=200&fit=crop" alt="Fresh Salad">
+                <h3>Salad Station</h3>
+                <p>Crisp garden salad with vinaigrette. $6.50</p>
+                <button onclick="openAddModal('Salad Station', 6.50)">Add to Cart</button>
+            </div>
+        </div>
+    </section>
+    <section id="vendors">
+        <h2>Our Vendors</h2>
+        <div class="vendor-grid">
+            <div class="vendor">
+                <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=250&h=150&fit=crop" alt="Burger Stall">
+                <h3>Burger Barn</h3>
+                <p>Fresh burgers and shakes.</p>
+            </div>
+            <div class="vendor">
+                <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=250&h=150&fit=crop" alt="Taco Stall">
+                <h3>Taco Town</h3>
+                <p>Authentic Mexican flavors.</p>
+            </div>
+            <div class="vendor">
+                <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=250&h=150&fit=crop" alt="Dessert Stall">
+                <h3>Sweet Treats</h3>
+                <p>Ice cream and pastries.</p>
+            </div>
+            <div class="vendor">
+                <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=250&h=150&fit=crop" alt="Pizza Stall">
+                <h3>Pizza Palace</h3>
+                <p>Wood-fired pizzas and sides.</p>
+            </div>
+            <div class="vendor">
+                <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=250&h=150&fit=crop" alt="Salad Stall">
+                <h3>Green Garden</h3>
+                <p>Healthy salads and smoothies.</p>
+            </div>
+        </div>
+    </section>
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <form>
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <textarea placeholder="Message" required></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </section>
+    <footer>
+        <p>&copy; 2023 Food Court Delight. All rights reserved.</p>
+    </footer>
+    <div class="floating-cart" onclick="openCartModal()" id="floating-cart">
+        🛒<span id="cart-count">0</span>
+    </div>
+    <!-- Add to Cart Modal -->
+    <div id="add-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('add-modal')">&times;</span>
+            <h3 id="add-title">Add Item</h3>
+            <p id="add-desc"></p>
+            <p>Price: $<span id="add-price"></span></p>
+            <label>Quantity: <input type="number" min="1" value="1" id="add-qty"></label>
+            <button onclick="confirmAdd()">Add to Cart</button>
+        </div>
+    </div>
+    <!-- Cart Summary Modal -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cart-modal')">&times;</span>
+            <h3>Your Cart</h3>
+            <div id="cart-items"></div>
+            <p>Total: $<span id="total">0.00</span></p>
+            <div id="payment-form" style="display: none;">
+                <h4>Payment Details</h4>
+                <div id="card-element"></div>
+                <button id="pay-btn">Pay Now</button>
+            </div>
+            <button onclick="showPayment()">Buy Now</button>
+        </div>
+    </div>
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let stripe = Stripe('pk_test_51H7bbSE2RcKvfXD4DQkmxkpZQDs3rE8N4g6X8zY0uF4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6gK4cB2n6')                    
