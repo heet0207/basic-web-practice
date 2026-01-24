@@ -558,3 +558,84 @@ plt.stackplot(x,y1,y2,y3,labels=['A','B','C'],colors=['r','g','b'])
 plt.legend(loc='upper left')
 plt.show()
 
+import random
+import time
+
+class CongestionControl:
+    def __init__(self):
+        self.window_size = 1
+        self.max_window = 10
+
+    def send_packets(self):  # sourcery skip: use-named-expression
+        print(f"\nSending {self.window_size} packets...")
+        
+        # Random congestion simulation
+        congestion = random.choice([True, False, False])
+
+        if congestion:
+            print("⚠ Congestion detected!")
+            self.window_size = max(1, self.window_size // 2)
+        else:
+            print("✅ No congestion")
+            if self.window_size < self.max_window:
+                self.window_size += 1
+
+    def start(self):
+        for _ in range(10):
+            self.send_packets()
+            time.sleep(1)
+
+# Run simulator
+cc = CongestionControl()
+cc.start()
+
+import hashlib
+import time
+
+class Block:
+    def __init__(self, index, data, prev_hash):
+        self.index = index
+        self.timestamp = time.time()
+        self.data = data
+        self.prev_hash = prev_hash
+        self.hash = self.calculate_hash()
+
+    def calculate_hash(self):
+        block_data = f"{self.index}{self.timestamp}{self.data}{self.prev_hash}"
+        return hashlib.sha256(block_data.encode()).hexdigest()
+
+class Blockchain:
+    def __init__(self):
+        self.chain = [self.create_genesis_block()]
+
+    def create_genesis_block(self):
+        return Block(0, "Genesis Block", "0")
+
+    def add_block(self, data):
+        prev_block = self.chain[-1]
+        new_block = Block(len(self.chain), data, prev_block.hash)
+        self.chain.append(new_block)
+
+    def validate_chain(self):
+        for i in range(1, len(self.chain)):
+            curr = self.chain[i]
+            prev = self.chain[i - 1]
+
+            if curr.hash != curr.calculate_hash():
+                return False
+            if curr.prev_hash != prev.hash:
+                return False
+        return True
+
+# Run blockchain
+bc = Blockchain()
+bc.add_block("Transaction A → B ₹500")
+bc.add_block("Transaction B → C ₹200")
+
+print("Blockchain valid?", bc.validate_chain())
+
+for block in bc.chain:
+    print("\nBlock", block.index)
+    print("Data:", block.data)
+    print("Hash:", block.hash)
+    print("Previous Hash:", block.prev_hash)
