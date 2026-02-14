@@ -1,30 +1,48 @@
-import random
-import time
-
-class CongestionControl:
-    def __init__(self):
-        self.window_size = 1
-        self.max_window = 10
-
-    def send_packets(self):  # sourcery skip: use-named-expression
-        print(f"\nSending {self.window_size} packets...")
-        
-        # Random congestion simulation
-        congestion = random.choice([True, False, False])
-
-        if congestion:
-            print("⚠ Congestion detected!")
-            self.window_size = max(1, self.window_size // 2)
-        else:
-            print("✅ No congestion")
-            if self.window_size < self.max_window:
-                self.window_size += 1
-
-    def start(self):
-        for _ in range(10):
-            self.send_packets()
-            time.sleep(1)
-
-# Run simulator
-cc = CongestionControl()
-cc.start()
+import streamlit as st
+import matplotlib.pyplot as plt
+import numpy as np
+st.title("Matplotlib vs Streamlit Built-in Charts (No Pandas)")
+# ----------------------------
+# Generate sample dataset
+# ----------------------------
+np.random.seed(42)
+marks = np.random.randint(50,100,size=100)
+attendance = np.random.randint(60,100,size=100)
+# ----------------------------
+# Histogram using Matplotlib
+# ----------------------------
+st.subheader("Histogram of Marks (Matplotlib)")
+plt.figure(figsize=(6, 4))
+plt.hist(marks, bins=10)
+plt.xlabel("Marks")
+plt.ylabel("Frequency")
+plt.title("Distribution of Marks")
+st.pyplot(plt)
+plt.clf()
+# ----------------------------
+# Scatter Plot using Matplotlib
+# ----------------------------
+st.subheader("Scatter Plot (Matplotlib) – Marks vs Attendance")
+plt.figure(figsize=(6, 4))
+plt.scatter(attendance, marks)
+plt.xlabel("Attendance (%)")
+plt.ylabel("Marks")
+plt.title("Marks vs Attendance")
+st.pyplot(plt)
+plt.clf()
+# ----------------------------
+# Streamlit Built-In Charts
+# ----------------------------
+st.subheader("Streamlit Built-in Line & Area Charts")
+st.write("Using NumPy arrays directly:")
+# Convert arrays into a simple 2D structure
+chart_data = np.column_stack((marks, attendance))
+st.line_chart(chart_data)
+st.area_chart(chart_data)
+# ----------------------------
+# ----------------------------
+# Streamlit Bar Chart (Histogram Approximation)
+# ----------------------------
+st.subheader("Bar Chart (Streamlit) – Histogram Approximation")
+counts, bins = np.histogram(marks, bins=10)
+st.bar_chart(counts)

@@ -10,6 +10,7 @@ cmap
 colorbar
 Dhruv
 edgecolor
+figsize
 fontdict
 fontname
 fontsize
