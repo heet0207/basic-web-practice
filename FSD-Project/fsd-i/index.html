@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopSphere India | Official Store</title>
+    <style>
+        :root {
+            --primary: #232f3e; --secondary: #37475a; --accent: #ffd814;
+            --text-dark: #0F1111; --bg-gray: #e3e6e6; --white: #ffffff; --border-radius: 8px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: var(--bg-gray); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+        a { text-decoration: none; color: inherit; cursor: pointer; }
+
+        header { background-color: #131921; color: white; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; }
+        .header-inner { max-width: 1500px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+        .logo { font-size: 24px; font-weight: 700; color: white; margin-right: 10px; }
+        .logo span { color: var(--accent); }
+        .search-wrapper { flex-grow: 1; max-width: 800px; display: flex; border-radius: 4px; overflow: hidden; height: 40px; }
+        .search-wrapper input { width: 100%; padding: 0 15px; border: none; outline: none; font-size: 15px; }
+        .search-wrapper button { background-color: var(--accent); border: none; padding: 0 20px; cursor: pointer; }
+        .nav-links { display: flex; gap: 25px; align-items: center; font-size: 14px; }
+        .nav-item { cursor: pointer; color: white; display: flex; flex-direction: column; line-height: 1.2; position: relative; }
+        .nav-item strong { font-weight: 700; }
+        .nav-item small { font-size: 11px; color: #ccc; }
+        .cart-badge { background: var(--accent); color: #111; font-size: 11px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; position: absolute; top: -5px; right: -8px; }
+
+        .container { display: flex; max-width: 1500px; margin: 20px auto; padding: 0 20px; gap: 20px; flex: 1; align-items: flex-start; }
+        .sidebar { width: 260px; flex-shrink: 0; background: white; padding: 20px; border-radius: var(--border-radius); box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 80px; max-height: 85vh; overflow-y: auto; }
+        .sidebar h3 { font-size: 16px; font-weight: 700; margin-bottom: 15px; }
+        .filter-option { cursor: pointer; padding: 8px 10px; border-radius: 4px; font-size: 13px; transition: 0.1s; display: flex; justify-content: space-between; align-items: center; }
+        .filter-option:hover { background-color: #f0f2f2; color: #e77600; }
+        .filter-option.active { font-weight: 700; background-color: #f0f2f2; border-left: 3px solid #e77600; }
+        .main-content { flex-grow: 1; width: 100%; }
+        .hero { background: linear-gradient(to right, #232f3e, #131921); color: white; padding: 30px; border-radius: var(--border-radius); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; overflow: hidden; }
+        .hero button { margin-top: 15px; padding: 10px 20px; background: var(--accent); border: none; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .hero-coupon { background: rgba(255,255,255,0.1); padding: 12px; border: 1px dashed var(--accent); border-radius: 4px; margin-top: 15px; font-size: 13px; display:inline-block; }
+        .coupon-tag { background: var(--accent); color: #111; padding: 2px 6px; border-radius: 3px; font-weight: bold; margin-right: 5px; font-size: 11px; }
+
+        .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        @media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 900px) { .container { flex-direction: column; } .sidebar { width: 100%; position: static; margin-bottom: 20px; max-height: none; } .product-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .product-grid { grid-template-columns: 1fr; } }
+
+        .product-card { background: white; border: 1px solid #ddd; border-radius: var(--border-radius); padding: 15px; display: flex; flex-direction: column; height: 100%; transition: box-shadow 0.2s; position: relative; cursor: pointer; }
+        .product-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.15); transform: translateY(-2px); }
+        .product-card.out-of-stock { opacity: 0.75; }
+        .card-img { height: 200px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; position: relative; }
+        .card-img img { max-height: 100%; max-width: 100%; object-fit: contain; mix-blend-mode: multiply; transition: transform 0.3s; }
+        .product-card:hover .card-img img { transform: scale(1.05); }
+
+        /* Stock Badge */
+        .stock-badge {
+            position: absolute; top: 8px; right: 8px;
+            font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 12px; letter-spacing: 0.5px; z-index: 2;
+        }
+        .stock-badge.in-stock { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+        .stock-badge.low-stock { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+        .stock-badge.out-of-stock { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+
+        /* Qty control on card */
+        .card-qty-control {
+            display: flex; align-items: center; gap: 0; border: 1.5px solid #e77600;
+            border-radius: 20px; overflow: hidden; height: 32px;
+        }
+        .card-qty-control button {
+            background: #fff3e0; border: none; width: 34px; height: 100%;
+            font-size: 18px; font-weight: 700; cursor: pointer; color: #e77600;
+            display: flex; align-items: center; justify-content: center; transition: background 0.15s;
+        }
+        .card-qty-control button:hover { background: #ffe0b2; }
+        .card-qty-control .qty-num {
+            flex: 1; text-align: center; font-weight: 700; font-size: 14px; color: #111;
+            min-width: 28px;
+        }
+
+        .p-title { font-size: 14px; font-weight: 500; height: 38px; overflow: hidden; margin-bottom: 5px; line-height: 1.3; color: #007185; }
+        .p-cat { font-size: 11px; color: #777; text-transform: uppercase; margin-bottom: 3px; }
+        .p-price { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; }
+        .btn-group { margin-top: auto; display: flex; gap: 5px; flex-direction: column; }
+        .btn-row { display: flex; gap: 5px; }
+        .add-btn { flex:1; background: #ffd814; border: none; padding: 8px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .add-btn:disabled { background: #e0e0e0; color: #aaa; cursor: not-allowed; }
+        .buy-btn { flex:1; background: #fa8900; border: none; padding: 8px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: bold; color: white; }
+        .buy-btn:disabled { background: #e0e0e0; color: #aaa; cursor: not-allowed; }
+
+        /* --- MODALS --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; backdrop-filter: blur(2px); }
+        .side-panel { position: absolute; right: 0; top: 0; width: 380px; height: 100%; background: white; padding: 20px; display: flex; flex-direction: column; animation: slideIn 0.3s; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .auth-box { background: white; width: 90%; max-width: 380px; margin: 80px auto; padding: 30px; border-radius: 8px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.3s; }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        .auth-link { color: #0066c0; font-size: 13px; cursor: pointer; text-decoration: underline; }
+        .auth-link:hover { color: #c45500; }
+
+        /* ===== PRODUCT DETAIL MODAL ===== */
+        #detail-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.65); z-index: 3000; backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+        }
+        #detail-modal.open { display: flex; }
+        .detail-box {
+            background: white; width: 92%; max-width: 860px; max-height: 92vh;
+            border-radius: 14px; overflow: hidden; display: flex; flex-direction: column;
+            animation: popIn 0.28s; box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+        }
+        .detail-topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 20px; border-bottom: 1px solid #eee; background: #fafafa; flex-shrink: 0;
+        }
+        .detail-topbar-cat { font-size: 12px; color: #e77600; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .detail-close { font-size: 28px; cursor: pointer; color: #666; line-height: 1; border: none; background: none; padding: 0 4px; }
+        .detail-close:hover { color: #111; }
+        .detail-inner { display: flex; flex: 1; overflow: hidden; }
+        .detail-img-panel {
+            width: 42%; background: linear-gradient(135deg, #f7f8f8, #eef0f0);
+            display: flex; align-items: center; justify-content: center; padding: 30px; flex-shrink: 0; position: relative;
+        }
+        .detail-img-panel img { max-width: 100%; max-height: 300px; object-fit: contain; filter: drop-shadow(0 8px 20px rgba(0,0,0,0.12)); }
+        .detail-info-panel { flex: 1; padding: 28px 26px; overflow-y: auto; display: flex; flex-direction: column; }
+        .detail-cat-badge { display: inline-block; background: #fff3e0; color: #e65100; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+        .detail-name { font-size: 21px; font-weight: 700; color: #111; margin-bottom: 10px; line-height: 1.35; }
+        .detail-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+        .stars { color: #e77600; font-size: 16px; letter-spacing: 1px; }
+        .rating-num { font-weight: 700; color: #333; font-size: 14px; }
+        .rating-count { color: #888; font-size: 13px; }
+        .detail-price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+        .detail-price { font-size: 26px; font-weight: 700; color: #B12704; }
+        .detail-mrp { font-size: 14px; color: #999; text-decoration: line-through; }
+        .detail-save { font-size: 13px; color: #007600; font-weight: 600; background: #e8f5e9; padding: 2px 8px; border-radius: 4px; }
+        .detail-stock-row { display: flex; align-items: center; gap: 10px; margin: 10px 0 14px; flex-wrap: wrap; }
+        .detail-stock-status { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; }
+        .detail-stock-status.in { color: #007600; }
+        .detail-stock-status.low { color: #e65100; }
+        .detail-stock-status.out { color: #B12704; }
+        .detail-stock-status::before { content: '●'; font-size: 10px; }
+
+        /* Detail qty control */
+        .detail-qty-wrapper { display: flex; align-items: center; gap: 12px; margin: 10px 0 14px; }
+        .detail-qty-label { font-size: 13px; font-weight: 600; color: #555; }
+        .detail-qty-control {
+            display: flex; align-items: center; border: 2px solid #e77600;
+            border-radius: 8px; overflow: hidden;
+        }
+        .detail-qty-control button {
+            background: #fff3e0; border: none; width: 36px; height: 36px;
+            font-size: 20px; font-weight: 700; cursor: pointer; color: #e77600; transition: background 0.15s;
+        }
+        .detail-qty-control button:hover { background: #ffe0b2; }
+        .detail-qty-control button:disabled { color: #ccc; background: #f9f9f9; cursor: not-allowed; }
+        .detail-qty-control .dqty-num {
+            width: 42px; text-align: center; font-weight: 700; font-size: 16px; color: #111;
+        }
+        .detail-qty-max { font-size: 12px; color: #888; }
+
+        .detail-divider { border: none; border-top: 1px solid #f0f0f0; margin: 14px 0; }
+        .detail-section-title { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 8px; }
+        .detail-highlights { list-style: none; padding: 0; }
+        .detail-highlights li { font-size: 13px; color: #444; padding: 5px 0 5px 18px; position: relative; line-height: 1.5; border-bottom: 1px dashed #f5f5f5; }
+        .detail-highlights li::before { content: '✓'; position: absolute; left: 0; color: #e77600; font-weight: 700; }
+        .detail-delivery { font-size: 13px; color: #555; background: #f9f9f9; padding: 10px 14px; border-radius: 6px; border-left: 3px solid #ffd814; margin-bottom: 18px; }
+        .detail-actions { display: flex; gap: 10px; margin-top: auto; padding-top: 4px; }
+        .detail-actions .add-btn { flex: 1; padding: 12px; font-size: 14px; border-radius: 8px; }
+        .detail-actions .buy-btn { flex: 1; padding: 12px; font-size: 14px; border-radius: 8px; }
+
+        /* Out of Stock Overlay */
+        .oos-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.65); display: flex; align-items: center; justify-content: center;
+            font-size: 15px; font-weight: 700; color: #B12704; letter-spacing: 1px; border-radius: 4px;
+        }
+
+        @media (max-width: 620px) {
+            .detail-inner { flex-direction: column; }
+            .detail-img-panel { width: 100%; height: 200px; padding: 15px; }
+            .detail-info-panel { padding: 18px; }
+        }
+
+        /* --- CART ITEMS --- */
+        .cart-item { display:flex; gap:10px; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:12px; align-items:flex-start; }
+        .cart-item-img { width:54px; height:54px; object-fit:contain; border:1px solid #eee; border-radius:4px; flex-shrink:0; }
+        .cart-item-info { flex:1; }
+        .cart-item-name { font-size:13px; font-weight:600; margin-bottom:3px; }
+        .cart-item-price { color:#B12704; font-weight:700; font-size:13px; margin-bottom:6px; }
+        /* Cart qty control */
+        .cart-qty-control {
+            display: inline-flex; align-items: center; border: 1.5px solid #ddd;
+            border-radius: 6px; overflow: hidden; height: 28px;
+        }
+        .cart-qty-control button {
+            background: #f5f5f5; border: none; width: 28px; height: 100%;
+            font-size: 16px; font-weight: 700; cursor: pointer; color: #555; transition: background 0.15s;
+        }
+        .cart-qty-control button:hover { background: #ffe0b2; color: #e77600; }
+        .cart-qty-control button:disabled { color: #ccc; cursor: not-allowed; }
+        .cart-qty-control .cqty-num {
+            width: 32px; text-align: center; font-size: 13px; font-weight: 700; color: #111;
+        }
+
+        /* --- ORDERS & RETURNS --- */
+        .order-card { border: 1px solid #ddd; background: white; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
+        .order-header { background: #f0f2f2; padding: 10px 15px; display: flex; justify-content: space-between; font-size: 12px; color: #565959; }
+        .order-body { padding: 15px; display: flex; gap: 15px; }
+        .order-status { color: #007600; font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+        .return-btn { background: #fff; border: 1px solid #d5d9d9; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; box-shadow: 0 2px 5px rgba(213,217,217,.5); }
+        .return-btn:hover { background: #f7fafa; }
+        .payment-option { display: flex; align-items: center; padding: 12px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; margin-bottom: 10px; }
+        .payment-option.selected { border-color: #e77600; background-color: #fdf6e8; }
+        .payment-option input { margin-right: 10px; accent-color: #e77600; }
+        .payment-details { display: none; margin-bottom: 15px; padding: 10px; background: #f9f9f9; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <a href="#" class="logo">Shop<span>Sphere</span></a>
+        <div class="search-wrapper">
+            <input type="text" id="search-input" placeholder="Search brands, products..." onkeyup="handleSearch()">
+            <button>🔍</button>
+        </div>
+        <div class="nav-links">
+            <div class="nav-item" onclick="handleAuthClick()">
+                <small id="user-greeting">Hello, Sign in</small>
+                <strong>Account & Lists</strong>
+            </div>
+            <div class="nav-item" onclick="toggleOrders()">
+                <small>Returns</small><strong>& Orders</strong>
+            </div>
+            <div class="nav-item" onclick="toggleCart()" style="position:relative;">
+                <span style="font-size:24px;">🛒</span>
+                <div id="cart-badge" class="cart-badge">0</div>
+                <strong>Cart</strong>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <aside class="sidebar">
+        <h3>Department</h3>
+        <div id="category-list"></div>
+    </aside>
+    <main class="main-content">
+        <div class="hero">
+            <div>
+                <h1>Mega Monsoon Sale</h1>
+                <p>Flat 40% Off on Electronics & Fashion. Free Delivery.</p>
+                <div class="hero-coupon">
+                    <strong><span style="font-size:15px;">🎟️ Exclusive One-Time Coupons:</span></strong><br>
+                    <div style="margin-top:8px;">
+                        <span class="coupon-tag">NEWUSER50</span> 50% Off<br>
+                        <span class="coupon-tag">FLASH30</span> 30% Off<br>
+                        <span class="coupon-tag">SALE20</span> 20% Off<br>
+                        <span class="coupon-tag">WELCOME10</span> 10% Off
+                    </div>
+                </div>
+                <br>
+                <button onclick="document.querySelector('.product-grid').scrollIntoView({behavior:'smooth'})">Shop Deals</button>
+            </div>
+            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=300" style="opacity:0.8;border-radius:4px;">
+        </div>
+        <h2 style="margin-bottom:15px;font-weight:700;">Results (<span id="result-count">0</span>)</h2>
+        <div id="product-grid" class="product-grid"></div>
+    </main>
+</div>
+
+<div id="detail-modal" onclick="handleDetailBgClick(event)">
+    <div class="detail-box" id="detail-box">
+        <div class="detail-topbar">
+            <span class="detail-topbar-cat" id="dtop-cat"></span>
+            <button class="detail-close" onclick="closeDetail()">✕</button>
+        </div>
+        <div class="detail-inner">
+            <div class="detail-img-panel">
+                <img id="d-img" src="" alt="">
+                <div id="d-oos-overlay" class="oos-overlay" style="display:none;">OUT OF STOCK</div>
+            </div>
+            <div class="detail-info-panel">
+                <span class="detail-cat-badge" id="d-cat"></span>
+                <div class="detail-name" id="d-name"></div>
+                <div class="detail-rating">
+                    <span class="stars" id="d-stars"></span>
+                    <span class="rating-num" id="d-rnum"></span>
+                    <span class="rating-count" id="d-rcnt"></span>
+                </div>
+                <div class="detail-price-row">
+                    <span class="detail-price" id="d-price"></span>
+                    <span class="detail-mrp" id="d-mrp"></span>
+                    <span class="detail-save" id="d-save"></span>
+                </div>
+                <div class="detail-stock-row">
+                    <div class="detail-stock-status" id="d-stock-status"></div>
+                </div>
+                <div class="detail-qty-wrapper" id="d-qty-wrapper">
+                    <span class="detail-qty-label">Quantity:</span>
+                    <div class="detail-qty-control">
+                        <button id="d-qty-minus" onclick="changeDetailQty(-1)">−</button>
+                        <span class="dqty-num" id="d-qty-num">1</span>
+                        <button id="d-qty-plus" onclick="changeDetailQty(1)">+</button>
+                    </div>
+                    <span class="detail-qty-max" id="d-qty-max"></span>
+                </div>
+                <hr class="detail-divider">
+                <div class="detail-section-title">Key Highlights</div>
+                <ul class="detail-highlights" id="d-highlights"></ul>
+                <hr class="detail-divider">
+                <div class="detail-delivery">🚚 <strong>Free Delivery</strong> — Order within 2 hours for same-day dispatch<br>↩ <strong>10-day</strong> return & replacement policy</div>
+                <div class="detail-actions">
+                    <button class="add-btn" id="d-add">Add to Cart</button>
+                    <button class="buy-btn" id="d-buy">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="cart-modal" class="modal-overlay">
+    <div class="side-panel">
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #ddd;padding-bottom:10px;">
+            <h2>🛒 Cart</h2>
+            <span style="cursor:pointer;font-size:24px;" onclick="toggleCart()">&times;</span>
+        </div>
+        <div id="cart-items" style="flex-grow:1;overflow-y:auto;padding-top:10px;"></div>
+        <div style="border-top:1px solid #ddd;padding-top:15px;">
+            <div style="font-size:13px;color:#555;margin-bottom:4px;" id="cart-item-count"></div>
+            <h3>Subtotal: <span id="cart-total">₹0</span></h3>
+            <button class="add-btn" style="padding:12px;margin-top:10px;font-weight:bold;width:100%;" onclick="initiateCheckout()">Proceed to Buy</button>
+        </div>
+    </div>
+</div>
+
+<div id="orders-modal" class="modal-overlay">
+    <div class="side-panel" style="width:450px;">
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #ddd;padding-bottom:10px;margin-bottom:15px;">
+            <h2>Your Orders</h2>
+            <span style="cursor:pointer;font-size:24px;" onclick="toggleOrders()">&times;</span>
+        </div>
+        <div id="orders-list" style="flex-grow:1;overflow-y:auto;"></div>
+    </div>
+</div>
+
+<div id="payment-modal" class="modal-overlay">
+    <div class="auth-box">
+        <span style="position:absolute;right:15px;top:10px;cursor:pointer;font-size:24px;" onclick="closePaymentModal()">&times;</span>
+        <h2 style="margin-bottom:15px;">Checkout</h2>
+        
+        <div style="margin-bottom:15px;background:#f9f9f9;padding:10px;border-radius:4px;border:1px dashed #ccc;">
+            <label style="font-size:13px;font-weight:bold;margin-bottom:5px;display:block;">Have a Coupon?</label>
+            <div style="display:flex;gap:5px;">
+                <input id="coupon-input" class="auth-input" style="margin-bottom:0;padding:8px;" type="text" placeholder="Enter code">
+                <button class="add-btn" style="width:70px;padding:5px;" onclick="applyCoupon()">Apply</button>
+            </div>
+            <small id="coupon-msg" style="display:block;margin-top:5px;min-height:18px;font-size:12px;"></small>
+        </div>
+
+        <div style="margin-bottom:15px;font-size:14px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span>Subtotal:</span> <span id="pay-subtotal">₹0</span></div>
+            <div style="display:flex;justify-content:space-between;color:#007600;margin-bottom:5px;"><span>Discount:</span> <span id="pay-discount">-₹0</span></div>
+            <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:18px;margin-top:5px;border-top:1px solid #eee;padding-top:8px;">
+                <span>Total to Pay:</span> <span id="pay-total" style="color:#B12704">₹0</span>
+            </div>
+        </div>
+
+        <div style="margin-bottom:10px;font-weight:600;">Payment Method</div>
+        <div class="payment-option" onclick="selectPayment('upi',this)"><input type="radio" name="payment" value="upi"><span>UPI / QR Code</span></div>
+        <div id="upi-fields" class="payment-details"><input type="text" class="auth-input" placeholder="Enter UPI ID (e.g. mobile@upi)"></div>
+        <div class="payment-option" onclick="selectPayment('card',this)"><input type="radio" name="payment" value="card"><span>Credit / Debit Card</span></div>
+        <div id="card-fields" class="payment-details">
+            <input type="text" class="auth-input" placeholder="Card Number">
+            <div style="display:flex;gap:10px;"><input type="text" class="auth-input" placeholder="MM/YY"><input type="password" class="auth-input" placeholder="CVV"></div>
+        </div>
+        <div class="payment-option" onclick="selectPayment('cod',this)"><input type="radio" name="payment" value="cod"><span>Cash on Delivery</span></div>
+        <button id="pay-btn" class="add-btn" style="padding:12px;font-weight:bold;width:100%;" onclick="confirmOrder()">Place Order</button>
+    </div>
+</div>
+
+<div id="return-modal" class="modal-overlay">
+    <div class="auth-box">
+        <span style="position:absolute;right:15px;top:10px;cursor:pointer;font-size:24px;" onclick="closeReturnModal()">&times;</span>
+        <h2>Return Verification</h2>
+        <p style="font-size:13px;color:#555;margin-bottom:15px;">Enter OTP sent to your mobile to confirm return.</p>
+        <input id="return-otp-input" class="auth-input" type="number" placeholder="Enter OTP">
+        <button class="add-btn" style="padding:10px;width:100%;" onclick="verifyReturnOTP()">Verify & Return</button>
+    </div>
+</div>
+
+<div id="auth-modal" class="modal-overlay">
+    <div class="auth-box">
+        <span style="position:absolute;right:15px;top:10px;cursor:pointer;font-size:24px;" onclick="closeAuthModal()">&times;</span>
+        <div id="login-view">
+            <h2>Sign In</h2>
+            <p style="font-size:13px;color:#555;margin-bottom:15px;">Login via Mobile OTP.</p>
+            <div id="login-step-1">
+                <input id="login-mobile" class="auth-input" type="tel" placeholder="Mobile number (10 digits)">
+                <button class="add-btn" style="padding:10px;width:100%;margin-bottom:15px;" onclick="getLoginOTP()">Get OTP</button>
+            </div>
+            <div id="login-step-2" style="display:none;">
+                <input id="login-otp" class="auth-input" type="number" placeholder="Enter OTP">
+                <button class="add-btn" style="padding:10px;width:100%;margin-bottom:15px;" onclick="verifyLoginOTP()">Verify & Login</button>
+                <small style="color:#0066c0;cursor:pointer;" onclick="resendOTP()">Resend OTP</small>
+            </div>
+            <div style="text-align:center;"><small>New here? <span class="auth-link" onclick="toggleAuthView('signup')">Create account</span></small></div>
+        </div>
+        <div id="signup-view" style="display:none;">
+            <h2>Create Account</h2>
+            <p style="font-size:13px;color:#555;margin-bottom:15px;">Verify mobile to sign up.</p>
+            <div id="signup-step-1">
+                <input id="signup-name" class="auth-input" type="text" placeholder="Full Name">
+                <input id="signup-mobile" class="auth-input" type="tel" placeholder="Mobile number">
+                <button class="add-btn" style="padding:10px;width:100%;margin-bottom:15px;" onclick="getSignupOTP()">Get OTP</button>
+            </div>
+            <div id="signup-step-2" style="display:none;">
+                <input id="signup-otp" class="auth-input" type="number" placeholder="Enter OTP">
+                <button class="add-btn" style="padding:10px;width:100%;margin-bottom:15px;" onclick="verifySignupOTP()">Verify & Create</button>
+            </div>
+            <div style="text-align:center;"><small>Already have an account? <span class="auth-link" onclick="toggleAuthView('login')">Sign in</span></small></div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

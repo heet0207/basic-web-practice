@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopSphere India | Official Store</title>
+    <style>
+        :root {
+            --primary: #232f3e; --secondary: #37475a; --accent: #ffd814;
+            --text-dark: #0F1111; --bg-gray: #e3e6e6; --white: #ffffff; --border-radius: 8px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: var(--bg-gray); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+        a { text-decoration: none; color: inherit; cursor: pointer; }
+
+        header { background-color: #131921; color: white; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; }
+        .header-inner { max-width: 1500px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+        .logo { font-size: 24px; font-weight: 700; color: white; margin-right: 10px; }
+        .logo span { color: var(--accent); }
+        .search-wrapper { flex-grow: 1; max-width: 800px; display: flex; border-radius: 4px; overflow: hidden; height: 40px; }
+        .search-wrapper input { width: 100%; padding: 0 15px; border: none; outline: none; font-size: 15px; }
+        .search-wrapper button { background-color: var(--accent); border: none; padding: 0 20px; cursor: pointer; }
+        .nav-links { display: flex; gap: 25px; align-items: center; font-size: 14px; }
+        .nav-item { cursor: pointer; color: white; display: flex; flex-direction: column; line-height: 1.2; position: relative; }
+        .nav-item strong { font-weight: 700; }
+        .nav-item small { font-size: 11px; color: #ccc; }
+        .cart-badge { background: var(--accent); color: #111; font-size: 11px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; position: absolute; top: -5px; right: -8px; }
+
+        .container { display: flex; max-width: 1500px; margin: 20px auto; padding: 0 20px; gap: 20px; flex: 1; align-items: flex-start; }
+        .sidebar { width: 260px; flex-shrink: 0; background: white; padding: 20px; border-radius: var(--border-radius); box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 80px; max-height: 85vh; overflow-y: auto; }
+        .sidebar h3 { font-size: 16px; font-weight: 700; margin-bottom: 15px; }
+        .filter-option { cursor: pointer; padding: 8px 10px; border-radius: 4px; font-size: 13px; transition: 0.1s; display: flex; justify-content: space-between; align-items: center; }
+        .filter-option:hover { background-color: #f0f2f2; color: #e77600; }
+        .filter-option.active { font-weight: 700; background-color: #f0f2f2; border-left: 3px solid #e77600; }
+        .main-content { flex-grow: 1; width: 100%; }
+        .hero { background: linear-gradient(to right, #232f3e, #131921); color: white; padding: 30px; border-radius: var(--border-radius); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; overflow: hidden; }
+        .hero button { margin-top: 15px; padding: 10px 20px; background: var(--accent); border: none; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .hero-coupon { background: rgba(255,255,255,0.1); padding: 12px; border: 1px dashed var(--accent); border-radius: 4px; margin-top: 15px; font-size: 13px; display:inline-block; }
+        .coupon-tag { background: var(--accent); color: #111; padding: 2px 6px; border-radius: 3px; font-weight: bold; margin-right: 5px; font-size: 11px; }
+
+        .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        @media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 900px) { .container { flex-direction: column; } .sidebar { width: 100%; position: static; margin-bottom: 20px; max-height: none; } .product-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .product-grid { grid-template-columns: 1fr; } }
+
+        .product-card { background: white; border: 1px solid #ddd; border-radius: var(--border-radius); padding: 15px; display: flex; flex-direction: column; height: 100%; transition: box-shadow 0.2s; position: relative; cursor: pointer; }
+        .product-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.15); transform: translateY(-2px); }
+        .product-card.out-of-stock { opacity: 0.75; }
+        .card-img { height: 200px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; position: relative; }
+        .card-img img { max-height: 100%; max-width: 100%; object-fit: contain; mix-blend-mode: multiply; transition: transform 0.3s; }
+        .product-card:hover .card-img img { transform: scale(1.05); }
+
+        /* Stock Badge */
+        .stock-badge {
+            position: absolute; top: 8px; right: 8px;
+            font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 12px; letter-spacing: 0.5px; z-index: 2;
+        }
+        .stock-badge.in-stock { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+        .stock-badge.low-stock { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+        .stock-badge.out-of-stock { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+
+        /* Qty control on card */
+        .card-qty-control {
+            display: flex; align-items: center; gap: 0; border: 1.5px solid #e77600;
+            border-radius: 20px; overflow: hidden; height: 32px;
+        }
+        .card-qty-control button {
+            background: #fff3e0; border: none; width: 34px; height: 100%;
+            font-size: 18px; font-weight: 700; cursor: pointer; color: #e77600;
+            display: flex; align-items: center; justify-content: center; transition: background 0.15s;
+        }
+        .card-qty-control button:hover { background: #ffe0b2; }
+        .card-qty-control .qty-num {
+            flex: 1; text-align: center; font-weight: 700; font-size: 14px; color: #111;
+            min-width: 28px;
+        }
+
+        .p-title { font-size: 14px; font-weight: 500; height: 38px; overflow: hidden; margin-bottom: 5px; line-height: 1.3; color: #007185; }
+        .p-cat { font-size: 11px; color: #777; text-transform: uppercase; margin-bottom: 3px; }
+        .p-price { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; }
+        .btn-group { margin-top: auto; display: flex; gap: 5px; flex-direction: column; }
+        .btn-row { display: flex; gap: 5px; }
+        .add-btn { flex:1; background: #ffd814; border: none; padding: 8px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .add-btn:disabled { background: #e0e0e0; color: #aaa; cursor: not-allowed; }
+        .buy-btn { flex:1; background: #fa8900; border: none; padding: 8px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: bold; color: white; }
+        .buy-btn:disabled { background: #e0e0e0; color: #aaa; cursor: not-allowed; }
+
+        /* --- MODALS --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; backdrop-filter: blur(2px); }
+        .side-panel { position: absolute; right: 0; top: 0; width: 380px; height: 100%; background: white; padding: 20px; display: flex; flex-direction: column; animation: slideIn 0.3s; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .auth-box { background: white; width: 90%; max-width: 380px; margin: 80px auto; padding: 30px; border-radius: 8px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.3s; }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        .auth-link { color: #0066c0; font-size: 13px; cursor: pointer; text-decoration: underline; }
+        .auth-link:hover { color: #c45500; }
+
+        /* ===== PRODUCT DETAIL MODAL ===== */
+        #detail-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.65); z-index: 3000; backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+        }
+        #detail-modal.open { display: flex; }
+        .detail-box {
+            background: white; width: 92%; max-width: 860px; max-height: 92vh;
+            border-radius: 14px; overflow: hidden; display: flex; flex-direction: column;
+            animation: popIn 0.28s; box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+        }
+        .detail-topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 20px; border-bottom: 1px solid #eee; background: #fafafa; flex-shrink: 0;
+        }
+        .detail-topbar-cat { font-size: 12px; color: #e77600; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .detail-close { font-size: 28px; cursor: pointer; color: #666; line-height: 1; border: none; background: none; padding: 0 4px; }
+        .detail-close:hover { color: #111; }
+        .detail-inner { display: flex; flex: 1; overflow: hidden; }
+        .detail-img-panel {
+            width: 42%; background: linear-gradient(135deg, #f7f8f8, #eef0f0);
+            display: flex; align-items: center; justify-content: center; padding: 30px; flex-shrink: 0; position: relative;
+        }
+        .detail-img-panel img { max-width: 100%; max-height: 300px; object-fit: contain; filter: drop-shadow(0 8px 20px rgba(0,0,0,0.12)); }
+        .detail-info-panel { flex: 1; padding: 28px 26px; overflow-y: auto; display: flex; flex-direction: column; }
+        .detail-cat-badge { display: inline-block; background: #fff3e0; color: #e65100; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+        .detail-name { font-size: 21px; font-weight: 700; color: #111; margin-bottom: 10px; line-height: 1.35; }
+        .detail-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+        .stars { color: #e77600; font-size: 16px; letter-spacing: 1px; }
+        .rating-num { font-weight: 700; color: #333; font-size: 14px; }
+        .rating-count { color: #888; font-size: 13px; }
+        .detail-price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+        .detail-price { font-size: 26px; font-weight: 700; color: #B12704; }
+        .detail-mrp { font-size: 14px; color: #999; text-decoration: line-through; }
+        .detail-save { font-size: 13px; color: #007600; font-weight: 600; background: #e8f5e9; padding: 2px 8px; border-radius: 4px; }
+        .detail-stock-row { display: flex; align-items: center; gap: 10px; margin: 10px 0 14px; flex-wrap: wrap; }
+        .detail-stock-status { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; }
+        .detail-stock-status.in { color: #007600; }
+        .detail-stock-status.low { color: #e65100; }
+        .detail-stock-status.out { color: #B12704; }
+        .detail-stock-status::before { content: '●'; font-size: 10px; }
+
+        /* Detail qty control */
+        .detail-qty-wrapper { display: flex; align-items: center; gap: 12px; margin: 10px 0 14px; }
+        .detail-qty-label { font-size: 13px; font-weight: 600; color: #555; }
+        .detail-qty-control {
+            display: flex; align-items: center; border: 2px solid #e77600;
+            border-radius: 8px; overflow: hidden;
+        }
+        .detail-qty-control button {
+            background: #fff3e0; border: none; width: 36px; height: 36px;
+            font-size: 20px; font-weight: 700; cursor: pointer; color: #e77600; transition: background 0.15s;
+        }
+        .detail-qty-control button:hover { background: #ffe0b2; }
+        .detail-qty-control button:disabled { color: #ccc; background: #f9f9f9; cursor: not-allowed; }
+        .detail-qty-control .dqty-num {
+            width: 42px; text-align: center; font-weight: 700; font-size: 16px; color: #111;
+        }
+        .detail-qty-max { font-size: 12px; color: #888; }
+
+        .detail-divider { border: none; border-top: 1px solid #f0f0f0; margin: 14px 0; }
+        .detail-section-title { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 8px; }
+        .detail-highlights { list-style: none; padding: 0; }
+        .detail-highlights li { font-size: 13px; color: #444; padding: 5px 0 5px 18px; position: relative; line-height: 1.5; border-bottom: 1px dashed #f5f5f5; }
+        .detail-highlights li::before { content: '✓'; position: absolute; left: 0; color: #e77600; font-weight: 700; }
+        .detail-delivery { font-size: 13px; color: #555; background: #f9f9f9; padding: 10px 14px; border-radius: 6px; border-left: 3px solid #ffd814; margin-bottom: 18px; }
+        .detail-actions { display: flex; gap: 10px; margin-top: auto; padding-top: 4px; }
+        .detail-actions .add-btn { flex: 1; padding: 12px; font-size: 14px; border-radius: 8px; }
+        .detail-actions .buy-btn { flex: 1; padding: 12px; font-size: 14px; border-radius: 8px; }
+
+        /* Out of Stock Overlay */
+        .oos-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.65); display: flex; align-items: center; justify-content: center;
+            font-size: 15px; font-weight: 700; color: #B12704; letter-spacing: 1px; border-radius: 4px;
+        }
+
+        @media (max-width: 620px) {
+            .detail-inner { flex-direction: column; }
+            .detail-img-panel { width: 100%; height: 200px; padding: 15px; }
+            .detail-info-panel { padding: 18px; }
+        }
+
+        /* --- CART ITEMS --- */
+        .cart-item { display:flex; gap:10px; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:12px; align-items:flex-start; }
+        .cart-item-img { width:54px; height:54px; object-fit:contain; border:1px solid #eee; border-radius:4px; flex-shrink:0; }
+        .cart-item-info { flex:1; }
+        .cart-item-name { font-size:13px; font-weight:600; margin-bottom:3px; }
+        .cart-item-price { color:#B12704; font-weight:700; font-size:13px; margin-bottom:6px; }
+        /* Cart qty control */
+        .cart-qty-control {
+            display: inline-flex; align-items: center; border: 1.5px solid #ddd;
+            border-radius: 6px; overflow: hidden; height: 28px;
+        }
+        .cart-qty-control button {
+            background: #f5f5f5; border: none; width: 28px; height: 100%;
+            font-size: 16px; font-weight: 700; cursor: pointer; color: #555; transition: background 0.15s;
+        }
+        .cart-qty-control button:hover { background: #ffe0b2; color: #e77600; }
+        .cart-qty-control button:disabled { color: #ccc; cursor: not-allowed; }
+        .cart-qty-control .cqty-num {
+            width: 32px; text-align: center; font-size: 13px; font-weight: 700; color: #111;
+        }
+
+        /* --- ORDERS & RETURNS --- */
+        .order-card { border: 1px solid #ddd; background: white; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
+        .order-header { background: #f0f2f2; padding: 10px 15px; display: flex; justify-content: space-between; font-size: 12px; color: #565959; }
+        .order-body { padding: 15px; display: flex; gap: 15px; }
+        .order-status { color: #007600; font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+        .return-btn { background: #fff; border: 1px solid #d5d9d9; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; box-shadow: 0 2px 5px rgba(213,217,217,.5); }
+        .return-btn:hover { background: #f7fafa; }
+        .payment-option { display: flex; align-items: center; padding: 12px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; margin-bottom: 10px; }
+        .payment-option.selected { border-color: #e77600; background-color: #fdf6e8; }
+        .payment-option input { margin-right: 10px; accent-color: #e77600; }
+        .payment-details { display: none; margin-bottom: 15px; padding: 10px; background: #f9f9f9; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <a href="#" class="logo">Shop<span>Sphere</span></a>
+        <div class="search-wrapper">
+            <input type="text" id="search-input" placeholder="Search brands, products..." onkeyup="handleSearch()">
+            <button>🔍</button>
+        </div>
+        <div class="nav-links">
+            <div class="nav-item" onclick="handleAuthClick()">
+                <small id="user-greeting">Hello, Sign in</small>
+                <strong>Account & Lists</strong>
+            </div>
+            <div class="nav-item" onclick="toggleOrders()">
+                <small>Returns</small><strong>& Orders</strong>
+            </div>
+            <div class="nav-item" onclick="toggleCart()" style="position:relative;">
+                <span style="font-size:24px;">🛒</span>
+                <div id="cart-badge" class="cart-badge">0</div>
+                <strong>Cart</strong>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <aside class="sidebar">
+        <h3>Department</h3>
+        <div id="category-list"></div>
+    </aside>
+    <main class="main-content">
+        <div class="hero">
+            <div>
+                <h1>Mega Monsoon Sale</h1>
+                <p>Flat 40% Off on Electronics & Fashion. Free Delivery.</p>
+                <div class="hero-coupon">
+                    <strong><span style="font-size:15px;">🎟️ Exclusive One-Time Coupons:</span></strong><br>
+                    <div style="margin-top:8px;">
+                        <span class="coupon-tag">NEWUSER50</span> 50% Off<br>
+                        <span class="coupon-tag">FLASH30</span> 30% Off<br>
+                        <span class="coupon-tag">SALE20</span> 20% Off<br>
+                        <span class="coupon-tag">WELCOME10</span> 10% Off
+                    </div>
+                </div>
+                <br>
+                <button onclick="document.querySelector('.product-grid').scrollIntoView({behavior:'smooth'})">Shop Deals</button>
+            </div>
+            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=300" style="opacity:0.8;border-radius:4px;">
+        </div>
+        <h2 style="margin-bottom:15px;font-weight:700;">Results (<span id="result-count">0</span>)</h2>
+        <div id="product-grid" class="product-grid"></div>
+    </main>
+</div>
+
+<div id="detail-modal" onclick="handleDetailBgClick(event)">
+    <div class="detail-box" id="detail-box">
+        <div class="detail-topbar">
+            <span class="detail-topbar-cat" id="dtop-cat"></span>
+            <button class="detail-close" onclick="closeDetail()">✕</button>
+        </div>
+        <div class="detail-inner">
+            <div class="detail-img-panel">
+                <img id="d-img" src="" alt="">
+                <div id="d-oos-overlay" class="oos-overlay" style="display:none;">OUT OF STOCK</div>
+            </div>
+            <div class="detail-info-panel">
+                <span class="detail-cat-badge" id="d-cat"></span>
+                <div class="detail-name" id="d-name"></div>
+                <div class="detail-rating">
+                    <span class="stars" id="d-stars"></span>
+                    <span class="rating-num" id="d-rnum"></span>
+                    <span class="rating-count" id="d-rcnt"></span>
+                </div>
+                <div class="detail-price-row">
+                    <span class="detail-price" id="d-price"></span>
+                    <span class="detail-mrp" id="d-mrp"></span>
+                    <span class="detail-save" id="d-save"></span>
+                </div>
+                <div class="detail-stock-row">
+                    <div class="detail-stock-status" id="d-stock-status"></div>
+                </div>
+                <div class="detail-qty-wrapper" id="d-qty-wrapper">
+                    <span class="detail-qty-label">Quantity:</span>
+                    <div class="detail-qty-control">
+                        <button id="d-qty-minus" onclick="changeDetailQty(-1)">−</button>
+                        <span class="dqty-num" id="d-qty-num">1</span>
+                        <button id="d-qty-plus" onclick="changeDetailQty(1)">+</button>
+                    </div>
+                    <span class="detail-qty-max" id="d-qty-max"></span>
+                </div>
+                <hr class="detail-divider">
+                <div class="detail-section-title">Key Highlights</div>
+                <ul class="detail-highlights" id="d-highlights"></ul>
+                <hr class="detail-divider">
+                <div class="detail-delivery">🚚 <strong>Free Delivery</strong> — Order within 2 hours for same-day dispatch<br>↩ <strong>10-day</strong> return & replacement policy</div>
+                <div class="detail-actions">
+                    <button class="add-btn" id="d-add">Add to Cart</button>
+                    <button class="buy-btn" id="d-buy">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="cart-modal" class="modal-overlay">
+    <div class="side-panel">
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #ddd;padding-bottom:10px;">
+            <h2>🛒 Cart</h2>
+            <span style="cursor:pointer;font-size:24px;" onclick="toggleCart()">&times;</span>
+        </div>
+        <div id="cart-items" style="flex-grow:1;overflow-y:auto;padding-top:10px;"></div>
+        <div style="border-top:1px solid #ddd;padding-top:15px;">
+            <div style="font-size:13px;color:#555;margin-bottom:4px;" id="cart-item-count"></div>
+            <h3>Subtotal: <span id="cart-total">₹0</span></h3>
+            <button class="add-btn" style="padding:12px;margin-top:10px;font-weight:bold;width:100%;" onclick="initiateCheckout()">Proceed to Buy</button>
+        </div>
+    </div>
+</div>
+
+<div id="orders-modal" class="modal-overlay">
+    <div class="side-panel" style="width:450px;">
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #ddd;padding-bottom:10px;margin-bottom:15px;">
+            <h2>Your Orders</h2>
+            <span style="cursor:pointer;font-size:24px;" onclick="toggleOrders()">&times;</span>
+        </div>
+        <div id="orders-list" style="flex-grow:1;overflow-y:auto;"></div>
+    </div>
+</div>
+
+<div id="payment-modal" class="modal-overlay">
+    <div class="auth-box">
+        <span style="position:absolute;right:15px;top:10px;cursor:pointer;font-size:24px;" onclick="closePaymentModal()">&times;</span>
+        <h2 style="margin-bottom:15px;">Checkout</h2>
+        
+        <div style="margin-bottom:15px;background:#f9f9f9;padding:10px;border-radius:4px;border:1px dashed #ccc;">
+            <label style="font-size:13px;font-weight:bold;margin-bottom:5px;display:block;">Have a Coupon?</label>
+            <div style="display:flex;gap:5px;">
+                <input id="coupon-input" class="auth-input" style="margin-bottom:0;padding:8px;" type="text" placeholder="Enter code">
+                <button class="add-btn" style="width:70px;padding:5px;" onclick="applyCoupon()">Apply</button>
+            </div>
+            <small id="coupon-msg" style="display:block;margin-top:5px;min-height:18px;font-size:12px;"></small>
+        </div>
+
+        <div style="margin-bottom:15px;font-size:14px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span>Subtotal:</span> <span id="pay-subtotal">₹0</span></div>
+            <div style="display:flex;justify-content:space-between;color:#007600;margin-bottom:5px;"><span>Discount:</span> <span id="pay-discount">-₹0</span></div>
+            <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:18px;margin-top:5px;border-top:1px solid #eee;padding-top:8px;">
+                <span>Total to Pay:</span> <span id="pay-total" style="color:#B12704">₹0</span>
+            </div>
+        </div>
+
+        <div style="margin-bottom:10px;font-weight:600;">Payment Method</div>
+        <div class="payment-option" onclick="selectPayment('upi',this)"><input type="radio" name="payment" value="upi"><span>UPI / QR Code</span></div>
+        <div id="upi-fields" class="payment-details"><input type="text" class="auth-input" placeholder="Enter UPI ID (e.g. mobile@upi)"></div>
+        <div class="payment-option" onclick="selectPayment('card',this)"><input type="radio" name="payment" value="card"><span>Credit / Debit Card</span></div>
+        <div id="card-fields" class="payment-details">
+            <input type="text" class="auth-input" placeholder="Card Number">
+            <div style="display:flex;gap:10px;"><input type="text" class="auth-input" placeholder="MM/YY"><input type="password" class="auth-input" placeholder="CVV"></div>
+        </div>
+        <div class="payment-option" onclick="selectPayment('cod',this)"><input type="radio" name="payment" value="cod"><span>Cash on Delivery</span></div>
+        <button id="pay-btn" class="add-btn" style="padding:12px;font-weight:bold;width:100%;" onclick="confirmOrder()">Place Order</button>
+    </div>
+</div>
+
+<div id="return-modal" class="modal-overlay">
+    <div class="auth-box">
+        <span style="position:absolute;right:15px;top:10px;cursor:pointer;font-size:24px;" onclick="closeReturnModal()">&times;</span>
+        <h2>Return Verification</h2>
+        <p style="font-size:13px;color:#555;margin-bottom:15px;">Enter OTP sent to your mobile to confirm return.</p>
+        <input id="return-otp-input" class="auth-input" type="number" placeholder="Enter OTP">
+        <button class="add-btn" style="padding:10px;width:100%;" onclick="verifyReturnOTP()">Verify & Return</button>
+    </div>
+</div>
+
+<div id="auth-modal" class="modal-overlay">
+    <div class="auth-box">
+        <span style="position:absolute;right:15px;top:10px;cursor:pointer;font-size:24px;" onclick="closeAuthModal()">&times;</span>
+        <div id="login-view">
+            <h2>Sign In</h2>
+            <p style="font-size:13px;color:#555;margin-bottom:15px;">Login via Mobile OTP.</p>
+            <div id="login-step-1">
+                <input id="login-mobile" class="auth-input" type="tel" placeholder="Mobile number (10 digits)">
+                <button class="add-btn" style="padding:10px;width:100%;margin-bottom:15px;" onclick="getLoginOTP()">Get OTP</button>
+            </div>
+            <div id="login-step-2" style="display:none;">
+                <input id="login-otp" class="auth-input" type="number" placeholder="Enter OTP">
+                <button class="add-btn" style="padding:10px;width:100%;margin-bottom:15px;" onclick="verifyLoginOTP()">Verify & Login</button>
+                <small style="color:#0066c0;cursor:pointer;" onclick="resendOTP()">Resend OTP</small>
+            </div>
+            <div style="text-align:center;"><small>New here? <span class="auth-link" onclick="toggleAuthView('signup')">Create account</span></small></div>
+        </div>
+        <div id="signup-view" style="display:none;">
+            <h2>Create Account</h2>
+            <p style="font-size:13px;color:#555;margin-bottom:15px;">Verify mobile to sign up.</p>
+            <div id="signup-step-1">
+                <input id="signup-name" class="auth-input" type="text" placeholder="Full Name">
+                <input id="signup-mobile" class="auth-input" type="tel" placeholder="Mobile number">
+                <button class="add-btn" style="padding:10px;width:100%;margin-bottom:15px;" onclick="getSignupOTP()">Get OTP</button>
+            </div>
+            <div id="signup-step-2" style="display:none;">
+                <input id="signup-otp" class="auth-input" type="number" placeholder="Enter OTP">
+                <button class="add-btn" style="padding:10px;width:100%;margin-bottom:15px;" onclick="verifySignupOTP()">Verify & Create</button>
+            </div>
+            <div style="text-align:center;"><small>Already have an account? <span class="auth-link" onclick="toggleAuthView('login')">Sign in</span></small></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ===== DATA with RANDOM stock quantity (11 to 24) =====
+const productsData = [
+    { id:1,  name:"Apple iPhone 15 Pro",       category:"Mobiles",     price:134900, img:"i15p.jpeg",    discount:8,  rating:4.8, reviews:"12,340 ratings", stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["6.1-inch Super Retina XDR ProMotion display","A17 Pro chip — industry-first 3nm processor","48MP Main + 12MP Ultra Wide + 12MP 3x Telephoto","Titanium design — lighter yet stronger than steel","Action Button for instant one-press shortcuts"] },
+    { id:2,  name:"Samsung Galaxy S24 Ultra",  category:"Mobiles",     price:129999, img:"s24u.jpeg",    discount:10, rating:4.7, reviews:"9,820 ratings",  stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["6.8-inch Dynamic AMOLED 2X, 120Hz adaptive","200MP main camera with 10x Optical Zoom","Snapdragon 8 Gen 3 — fastest Android chip","Built-in S Pen with enhanced AI writing tools","5000mAh + 45W wired / 15W wireless charging"] },
+    { id:3,  name:"Google Pixel 8 Pro",        category:"Mobiles",     price:106999, img:"gp8p.jpeg",    discount:12, rating:4.6, reviews:"5,210 ratings",  stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["6.7-inch LTPO OLED, 1-120Hz variable refresh","Google Tensor G3 chip with on-device AI","50MP + 48MP + 48MP triple camera system","7 years of Android OS & security updates","Magic Eraser, Photo Unblur & Best Take AI features"] },
+    { id:4,  name:"Apple MacBook Air M2",      category:"Laptops",     price:94900,  img:"Mac.jpeg",     discount:5,  rating:4.9, reviews:"18,540 ratings", stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["Apple M2 chip — up to 18 hours battery life","13.6-inch Liquid Retina display, 500 nits brightness","8GB unified memory, 256GB SSD storage","Fanless, completely silent operation","MagSafe 3 + two Thunderbolt / USB 4 ports"] },
+    { id:5,  name:"Dell XPS 13 Plus",          category:"Laptops",     price:159990, img:"Dell.jpeg",    discount:7,  rating:4.5, reviews:"3,670 ratings",  stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["13.4-inch OLED 3.5K touch display, 60Hz","13th Gen Intel Core i7-1360P processor","16GB LPDDR5 RAM + 512GB NVMe PCIe SSD","Capacitive function row with seamless touchpad","Ultra-compact 1.26 kg chassis"] },
+    { id:6,  name:"Sony WH-1000XM5",           category:"Audio",       price:24990,  img:"He.jpeg",      discount:15, rating:4.8, reviews:"22,100 ratings", stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["Industry-leading ANC with 8 microphones","30-hour battery + 3-min quick charge for 3 hours","Multipoint Bluetooth — connect 2 devices at once","Speak-to-Chat pauses music when you talk","Soft fit leather for all-day comfort"] },
+    { id:7,  name:"JBL Flip 6",                category:"Audio",       price:9999,   img:"JBLF6.jpeg",   discount:20, rating:4.6, reviews:"14,230 ratings", stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["JBL Original Pro Sound with racetrack-shaped driver","IP67 rated — waterproof, dustproof, mudproof","12 hours of continuous playtime","PartyBoost — sync 2 JBL speakers wirelessly","USB-C fast charging"] },
+    { id:8,  name:"Apple Watch Series 9",      category:"Watch",       price:41900,  img:"aws9.jpeg",    discount:6,  rating:4.8, reviews:"8,990 ratings",  stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["New S9 chip with Double Tap gesture control","Always-On Retina display — 2000 nits brightness","Blood Oxygen app + ECG + Crash Detection","watchOS 10 with new Smart Stack widgets","Up to 18-hour battery, 36hr Low Power Mode"] },
+    { id:9,  name:"Samsung Galaxy Watch 6",    category:"Watch",       price:29999,  img:"sgw6.jpeg",    discount:12, rating:4.5, reviews:"6,120 ratings",  stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["Advanced sleep coaching with sleep score","BioActive Sensor — heart rate, ECG, body fat","40mm Super AMOLED display, 2000 nits","Sapphire Crystal glass for scratch resistance","40 hours typical battery life"] },
+    { id:10, name:"Canon EOS R6 Mark II",      category:"Cameras",     price:215995, img:"Canon.jpeg",   discount:4,  rating:4.9, reviews:"2,340 ratings",  stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["40fps continuous RAW burst shooting","6K oversampled 4K 60p video, no crop","Dual UHS-II SD card slots","In-body 8-stop image stabilization (IBIS)","Advanced animal, vehicle & eye-tracking AF"] },
+    { id:11, name:"Nike Air Jordan 1",         category:"Fashion",     price:16995,  img:"NAJ1.jpeg",    discount:10, rating:4.7, reviews:"31,400 ratings", stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["Premium full-grain leather upper","Iconic Wings logo on the ankle collar","Encapsulated Nike Air heel cushioning","Rubber outsole with herringbone traction pattern","OG colourway inspired by Michael Jordan's 1985 debut"] },
+    { id:12, name:"Ray-Ban Aviator",           category:"Fashion",     price:8590,   img:"RBA.jpeg",     discount:5,  rating:4.6, reviews:"19,880 ratings", stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["Classic teardrop lens — 100% UV protection","Lightweight gold-tone metal frame","Iconic double bridge design since 1937","Crystal lenses for superior optical clarity","Adjustable nose pads for a custom fit"] },
+    { id:13, name:"Logitech MX Master 3S",     category:"Accessories", price:9995,   img:"LMM3S.jpeg",   discount:18, rating:4.8, reviews:"11,230 ratings", stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["MagSpeed electromagnetic scrolling — whisper quiet","8000 DPI high-precision sensor on any surface","Silent clicks — 90% noise reduction vs standard","Connect up to 3 devices, switch with one button","USB-C quick charge: 1 min = 3 hours of use"] },
+    { id:14, name:"Keychron Q1 Pro",           category:"Accessories", price:18999,  img:"Kq1P.jpeg",    discount:8,  rating:4.7, reviews:"3,410 ratings",  stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["QMK/VIA fully programmable with any key remap","Bluetooth 5.1 wireless + USB-C wired dual mode","Gasket-mount design for a soft, bouncy typing feel","CNC machined full-aluminium body","Hot-swappable PCB — swap switches without soldering"] },
+    { id:15, name:"Nespresso Coffee Machine",  category:"Home",        price:18500,  img:"NCM.jpeg",     discount:14, rating:4.5, reviews:"7,600 ratings",  stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["19-bar high-pressure pump for rich espresso","Rapid heat-up in just 25 seconds","Compact design — fits any kitchen countertop","Compatible with all Original Nespresso capsules","Energy-saving auto off after 9 minutes"] },
+    { id:16, name:"Dyson V12 Detect Slim",     category:"Home",        price:42900,  img:"DV12DS.jpeg",  discount:9,  rating:4.7, reviews:"4,980 ratings",  stock: Math.floor(Math.random() * 14) + 11,
+      highlights:["Laser Slim Fluffy head reveals microscopic dust","HEPA filtration captures 99.97% of particles","Up to 60 minutes run time on eco mode","LCD screen shows real-time suction & motor data","5 power modes for carpet, hard floor & crevices"] }
+];
+
+// cart = { productId: quantity }  (map for easy qty management)
+let cartMap = JSON.parse(localStorage.getItem('shopCartMap')) || {};
+let registeredUsers = JSON.parse(localStorage.getItem('shopUsers')) || {};
+let currentUser = localStorage.getItem('activeUser') || null;
+let userOrders = JSON.parse(localStorage.getItem('shopOrders')) || {};
+let activeCategory = 'All', searchQuery = '', pendingCheckout = false;
+let generatedOTP = null, tempSignupData = {}, pendingReturnIndex = null;
+let detailProductId = null, detailQty = 1;
+
+// COUPON SYSTEM VARS
+let currentCouponCode = null;
+let currentDiscountRate = 0; 
+// 1. ADDED MORE COUPONS HERE
+const VALID_COUPONS = {
+    "WELCOME10": 0.10, 
+    "SALE20": 0.20,    
+    "FLASH30": 0.30,   
+    "NEWUSER50": 0.50, 
+    "FESTIVE15": 0.15 
+};
+
+window.onload = () => { renderCategories(); renderProducts(); updateCartUI(); checkUser(); };
+
+function formatPrice(p) { return "₹" + p.toLocaleString('en-IN'); }
+function getMRP(price, disc) { return Math.round(price / (1 - disc / 100)); }
+function genStars(r) {
+    const full = Math.floor(r);
+    return '★'.repeat(full) + (r % 1 >= 0.5 ? '⯨' : '') + '☆'.repeat(5 - full - (r % 1 >= 0.5 ? 1 : 0));
+}
+
+// --- Stock helpers ---
+function availableStock(p) {
+    return Math.max(0, p.stock - (cartMap[p.id] || 0));
+}
+function getStockInfo(p) {
+    const avail = availableStock(p);
+    if (p.stock === 0) return { label: 'Out of Stock', cls: 'out-of-stock', badgeCls: 'out-of-stock' };
+    if (avail === 0) return { label: 'All in your cart!', cls: 'low-stock', badgeCls: 'low-stock' };
+    if (p.stock <= 3) return { label: `Only ${p.stock} left!`, cls: 'low-stock', badgeCls: 'low-stock' };
+    return { label: `In Stock (${p.stock})`, cls: 'in-stock', badgeCls: 'in-stock' };
+}
+
+// --- Cart quantity in cart (how many of this product are in cart) ---
+function cartQtyForProduct(id) { return cartMap[id] || 0; }
+function totalCartItems() { return Object.values(cartMap).reduce((a, b) => a + b, 0); }
+
+function renderCategories() {
+    const cats = ['All', ...new Set(productsData.map(p => p.category))];
+    document.getElementById('category-list').innerHTML = cats.map(c =>
+        `<div class="filter-option ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${c}</div>`
+    ).join('');
+}
+function setCategory(c) { activeCategory = c; renderCategories(); renderProducts(); }
+function handleSearch() { searchQuery = document.getElementById('search-input').value.toLowerCase(); renderProducts(); }
+
+function renderProducts() {
+    const container = document.getElementById('product-grid');
+    const filtered = productsData.filter(p =>
+        (activeCategory === 'All' || p.category === activeCategory) && p.name.toLowerCase().includes(searchQuery)
+    );
+    document.getElementById('result-count').innerText = filtered.length;
+    if (!filtered.length) { container.innerHTML = "<p>No products found.</p>"; return; }
+    container.innerHTML = filtered.map(p => {
+        const mrp = getMRP(p.price, p.discount);
+        const si = getStockInfo(p);
+        const oos = p.stock === 0;
+        const avail = availableStock(p);
+        const inCart = cartQtyForProduct(p.id);
+        const canAdd = !oos && avail > 0;
+        return `<div class="product-card ${oos ? 'out-of-stock' : ''}" onclick="openDetail(${p.id})">
+            <div class="card-img">
+                <img src="${p.img}" alt="${p.name}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://placehold.co/400?text=Image+Unavailable';">
+                ${oos ? '<div class="oos-overlay">OUT OF STOCK</div>' : ''}
+            </div>
+            <span class="stock-badge ${si.badgeCls}">${si.label}</span>
+            <div class="p-cat">${p.category}</div>
+            <div class="p-title" title="${p.name}">${p.name}</div>
+            <div class="p-price">${formatPrice(p.price)} <span style="font-size:12px;color:#888;font-weight:400;text-decoration:line-through;">${formatPrice(mrp)}</span>
+                <span style="font-size:11px;color:#007600;font-weight:600;margin-left:4px;">${p.discount}% off</span>
+            </div>
+            <div class="btn-group">
+                ${inCart > 0 && !oos ? `
+                <div class="card-qty-control" onclick="event.stopPropagation()">
+                    <button onclick="event.stopPropagation();cardDecreaseQty(${p.id})">−</button>
+                    <span class="qty-num">${inCart}</span>
+                    <button onclick="event.stopPropagation();cardIncreaseQty(${p.id})" ${!canAdd ? 'disabled' : ''}>+</button>
+                </div>` : ''}
+                <div class="btn-row">
+                    ${oos
+                        ? `<button class="add-btn" disabled>Out of Stock</button><button class="buy-btn" disabled>Unavailable</button>`
+                        : inCart > 0
+                            ? `<button class="buy-btn" style="flex:1" onclick="event.stopPropagation();buyNow(${p.id})">Buy Now</button>`
+                            : `<button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id},1)">Add to Cart</button>
+                               <button class="buy-btn" onclick="event.stopPropagation();buyNow(${p.id})">Buy Now</button>`
+                    }
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// Card-level qty controls
+function cardIncreaseQty(id) {
+    const p = productsData.find(x => x.id === id);
+    if (!p) return;
+    const avail = availableStock(p);
+    if (avail > 0) {
+        cartMap[id] = (cartMap[id] || 0) + 1;
+        saveCart(); updateCartUI(); renderProducts();
+    }
+}
+function cardDecreaseQty(id) {
+    const cur = cartQtyForProduct(id);
+    if (cur <= 1) {
+        delete cartMap[id];
+    } else {
+        cartMap[id] = cur - 1;
+    }
+    saveCart(); updateCartUI(); renderProducts();
+}
+
+// ===== PRODUCT DETAIL =====
+function openDetail(id) {
+    const p = productsData.find(x => x.id === id);
+    if (!p) return;
+    detailProductId = id;
+    detailQty = 1;
+    const mrp = getMRP(p.price, p.discount);
+    const oos = p.stock === 0;
+    const avail = availableStock(p); 
+
+    document.getElementById('dtop-cat').innerText = p.category;
+    document.getElementById('d-cat').innerText = p.category;
+    document.getElementById('d-name').innerText = p.name;
+    const img = document.getElementById('d-img');
+    img.src = p.img; img.alt = p.name;
+    img.onerror = function(){ this.src='https://placehold.co/400?text=Image'; };
+    document.getElementById('d-oos-overlay').style.display = (oos || avail === 0) ? 'flex' : 'none';
+    if (!oos && avail === 0) {
+        document.getElementById('d-oos-overlay').innerText = 'ALL STOCK IN CART';
+        document.getElementById('d-oos-overlay').style.fontSize = '13px';
+    } else {
+        document.getElementById('d-oos-overlay').innerText = 'OUT OF STOCK';
+        document.getElementById('d-oos-overlay').style.fontSize = '15px';
+    }
+
+    document.getElementById('d-stars').innerText = genStars(p.rating);
+    document.getElementById('d-rnum').innerText = p.rating;
+    document.getElementById('d-rcnt').innerText = '(' + p.reviews + ')';
+    document.getElementById('d-price').innerText = formatPrice(p.price);
+    document.getElementById('d-mrp').innerText = 'M.R.P: ' + formatPrice(mrp);
+    document.getElementById('d-save').innerText = `Save ${formatPrice(mrp - p.price)} (${p.discount}% off)`;
+
+    const stockEl = document.getElementById('d-stock-status');
+    if (oos) {
+        stockEl.className = 'detail-stock-status out';
+        stockEl.innerText = 'Out of Stock';
+    } else if (avail === 0) {
+        stockEl.className = 'detail-stock-status low';
+        stockEl.innerText = `All ${p.stock} units are in your cart`;
+    } else if (p.stock <= 3) {
+        stockEl.className = 'detail-stock-status low';
+        stockEl.innerText = `Only ${avail} left available (${cartQtyForProduct(id)} in cart)`;
+    } else {
+        stockEl.className = 'detail-stock-status in';
+        stockEl.innerText = `In Stock — ${avail} available`;
+    }
+
+    const qtyWrapper = document.getElementById('d-qty-wrapper');
+    const canAdd = !oos && avail > 0;
+    qtyWrapper.style.display = canAdd ? 'flex' : 'none';
+    if (canAdd) {
+        if (detailQty > avail) detailQty = avail;
+        updateDetailQtyUI(p);
+    }
+
+    document.getElementById('d-highlights').innerHTML = p.highlights.map(h => `<li>${h}</li>`).join('');
+
+    const addBtn = document.getElementById('d-add');
+    const buyBtn = document.getElementById('d-buy');
+    const effectiveOos = oos || avail === 0;
+    addBtn.disabled = effectiveOos; buyBtn.disabled = oos; 
+
+    addBtn.onclick = (e) => { e.stopPropagation(); if (!effectiveOos) { addToCart(id, detailQty); closeDetail(); } };
+    buyBtn.onclick = (e) => { e.stopPropagation(); if (!oos) { if (!effectiveOos) addToCart(id, detailQty); closeDetail(); initiateCheckout(); } };
+
+    document.getElementById('detail-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function updateDetailQtyUI(p) {
+    if (!p) p = productsData.find(x => x.id === detailProductId);
+    const avail = availableStock(p);
+    document.getElementById('d-qty-num').innerText = detailQty;
+    document.getElementById('d-qty-minus').disabled = detailQty <= 1;
+    document.getElementById('d-qty-plus').disabled = detailQty >= avail;
+    const maxNote = avail <= 5 ? `Max ${avail} more available` : '';
+    document.getElementById('d-qty-max').innerText = maxNote;
+}
+function changeDetailQty(delta) {
+    const p = productsData.find(x => x.id === detailProductId);
+    if (!p) return;
+    const avail = availableStock(p);
+    detailQty = Math.max(1, Math.min(avail, detailQty + delta));
+    updateDetailQtyUI(p);
+}
+function closeDetail() {
+    document.getElementById('detail-modal').classList.remove('open');
+    document.body.style.overflow = '';
+}
+function handleDetailBgClick(e) { if (e.target === document.getElementById('detail-modal')) closeDetail(); }
+
+// --- CART LOGIC ---
+function addToCart(id, qty = 1) {
+    const p = productsData.find(x => x.id === id);
+    if (!p || p.stock === 0) return;
+    const cur = cartQtyForProduct(id);
+    const newQty = Math.min(p.stock, cur + qty);
+    cartMap[id] = newQty;
+    saveCart(); updateCartUI(); renderProducts();
+}
+function buyNow(id, qty = 1) { addToCart(id, qty); initiateCheckout(); }
+function saveCart() { localStorage.setItem('shopCartMap', JSON.stringify(cartMap)); }
+
+function updateCartUI() {
+    const totalItems = totalCartItems();
+    document.getElementById('cart-badge').innerText = totalItems;
+    const container = document.getElementById('cart-items');
+    let total = 0;
+    const ids = Object.keys(cartMap).map(Number);
+
+    if (!ids.length) {
+        container.innerHTML = '<p style="text-align:center;color:#888;padding:30px 0;">Your cart is empty</p>';
+        document.getElementById('cart-item-count').innerText = '';
+        document.getElementById('cart-total').innerText = '₹0';
+        return;
+    }
+
+    container.innerHTML = ids.map(id => {
+        const p = productsData.find(x => x.id === id);
+        if (!p) return '';
+        const qty = cartMap[id];
+        const lineTotal = p.price * qty;
+        total += lineTotal;
+        return `<div class="cart-item">
+            <img class="cart-item-img" src="${p.img}" referrerpolicy="no-referrer" onerror="this.src='https://placehold.co/54'">
+            <div class="cart-item-info">
+                <div class="cart-item-name">${p.name}</div>
+                <div class="cart-item-price">${formatPrice(p.price)} each</div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div class="cart-qty-control">
+                        <button onclick="cartChangeQty(${id},-1)" ${qty <= 1 ? '' : ''}>−</button>
+                        <span class="cqty-num">${qty}</span>
+                        <button onclick="cartChangeQty(${id},1)" ${qty >= p.stock ? 'disabled' : ''}>+</button>
+                    </div>
+                    <span style="font-size:12px;color:#555;">= <strong>${formatPrice(lineTotal)}</strong></span>
+                </div>
+                ${p.stock <= 3 ? `<div style="font-size:11px;color:#e65100;margin-top:4px;">⚠ Only ${p.stock} in stock</div>` : ''}
+            </div>
+            <span style="color:red;cursor:pointer;font-size:22px;line-height:1;padding:2px 4px;" onclick="removeCartItem(${id})">&times;</span>
+        </div>`;
+    }).join('');
+
+    document.getElementById('cart-item-count').innerText = `${totalItems} item${totalItems !== 1 ? 's' : ''} in cart`;
+    document.getElementById('cart-total').innerText = formatPrice(total);
+}
+
+function cartChangeQty(id, delta) {
+    const p = productsData.find(x => x.id === id);
+    if (!p) return;
+    const cur = cartMap[id] || 0;
+    const newQty = cur + delta;
+    if (newQty <= 0) { delete cartMap[id]; }
+    else if (newQty <= p.stock) { cartMap[id] = newQty; }
+    saveCart(); updateCartUI(); renderProducts();
+}
+function removeCartItem(id) { delete cartMap[id]; saveCart(); updateCartUI(); renderProducts(); }
+function toggleCart() { const el=document.getElementById('cart-modal'); el.style.display=el.style.display==='block'?'none':'block'; }
+
+// --- AUTH ---
+function handleAuthClick() {
+    if(currentUser) { if(confirm("Logout from ShopSphere?")) { localStorage.removeItem('activeUser'); currentUser=null; checkUser(); alert("Logged out."); } }
+    else { document.getElementById('auth-modal').style.display='block'; toggleAuthView('login'); }
+}
+function closeAuthModal() { document.getElementById('auth-modal').style.display='none'; }
+function toggleAuthView(v) {
+    document.getElementById('login-view').style.display=v==='login'?'block':'none';
+    document.getElementById('signup-view').style.display=v==='signup'?'block':'none';
+    ['login-step-1','signup-step-1'].forEach(id=>document.getElementById(id).style.display='block');
+    ['login-step-2','signup-step-2'].forEach(id=>document.getElementById(id).style.display='none');
+}
+function generateOTP() { generatedOTP=Math.floor(1000+Math.random()*9000); setTimeout(()=>alert(`Your OTP is: ${generatedOTP}`),500); }
+function getLoginOTP() {
+    const m=document.getElementById('login-mobile').value;
+    if(!m||m.length!==10) return alert("Enter valid 10-digit mobile number");
+    if(!registeredUsers[m]) return alert("Account not found. Please Sign Up first.");
+    generateOTP(); document.getElementById('login-step-1').style.display='none'; document.getElementById('login-step-2').style.display='block';
+}
+function verifyLoginOTP() {
+    if(document.getElementById('login-otp').value==generatedOTP) {
+        currentUser=document.getElementById('login-mobile').value; localStorage.setItem('activeUser',currentUser);
+        checkUser(); closeAuthModal(); if(pendingCheckout){pendingCheckout=false;openPaymentModal();}
+    } else alert("Invalid OTP");
+}
+function getSignupOTP() {
+    const n=document.getElementById('signup-name').value, m=document.getElementById('signup-mobile').value;
+    if(!n||!m||m.length!==10) return alert("Enter valid details");
+    if(registeredUsers[m]) return alert("Account already exists!");
+    tempSignupData={name:n,mobile:m}; generateOTP(); document.getElementById('signup-step-1').style.display='none'; document.getElementById('signup-step-2').style.display='block';
+}
+function verifySignupOTP() {
+    if(document.getElementById('signup-otp').value==generatedOTP) {
+        registeredUsers[tempSignupData.mobile]=tempSignupData.name; localStorage.setItem('shopUsers',JSON.stringify(registeredUsers));
+        currentUser=tempSignupData.mobile; localStorage.setItem('activeUser',currentUser);
+        checkUser(); closeAuthModal(); alert("Account Created!"); if(pendingCheckout){pendingCheckout=false;openPaymentModal();}
+    } else alert("Invalid OTP");
+}
+function resendOTP(){generateOTP();}
+function checkUser(){document.getElementById('user-greeting').innerText=currentUser?"Hello, "+registeredUsers[currentUser]:"Hello, Sign in";}
+
+// --- CHECKOUT & COUPONS ---
+function initiateCheckout() {
+    if(!totalCartItems()) return alert("Cart is empty");
+    if(!currentUser){pendingCheckout=true;document.getElementById('cart-modal').style.display='none';handleAuthClick();}
+    else openPaymentModal();
+}
+
+function getCartTotalValue() {
+    const ids = Object.keys(cartMap).map(Number);
+    let total = 0;
+    ids.forEach(id => {
+        const p = productsData.find(x => x.id === id);
+        if (p) total += p.price * cartMap[id];
+    });
+    return total;
+}
+
+function openPaymentModal() {
+    document.getElementById('cart-modal').style.display='none';
+    
+    // Reset Coupon
+    currentCouponCode = null;
+    currentDiscountRate = 0;
+    document.getElementById('coupon-input').value = "";
+    document.getElementById('coupon-msg').innerHTML = "";
+    document.getElementById('coupon-msg').style.color = "#555";
+
+    updatePaymentModalTotals();
+    document.getElementById('payment-modal').style.display='block';
+}
+
+function applyCoupon() {
+    const input = document.getElementById('coupon-input').value.trim().toUpperCase();
+    const msg = document.getElementById('coupon-msg');
+    
+    if(!input) {
+        msg.innerHTML = "Please enter a code.";
+        msg.style.color = "red";
+        return;
+    }
+
+    // 2. CHECK IF USER LOGGED IN
+    if(!currentUser) {
+         msg.innerHTML = "Please login to use coupons.";
+         msg.style.color = "red";
+         return;
+    }
+
+    // 3. CHECK HISTORY (One-Time Use)
+    const usedCoupons = JSON.parse(localStorage.getItem('shopUsedCoupons')) || {};
+    const userHistory = usedCoupons[currentUser] || [];
+
+    if (userHistory.includes(input)) {
+        currentCouponCode = null;
+        currentDiscountRate = 0;
+        msg.innerHTML = `This coupon has already been used by you.`;
+        msg.style.color = "red";
+        updatePaymentModalTotals();
+        return;
+    }
+
+    if(VALID_COUPONS[input]) {
+        currentCouponCode = input;
+        currentDiscountRate = VALID_COUPONS[input];
+        msg.innerHTML = `Success! Coupon <strong>${input}</strong> applied.`;
+        msg.style.color = "green";
+        updatePaymentModalTotals();
+    } else {
+        currentCouponCode = null;
+        currentDiscountRate = 0;
+        msg.innerHTML = `Invalid coupon code.`;
+        msg.style.color = "red";
+        updatePaymentModalTotals();
+    }
+}
+
+function updatePaymentModalTotals() {
+    const subtotal = getCartTotalValue();
+    const discountAmount = Math.round(subtotal * currentDiscountRate);
+    const total = subtotal - discountAmount;
+
+    document.getElementById('pay-subtotal').innerText = formatPrice(subtotal);
+    document.getElementById('pay-discount').innerText = "- " + formatPrice(discountAmount);
+    document.getElementById('pay-total').innerText = formatPrice(total);
+}
+
+function closePaymentModal(){document.getElementById('payment-modal').style.display='none';}
+function selectPayment(m,el) {
+    document.querySelectorAll('.payment-details').forEach(e=>e.style.display='none');
+    document.querySelectorAll('.payment-option').forEach(e=>e.classList.remove('selected'));
+    document.querySelectorAll('input[name="payment"]').forEach(e=>e.checked=false);
+    el.classList.add('selected'); el.querySelector('input').checked=true;
+    if(m==='upi')document.getElementById('upi-fields').style.display='block';
+    if(m==='card')document.getElementById('card-fields').style.display='block';
+}
+
+function confirmOrder() {
+    const btn=document.getElementById('pay-btn'); btn.innerText="Processing..."; btn.disabled=true;
+    setTimeout(()=>{
+        // Build items
+        const items = Object.keys(cartMap).map(id => {
+            const p = productsData.find(x => x.id == id);
+            return { ...p, qty: cartMap[id] };
+        }).filter(Boolean);
+
+        // Calculate Final Paid Amount
+        const finalTotalStr = document.getElementById('pay-total').innerText;
+        
+        const o={
+            id:'ORD-'+Math.floor(100000+Math.random()*900000),
+            date:new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}),
+            total:finalTotalStr,
+            items,
+            status:'Delivered',
+            returnable:true
+        };
+
+        if(!userOrders[currentUser]) userOrders[currentUser]=[];
+        userOrders[currentUser].unshift(o); 
+        localStorage.setItem('shopOrders',JSON.stringify(userOrders));
+
+        // 4. SAVE USED COUPON TO HISTORY
+        if (currentCouponCode) {
+            const usedCoupons = JSON.parse(localStorage.getItem('shopUsedCoupons')) || {};
+            if (!usedCoupons[currentUser]) usedCoupons[currentUser] = [];
+            usedCoupons[currentUser].push(currentCouponCode);
+            localStorage.setItem('shopUsedCoupons', JSON.stringify(usedCoupons));
+        }
+
+        // ✅ DEDUCT STOCK
+        Object.keys(cartMap).forEach(id => {
+            const p = productsData.find(x => x.id == id);
+            if (p) p.stock = Math.max(0, p.stock - cartMap[id]);
+        });
+
+        alert("Order Placed Successfully! 🎉");
+        cartMap={}; saveCart(); updateCartUI(); renderProducts(); closePaymentModal();
+        btn.innerText="Place Order"; btn.disabled=false; toggleOrders();
+    },2000);
+}
+
+// --- ORDERS ---
+function toggleOrders() {
+    if(!currentUser)return alert("Please login");
+    const el=document.getElementById('orders-modal'); el.style.display=el.style.display==='block'?'none':'block';
+    if(el.style.display==='block')renderOrders();
+}
+function renderOrders() {
+    const list=document.getElementById('orders-list'); const orders=userOrders[currentUser]||[];
+    if(!orders.length){list.innerHTML="<p style='text-align:center;'>No orders yet.</p>";return;}
+    list.innerHTML=orders.map((o,i)=>`<div class="order-card">
+        <div class="order-header">
+            <div><span>ORDER PLACED</span><br><strong>${o.date}</strong></div>
+            <div><span>TOTAL</span><br><strong>${o.total}</strong></div>
+            <div><span>ORDER # ${o.id}</span></div>
+        </div>
+        <div class="order-body">
+            <div style="flex-grow:1;">
+                <div class="order-status" style="color:${o.status==='Returned'?'#B12704':'#007600'}">${o.status==='Returned'?'Refund Processed':'Delivered'}</div>
+                <div style="font-size:13px;margin-bottom:10px;">${o.items.map(x=>x.name+(x.qty>1?' ×'+x.qty:'')).join(', ')}</div>
+                <div style="display:flex;gap:5px;">${o.items.map(x=>`<img src="${x.img}" style="width:40px;height:40px;border:1px solid #eee;object-fit:contain;" referrerpolicy="no-referrer" onerror="this.src='https://placehold.co/50'">`).join('')}</div>
+            </div>
+            <div>${o.status!=='Returned'?`<button class="return-btn" onclick="initiateReturn(${i})">Return Item</button>`:''}</div>
+        </div>
+    </div>`).join('');
+}
+function initiateReturn(i){pendingReturnIndex=i;generateOTP();document.getElementById('return-modal').style.display='block';}
+function closeReturnModal(){document.getElementById('return-modal').style.display='none';}
+function verifyReturnOTP(){
+    if(document.getElementById('return-otp-input').value==generatedOTP){
+        userOrders[currentUser][pendingReturnIndex].status="Returned";
+        userOrders[currentUser][pendingReturnIndex].returnable=false;
+        localStorage.setItem('shopOrders',JSON.stringify(userOrders));
+        closeReturnModal(); renderOrders();
+        setTimeout(()=>alert("Return initiated.\n\nPickup & Refund will take 3–7 days."),200);
+    } else alert("Invalid OTP. Please try again.");
+}
+</script>
+</body>
+</html>

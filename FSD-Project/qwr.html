@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopSphere India | Official Store</title>
+    <style>
+        /* =========================================
+           1. CSS VARIABLES & RESET
+           ========================================= */
+        :root {
+            /* Palette */
+            --color-primary: #232f3e;
+            --color-secondary: #37475a;
+            --color-accent: #ffd814;
+            --color-accent-dark: #f7ca00;
+            --color-text-dark: #0F1111;
+            --color-bg-gray: #e3e6e6;
+            --color-white: #ffffff;
+            --color-link: #007185;
+            --color-price: #B12704;
+            --color-success: #007600;
+            
+            /* Dimensions */
+            --border-radius: 8px;
+            --max-width: 1500px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: var(--color-bg-gray); color: var(--color-text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+        a { text-decoration: none; color: inherit; cursor: pointer; }
+        button { cursor: pointer; }
+
+        /* =========================================
+           2. HEADER & NAVIGATION
+           ========================================= */
+        header { background-color: #131921; color: white; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; }
+        .header-inner { max-width: var(--max-width); margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+        
+        .logo { font-size: 24px; font-weight: 700; color: white; margin-right: 10px; }
+        .logo span { color: var(--color-accent); }
+
+        .search-wrapper { flex-grow: 1; max-width: 800px; display: flex; border-radius: 4px; overflow: hidden; height: 40px; }
+        .search-wrapper input { width: 100%; padding: 0 15px; border: none; outline: none; font-size: 15px; }
+        .search-wrapper button { background-color: var(--color-accent); border: none; padding: 0 20px; }
+        .search-wrapper button:hover { background-color: var(--color-accent-dark); }
+
+        .nav-links { display: flex; gap: 25px; align-items: center; font-size: 14px; }
+        .nav-item { cursor: pointer; color: white; display: flex; flex-direction: column; line-height: 1.2; position: relative; }
+        .nav-item small { font-size: 11px; color: #ccc; }
+        .cart-badge { background: var(--color-accent); color: #111; font-size: 11px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; position: absolute; top: -5px; right: -8px; }
+
+        /* =========================================
+           3. LAYOUT & SIDEBAR
+           ========================================= */
+        .container { display: flex; max-width: var(--max-width); margin: 20px auto; padding: 0 20px; gap: 20px; flex: 1; align-items: flex-start; }
+        
+        .sidebar { width: 260px; flex-shrink: 0; background: white; padding: 20px; border-radius: var(--border-radius); box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 80px; max-height: 85vh; overflow-y: auto; }
+        .filter-option { cursor: pointer; padding: 8px 10px; border-radius: 4px; font-size: 13px; transition: 0.1s; display: flex; justify-content: space-between; align-items: center; }
+        .filter-option:hover { background-color: #f0f2f2; color: #e77600; }
+        .filter-option.active { font-weight: 700; background-color: #f0f2f2; border-left: 3px solid #e77600; }
+
+        /* =========================================
+           4. PRODUCT GRID & CARDS
+           ========================================= */
+        .main-content { flex-grow: 1; width: 100%; }
+        
+        /* Hero Section */
+        .hero { background: linear-gradient(to right, #232f3e, #131921); color: white; padding: 30px; border-radius: var(--border-radius); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .hero-coupon { background: rgba(255,255,255,0.1); padding: 12px; border: 1px dashed var(--color-accent); border-radius: 4px; margin-top: 15px; font-size: 13px; display:inline-block; }
+        .coupon-tag { background: var(--color-accent); color: #111; padding: 2px 6px; border-radius: 3px; font-weight: bold; margin-right: 5px; font-size: 11px; }
+
+        /* Grid */
+        .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        @media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 900px) { .container { flex-direction: column; } .sidebar { width: 100%; position: static; margin-bottom: 20px; } .product-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .product-grid { grid-template-columns: 1fr; } }
+
+        /* Card */
+        .product-card { background: white; border: 1px solid #ddd; border-radius: var(--border-radius); padding: 15px; display: flex; flex-direction: column; height: 100%; transition: box-shadow 0.2s; position: relative; cursor: pointer; }
+        .product-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.15); transform: translateY(-2px); }
+        .product-card.out-of-stock { opacity: 0.75; }
+
+        .card-img { height: 200px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; position: relative; }
+        .card-img img { max-height: 100%; max-width: 100%; object-fit: contain; mix-blend-mode: multiply; }
+        
+        .stock-badge { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 12px; z-index: 2; }
+        .stock-badge.in-stock { background: #e8f5e9; color: var(--color-success); border: 1px solid #a5d6a7; }
+        .stock-badge.low-stock { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+        .stock-badge.out-of-stock { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+
+        .p-title { font-size: 14px; font-weight: 500; height: 38px; overflow: hidden; margin-bottom: 5px; line-height: 1.3; color: var(--color-link); }
+        .p-price { font-size: 18px; font-weight: 700; color: var(--color-text-dark); margin-bottom: 10px; }
+        
+        /* Buttons */
+        .btn-group { margin-top: auto; display: flex; gap: 5px; flex-direction: column; }
+        .btn-row { display: flex; gap: 5px; }
+        .add-btn { flex:1; background: var(--color-accent); border: none; padding: 8px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .buy-btn { flex:1; background: #fa8900; border: none; padding: 8px; border-radius: 20px; font-size: 12px; font-weight: bold; color: white; }
+        .add-btn:disabled, .buy-btn:disabled { background: #e0e0e0; color: #aaa; cursor: not-allowed; }
+
+        /* =========================================
+           5. MODALS & SIDE PANELS
+           ========================================= */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; backdrop-filter: blur(2px); }
+        .side-panel { position: absolute; right: 0; top: 0; width: 380px; height: 100%; background: white; padding: 20px; display: flex; flex-direction: column; animation: slideIn 0.3s; }
+        .auth-box { background: white; width: 90%; max-width: 380px; margin: 80px auto; padding: 30px; border-radius: 8px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.3s; }
+        .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; }
+
+        /* Animations */
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* Cart Items */
+        .cart-item { display:flex; gap:10px; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:12px; }
+        .cart-qty-control { display: inline-flex; align-items: center; border: 1.5px solid #ddd; border-radius: 6px; height: 28px; }
+        .cart-qty-control button { background: #f5f5f5; border: none; width: 28px; height: 100%; font-weight: bold; }
+
+        /* Product Detail Modal (Simplified CSS for brevity) */
+        #detail-modal.open { display: flex; align-items: center; justify-content: center; }
+        .detail-box { background: white; width: 92%; max-width: 860px; max-height: 92vh; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+        .detail-inner { display: flex; flex: 1; overflow: hidden; }
+        .detail-img-panel { width: 42%; background: #f7f8f8; display: flex; align-items: center; justify-content: center; }
+        .detail-info-panel { flex: 1; padding: 28px; overflow-y: auto; }
+        .detail-price { font-size: 26px; font-weight: 700; color: var(--color-price); }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <a href="#" class="logo">Shop<span>Sphere</span></a>
+        <div class="search-wrapper">
+            <input type="text" id="search-input" placeholder="Search brands, products..." onkeyup="handleSearch()">
+            <button>🔍</button>
+        </div>
+        <div class="nav-links">
+            <div class="nav-item" onclick="handleAuthClick()">
+                <small id="user-greeting">Hello, Sign in</small>
+                <strong>Account & Lists</strong>
+            </div>
+            <div class="nav-item" onclick="toggleModal('orders-modal')">
+                <small>Returns</small><strong>& Orders</strong>
+            </div>
+            <div class="nav-item" onclick="toggleModal('cart-modal')" style="position:relative;">
+                <span style="font-size:24px;">🛒</span>
+                <div id="cart-badge" class="cart-badge">0</div>
+                <strong>Cart</strong>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <aside class="sidebar">
+        <h3>Department</h3>
+        <div id="category-list"></div>
+    </aside>
+    
+    <main class="main-content">
+        <div class="hero">
+            <div>
+                <h1>Mega Monsoon Sale</h1>
+                <p>Flat 40% Off on Electronics & Fashion.</p>
+                <div class="hero-coupon">
+                    <strong>🎟️ Coupons:</strong> NEWUSER50, FLASH30
+                </div>
+                <br><br>
+                <button onclick="document.getElementById('product-grid').scrollIntoView({behavior:'smooth'})">Shop Deals</button>
+            </div>
+        </div>
+
+        <h2 style="margin-bottom:15px;font-weight:700;">Results (<span id="result-count">0</span>)</h2>
+        <div id="product-grid" class="product-grid"></div>
+    </main>
+</div>
+
+<div id="detail-modal" class="modal-overlay" onclick="handleOutsideClick(event, 'detail-modal')">
+    <div class="detail-box">
+        <div class="detail-inner">
+            <div class="detail-img-panel">
+                <img id="d-img" src="" alt="" style="max-width:90%;max-height:300px;">
+            </div>
+            <div class="detail-info-panel">
+                <h2 id="d-name"></h2>
+                <div id="d-price" class="detail-price"></div>
+                <hr style="margin:15px 0;border:0;border-top:1px solid #eee;">
+                <ul id="d-highlights" style="padding-left:20px;margin-bottom:20px;font-size:13px;line-height:1.6;"></ul>
+                <div class="btn-row">
+                    <button class="add-btn" id="d-add" style="padding:12px;">Add to Cart</button>
+                </div>
+                <br>
+                <button onclick="toggleModal('detail-modal')" style="background:none;border:none;text-decoration:underline;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="cart-modal" class="modal-overlay">
+    <div class="side-panel">
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #ddd;padding-bottom:10px;">
+            <h2>🛒 Cart</h2>
+            <span style="cursor:pointer;font-size:24px;" onclick="toggleModal('cart-modal')">&times;</span>
+        </div>
+        <div id="cart-items" style="flex-grow:1;overflow-y:auto;padding-top:10px;"></div>
+        <div style="border-top:1px solid #ddd;padding-top:15px;">
+            <h3>Subtotal: <span id="cart-total">₹0</span></h3>
+            <button class="add-btn" style="width:100%;padding:12px;margin-top:10px;" onclick="initiateCheckout()">Proceed to Buy</button>
+        </div>
+    </div>
+</div>
+
+<div id="auth-modal" class="modal-overlay">
+    <div class="auth-box">
+        <span style="position:absolute;right:15px;top:10px;cursor:pointer;font-size:24px;" onclick="toggleModal('auth-modal')">&times;</span>
+        <h2>Sign In / Sign Up</h2>
+        <p style="margin-bottom:15px;color:#666;font-size:13px;">Enter your mobile number to continue.</p>
+        <input id="auth-mobile" class="auth-input" type="tel" placeholder="Mobile Number">
+        <button class="add-btn" style="width:100%;padding:10px;" onclick="handleLogin()">Login / Register</button>
+    </div>
+</div>
+
+<div id="orders-modal" class="modal-overlay">
+    <div class="side-panel" style="width:450px;">
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid #ddd;padding-bottom:10px;">
+            <h2>Your Orders</h2>
+            <span style="cursor:pointer;font-size:24px;" onclick="toggleModal('orders-modal')">&times;</span>
+        </div>
+        <div id="orders-list" style="flex-grow:1;overflow-y:auto;padding-top:10px;"></div>
+    </div>
+</div>
+
+<script>
+/**
+ * =================================================================
+ * 1. CONFIGURATION & MOCK DATA
+ * =================================================================
+ */
+const PRODUCTS_DB = [
+    { id:1, name:"iPhone 15 Pro", category:"Mobiles", price:134900, img:"i15p.jpeg", stock: 15, highlights: ["A17 Pro Chip", "Titanium Design"] },
+    { id:2, name:"Samsung S24 Ultra", category:"Mobiles", price:129999, img:"s24u.jpeg", stock: 12, highlights: ["200MP Camera", "S-Pen Included"] },
+    { id:3, name:"MacBook Air M2", category:"Laptops", price:94900, img:"Mac.jpeg", stock: 8, highlights: ["18hr Battery", "Silent Design"] },
+    { id:4, name:"Sony WH-1000XM5", category:"Audio", price:24990, img:"He.jpeg", stock: 20, highlights: ["Best ANC", "30hr Battery"] },
+    { id:5, name:"Nike Air Jordan", category:"Fashion", price:16995, img:"NAJ1.jpeg", stock: 5, highlights: ["Leather Upper", "Iconic Design"] },
+    { id:6, name:"Dyson V12", category:"Home", price:42900, img:"DV12DS.jpeg", stock: 0, highlights: ["Laser Detect", "Powerful Suction"] } // Out of stock example
+];
+
+const COUPONS = { "WELCOME10": 0.10, "FLASH30": 0.30, "NEWUSER50": 0.50 };
+
+/**
+ * =================================================================
+ * 2. STATE MANAGEMENT
+ * =================================================================
+ */
+const AppState = {
+    user: localStorage.getItem('activeUser') || null,
+    cart: JSON.parse(localStorage.getItem('shopCartMap')) || {},
+    orders: JSON.parse(localStorage.getItem('shopOrders')) || {},
+    activeCategory: 'All',
+    searchQuery: ''
+};
+
+// Auto-run on load
+document.addEventListener('DOMContentLoaded', () => {
+    updateUserUI();
+    renderCategories();
+    renderProductGrid();
+    updateCartUI();
+});
+
+/**
+ * =================================================================
+ * 3. HELPER FUNCTIONS (FORMATTING)
+ * =================================================================
+ */
+const formatCurrency = (amount) => "₹" + amount.toLocaleString('en-IN');
+const saveState = () => {
+    localStorage.setItem('shopCartMap', JSON.stringify(AppState.cart));
+    localStorage.setItem('shopOrders', JSON.stringify(AppState.orders));
+    if(AppState.user) localStorage.setItem('activeUser', AppState.user);
+};
+
+// Modal Toggles
+function toggleModal(modalId) {
+    const el = document.getElementById(modalId);
+    el.classList.toggle('open');
+    el.style.display = el.style.display === 'flex' || el.style.display === 'block' ? 'none' : 'block';
+    
+    // Specifically for detail modal which uses flex
+    if(modalId === 'detail-modal' && el.style.display === 'block') el.style.display = 'flex';
+}
+function handleOutsideClick(e, id) { if(e.target.id === id) toggleModal(id); }
+
+/**
+ * =================================================================
+ * 4. CORE LOGIC: PRODUCTS
+ * =================================================================
+ */
+function renderCategories() {
+    const categories = ['All', ...new Set(PRODUCTS_DB.map(p => p.category))];
+    const container = document.getElementById('category-list');
+    
+    container.innerHTML = categories.map(cat => `
+        <div class="filter-option ${cat === AppState.activeCategory ? 'active' : ''}" 
+             onclick="setCategory('${cat}')">
+             ${cat}
+        </div>
+    `).join('');
+}
+
+function setCategory(cat) {
+    AppState.activeCategory = cat;
+    renderCategories(); // Re-render to update active styling
+    renderProductGrid();
+}
+
+function handleSearch() {
+    AppState.searchQuery = document.getElementById('search-input').value.toLowerCase();
+    renderProductGrid();
+}
+
+function renderProductGrid() {
+    const container = document.getElementById('product-grid');
+    
+    // Filter Data
+    const filtered = PRODUCTS_DB.filter(product => {
+        const matchesCat = AppState.activeCategory === 'All' || product.category === AppState.activeCategory;
+        const matchesSearch = product.name.toLowerCase().includes(AppState.searchQuery);
+        return matchesCat && matchesSearch;
+    });
+
+    document.getElementById('result-count').innerText = filtered.length;
+
+    // Generate HTML
+    if (filtered.length === 0) {
+        container.innerHTML = "<p>No products found.</p>";
+        return;
+    }
+
+    container.innerHTML = filtered.map(product => createProductCardHTML(product)).join('');
+}
+
+function createProductCardHTML(product) {
+    const isOutOfStock = product.stock === 0;
+    const inCartQty = AppState.cart[product.id] || 0;
+    
+    // Determine Stock Badge
+    let badgeClass = 'in-stock', badgeText = 'In Stock';
+    if (isOutOfStock) { badgeClass = 'out-of-stock'; badgeText = 'Out of Stock'; }
+    else if (product.stock < 5) { badgeClass = 'low-stock'; badgeText = 'Low Stock'; }
+
+    return `
+    <div class="product-card ${isOutOfStock ? 'out-of-stock' : ''}" onclick="openProductDetail(${product.id})">
+        <span class="stock-badge ${badgeClass}">${badgeText}</span>
+        <div class="card-img">
+            <img src="${product.img}" onerror="this.src='https://placehold.co/200'">
+        </div>
+        <div class="p-title">${product.name}</div>
+        <div class="p-price">${formatCurrency(product.price)}</div>
+        
+        <div class="btn-group">
+            ${ !isOutOfStock ? `
+                <button class="add-btn" onclick="event.stopPropagation(); addToCart(${product.id})">
+                    ${inCartQty > 0 ? `Add Another (${inCartQty})` : 'Add to Cart'}
+                </button>
+            ` : `<button class="add-btn" disabled>Unavailable</button>` }
+        </div>
+    </div>`;
+}
+
+function openProductDetail(id) {
+    const product = PRODUCTS_DB.find(p => p.id === id);
+    if(!product) return;
+
+    document.getElementById('d-name').innerText = product.name;
+    document.getElementById('d-price').innerText = formatCurrency(product.price);
+    document.getElementById('d-img').src = product.img;
+    document.getElementById('d-highlights').innerHTML = product.highlights.map(h => `<li>${h}</li>`).join('');
+    
+    // Setup Add Button
+    const btn = document.getElementById('d-add');
+    if(product.stock === 0) {
+        btn.disabled = true; btn.innerText = "Out of Stock";
+    } else {
+        btn.disabled = false; btn.innerText = "Add to Cart";
+        btn.onclick = () => { addToCart(product.id); toggleModal('detail-modal'); };
+    }
+
+    toggleModal('detail-modal');
+}
+
+/**
+ * =================================================================
+ * 5. CORE LOGIC: CART
+ * =================================================================
+ */
+function addToCart(id) {
+    const product = PRODUCTS_DB.find(p => p.id === id);
+    if (!product || product.stock === 0) return;
+
+    const currentQty = AppState.cart[id] || 0;
+    if (currentQty >= product.stock) {
+        alert("Max stock reached!");
+        return;
+    }
+
+    AppState.cart[id] = currentQty + 1;
+    saveState();
+    updateCartUI();
+    renderProductGrid(); // Refresh buttons
+}
+
+function removeFromCart(id, removeAll = false) {
+    if (!AppState.cart[id]) return;
+
+    if (removeAll || AppState.cart[id] <= 1) {
+        delete AppState.cart[id];
+    } else {
+        AppState.cart[id]--;
+    }
+    saveState();
+    updateCartUI();
+    renderProductGrid();
+}
+
+function updateCartUI() {
+    const cartIds = Object.keys(AppState.cart).map(Number);
+    const container = document.getElementById('cart-items');
+    let totalItems = 0;
+    let totalPrice = 0;
+
+    if (cartIds.length === 0) {
+        container.innerHTML = "<p style='text-align:center;padding:20px;'>Cart is empty</p>";
+        document.getElementById('cart-total').innerText = "₹0";
+        document.getElementById('cart-badge').innerText = "0";
+        return;
+    }
+
+    container.innerHTML = cartIds.map(id => {
+        const product = PRODUCTS_DB.find(p => p.id === id);
+        const qty = AppState.cart[id];
+        const lineTotal = product.price * qty;
+        
+        totalItems += qty;
+        totalPrice += lineTotal;
+
+        return `
+        <div class="cart-item">
+            <div style="flex:1">
+                <strong>${product.name}</strong><br>
+                <small>${formatCurrency(product.price)} x ${qty}</small>
+            </div>
+            <div class="cart-qty-control">
+                <button onclick="removeFromCart(${id})">-</button>
+                <span style="padding:0 10px;font-size:13px;">${qty}</span>
+                <button onclick="addToCart(${id})">+</button>
+            </div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('cart-total').innerText = formatCurrency(totalPrice);
+    document.getElementById('cart-badge').innerText = totalItems;
+}
+
+function initiateCheckout() {
+    if(!AppState.user) {
+        toggleModal('cart-modal');
+        toggleModal('auth-modal');
+        return;
+    }
+    
+    // Create Mock Order
+    const orderId = 'ORD-' + Date.now();
+    const orderTotal = document.getElementById('cart-total').innerText;
+    
+    // Save Order
+    if(!AppState.orders[AppState.user]) AppState.orders[AppState.user] = [];
+    AppState.orders[AppState.user].push({
+        id: orderId,
+        date: new Date().toLocaleDateString(),
+        total: orderTotal,
+        items: {...AppState.cart}
+    });
+
+    // Clear Cart
+    AppState.cart = {};
+    saveState();
+    updateCartUI();
+    toggleModal('cart-modal');
+    alert("Order Placed Successfully!");
+    
+    // Show Orders
+    renderOrders();
+    toggleModal('orders-modal');
+}
+
+/**
+ * =================================================================
+ * 6. CORE LOGIC: AUTH & USER
+ * =================================================================
+ */
+function handleAuthClick() {
+    if(AppState.user) {
+        if(confirm("Logout?")) {
+            AppState.user = null;
+            localStorage.removeItem('activeUser');
+            updateUserUI();
+        }
+    } else {
+        toggleModal('auth-modal');
+    }
+}
+
+function handleLogin() {
+    const mobile = document.getElementById('auth-mobile').value;
+    if(mobile.length < 10) return alert("Invalid Mobile");
+    
+    AppState.user = mobile;
+    saveState();
+    updateUserUI();
+    toggleModal('auth-modal');
+}
+
+function updateUserUI() {
+    const el = document.getElementById('user-greeting');
+    if(AppState.user) {
+        el.innerText = `Hello, User ${AppState.user.substr(-4)}`;
+        renderOrders();
+    } else {
+        el.innerText = "Hello, Sign in";
+        document.getElementById('orders-list').innerHTML = "";
+    }
+}
+
+function renderOrders() {
+    if(!AppState.user) return;
+    const orders = AppState.orders[AppState.user] || [];
+    const container = document.getElementById('orders-list');
+    
+    if(orders.length === 0) {
+        container.innerHTML = "<p>No orders found.</p>";
+        return;
+    }
+
+    container.innerHTML = orders.reverse().map(ord => `
+        <div style="border:1px solid #eee; padding:10px; margin-bottom:10px; border-radius:4px;">
+            <strong>${ord.date}</strong> | ${ord.total}<br>
+            <small style="color:green;">Status: Delivered</small><br>
+            <small>Order ID: ${ord.id}</small>
+        </div>
+    `).join('');
+}
+
+</script>
+</body>
+</html>

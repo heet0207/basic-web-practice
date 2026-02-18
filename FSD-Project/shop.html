@@ -61,11 +61,11 @@
 
         .product-card { background: white; border: 1px solid #ddd; border-radius: var(--border-radius); padding: 15px; display: flex; flex-direction: column; height: 100%; transition: box-shadow 0.2s; position: relative;}
         .product-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .card-img { height: 200px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; position: relative; }
+        .card-img { height: 200px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; position: relative; cursor: pointer; }
         .card-img img { max-height: 100%; max-width: 100%; object-fit: contain; mix-blend-mode: multiply; transition: transform 0.3s; }
         .product-card:hover .card-img img { transform: scale(1.05); }
 
-        .p-title { font-size: 14px; font-weight: 500; height: 38px; overflow: hidden; margin-bottom: 5px; line-height: 1.3; color: #007185; }
+        .p-title { font-size: 14px; font-weight: 500; height: 38px; overflow: hidden; margin-bottom: 5px; line-height: 1.3; color: #007185; cursor: pointer; }
         .p-title:hover { color: #C7511F; text-decoration: underline; }
         .p-cat { font-size: 11px; color: #777; text-transform: uppercase; margin-bottom: 3px; }
         .p-price { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; }
@@ -85,6 +85,24 @@
         .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
         .auth-link { color: #0066c0; font-size: 13px; cursor: pointer; text-decoration: underline; }
         .auth-link:hover { color: #c45500; }
+
+        /* --- PRODUCT DETAIL MODAL --- */
+        .detail-box { background: white; width: 90%; max-width: 900px; height: 85vh; margin: 40px auto; border-radius: 8px; display: flex; overflow: hidden; animation: popIn 0.3s; position: relative; }
+        .detail-left { width: 45%; background: #f7f7f7; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .detail-left img { max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+        .detail-right { width: 55%; padding: 30px; overflow-y: auto; }
+        
+        .dt-title { font-size: 24px; font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
+        .dt-price { font-size: 28px; color: #B12704; font-weight: 500; margin-bottom: 20px; }
+        .dt-specs { margin: 20px 0; border: 1px solid #ddd; border-radius: 8px; padding: 15px; background: #fcfcfc; }
+        .dt-specs h4 { margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; color: #333; }
+        .spec-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
+        .spec-label { color: #555; font-weight: 600; }
+        
+        .proof-badge { display: inline-block; background: #e6ffe6; border: 1px solid #007600; color: #007600; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-right: 5px; font-weight: bold; }
+
+        @media (max-width: 768px) { .detail-box { flex-direction: column; height: 90vh; } .detail-left, .detail-right { width: 100%; height: auto; } .detail-left { height: 300px; } }
+
 
         /* --- ORDERS & RETURNS --- */
         .order-card { border: 1px solid #ddd; background: white; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
@@ -148,6 +166,42 @@
             <h2 style="margin-bottom: 15px; font-weight: 700;">Results (<span id="result-count">0</span>)</h2>
             <div id="product-grid" class="product-grid"></div>
         </main>
+    </div>
+
+    <div id="product-detail-modal" class="modal-overlay">
+        <div class="detail-box">
+            <span style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:30px; z-index:10;" onclick="closeDetailModal()">&times;</span>
+            <div class="detail-left">
+                <img id="dt-img" src="" alt="">
+            </div>
+            <div class="detail-right">
+                <div id="dt-cat" class="p-cat"></div>
+                <h1 id="dt-name" class="dt-title"></h1>
+                <div id="dt-price" class="dt-price"></div>
+
+                <div style="margin-bottom: 20px;">
+                    <span class="proof-badge">✔ 100% Original</span>
+                    <span class="proof-badge">✔ GST Invoice</span>
+                    <span class="proof-badge">✔ Brand Warranty</span>
+                </div>
+
+                <div class="btn-group" style="margin-bottom: 20px;">
+                    <button class="add-btn" style="padding: 12px;" onclick="addToCartFromDetail()">Add to Cart</button>
+                    <button class="buy-btn" style="padding: 12px;" onclick="buyNowFromDetail()">Buy Now</button>
+                </div>
+
+                <div class="dt-specs">
+                    <h4>Product Specifications & Proof</h4>
+                    <div id="dt-specs-content">
+                        </div>
+                </div>
+
+                <p style="font-size:14px; line-height:1.5; color:#333;">
+                    This product is eligible for free shipping and returns. Sold by ShopSphere Certified Retailers. 
+                    Includes 7-day replacement policy for damaged or defective items.
+                </p>
+            </div>
+        </div>
     </div>
 
     <div id="cart-modal" class="modal-overlay">
@@ -261,39 +315,39 @@
     </div>
 
     <script>
-        // --- 1. DATA (16 SELECTED ITEMS with HIGH RELIABILITY IMAGES) ---
+        // --- 1. DATA (UPDATED: WEARABLES -> WATCH) ---
         const productsData = [
             // Mobiles
-            { id: 1, name: "Apple iPhone 15 Pro", category: "Mobiles", price: 134900, img: "https://images.unsplash.com/photo-1696446701796-da61225697cc?w=800&auto=format&fit=crop" },
-            { id: 2, name: "Samsung Galaxy S24 Ultra", category: "Mobiles", price: 129999, img: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800&auto=format&fit=crop" },
-            { id: 3, name: "Google Pixel 8 Pro", category: "Mobiles", price: 106999, img: "https://images.unsplash.com/photo-1698623545124-762291937965?w=800&auto=format&fit=crop" },
+            { id: 1, name: "Apple iPhone 15 Pro", category: "Mobiles", price: 134900, img:'i15p.jpeg' },
+            { id: 2, name: "Samsung Galaxy S24 Ultra", category: "Mobiles", price: 129999, img: "s24u.jpeg" },
+            { id: 3, name: "Google Pixel 8 Pro", category: "Mobiles", price: 106999, img: "gp8p.jpeg" },
             
             // Laptops
-            { id: 4, name: "Apple MacBook Air M2", category: "Laptops", price: 94900, img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca4?w=800&auto=format&fit=crop" },
-            { id: 5, name: "Dell XPS 13 Plus", category: "Laptops", price: 159990, img: "https://images.unsplash.com/photo-1593642632823-8f78536788c6?w=800&auto=format&fit=crop" },
+            { id: 4, name: "Apple MacBook Air M2", category: "Laptops", price: 94900, img: "Mac.jpeg" },
+            { id: 5, name: "Dell XPS 13 Plus", category: "Laptops", price: 159990, img: "Dell.jpeg" },
             
             // Audio
-            { id: 6, name: "Sony WH-1000XM5", category: "Audio", price: 24990, img: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=800&auto=format&fit=crop" },
-            { id: 7, name: "JBL Flip 6", category: "Audio", price: 9999, img: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=800&auto=format&fit=crop" },
+            { id: 6, name: "Sony WH-1000XM5", category: "Audio", price: 24990, img: "He.jpeg" },
+            { id: 7, name: "JBL Flip 6", category: "Audio", price: 9999, img: "JBLF6.jpeg" },
             
-            // Wearables
-            { id: 8, name: "Apple Watch Series 9", category: "Wearables", price: 41900, img: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop" },
-            { id: 9, name: "Samsung Galaxy Watch 6", category: "Wearables", price: 29999, img: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&auto=format&fit=crop" },
+            // Watch (Previously Wearables)
+            { id: 8, name: "Apple Watch Series 9", category: "Watch", price: 41900, img: "aws9.jpeg" },
+            { id: 9, name: "Samsung Galaxy Watch 6", category: "Watch", price: 29999, img: "sgw6.jpeg" },
             
             // Cameras
-            { id: 10, name: "Canon EOS R6 Mark II", category: "Cameras", price: 215995, img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop" },
+            { id: 10, name: "Canon EOS R6 Mark II", category: "Cameras", price: 215995, img: "Canon.jpeg" },
             
             // Fashion
-            { id: 11, name: "Nike Air Jordan 1", category: "Fashion", price: 16995, img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop" },
-            { id: 12, name: "Ray-Ban Aviator", category: "Fashion", price: 8590, img: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop" },
+            { id: 11, name: "Nike Air Jordan 1", category: "Fashion", price: 16995, img: "NAJ1.jpeg" },
+            { id: 12, name: "Ray-Ban Aviator", category: "Fashion", price: 8590, img: "RBA.jpeg" },
             
             // Accessories
-            { id: 13, name: "Logitech MX Master 3S", category: "Accessories", price: 9995, img: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop" },
-            { id: 14, name: "Keychron Q1 Pro", category: "Accessories", price: 18999, img: "https://images.unsplash.com/photo-1587829741301-dc798b91a91e?w=800&auto=format&fit=crop" },
+            { id: 13, name: "Logitech MX Master 3S", category: "Accessories", price: 9995, img: "LMM3S.jpeg" },
+            { id: 14, name: "Keychron Q1 Pro", category: "Accessories", price: 18999, img: "Kq1P.jpeg" },
             
             // Home
-            { id: 15, name: "Nespresso Coffee Machine", category: "Home", price: 18500, img: "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=800&auto=format&fit=crop" },
-            { id: 16, name: "Dyson V12 Detect Slim", category: "Home", price: 42900, img: "https://images.unsplash.com/photo-1558317374-a354d5f6d4da?w=800&auto=format&fit=crop" }
+            { id: 15, name: "Nespresso Coffee Machine", category: "Home", price: 18500, img: "NCM.jpeg" },
+            { id: 16, name: "Dyson V12 Detect Slim", category: "Home", price: 42900, img: "DV12DS.jpeg" }
         ];
 
         // --- STATE MANAGEMENT ---
@@ -308,6 +362,7 @@
         let generatedOTP = null;
         let tempSignupData = {};
         let pendingReturnIndex = null;
+        let currentDetailId = null;
 
         // --- INIT ---
         window.onload = () => { renderCategories(); renderProducts(); updateCartUI(); checkUser(); };
@@ -318,7 +373,7 @@
         // --- PRODUCTS & CATEGORIES ---
         function renderCategories() {
             const cats = ['All', ...new Set(productsData.map(p => p.category))];
-            document.getElementById('category-list').innerHTML = cats.map(c => 
+            document.getElementById('category-list').innerHTML = cats.map(c =>
                 `<div class="filter-option ${c === activeCategory ? 'active' : ''}" onclick="setCategory('${c}')">${c}</div>`
             ).join('');
         }
@@ -329,7 +384,7 @@
         function renderProducts() {
             const container = document.getElementById('product-grid');
             const filtered = productsData.filter(p => 
-                (activeCategory === 'All' || p.category === activeCategory) && 
+                (activeCategory === 'All' || p.category === activeCategory) &&
                 p.name.toLowerCase().includes(searchQuery)
             );
             
@@ -339,11 +394,11 @@
 
             container.innerHTML = filtered.map(p => `
                 <div class="product-card">
-                    <div class="card-img">
+                    <div class="card-img" onclick="showProductDetails(${p.id})">
                         <img src="${p.img}" alt="${p.name}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://placehold.co/400?text=Image+Unavailable';">
                     </div>
                     <div class="p-cat">${p.category}</div>
-                    <div class="p-title" title="${p.name}">${p.name}</div>
+                    <div class="p-title" title="${p.name}" onclick="showProductDetails(${p.id})">${p.name}</div>
                     <div class="p-price">${formatPrice(p.price)}</div>
                     <div class="btn-group">
                         <button class="add-btn" onclick="addToCart(${p.id})">Add to Cart</button>
@@ -351,6 +406,62 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        // --- PRODUCT DETAILS WITH PROOF ---
+        function showProductDetails(id) {
+            const product = productsData.find(p => p.id === id);
+            currentDetailId = id;
+
+            document.getElementById('dt-img').src = product.img;
+            document.getElementById('dt-img').onerror = function(){ this.src='https://placehold.co/400?text=Image+Unavailable'};
+            document.getElementById('dt-cat').innerText = product.category;
+            document.getElementById('dt-name').innerText = product.name;
+            document.getElementById('dt-price').innerText = formatPrice(product.price);
+
+            // Generate "Proofs" and Specs dynamically based on category
+            let specsHTML = '';
+            const randomSerial = 'SN-' + Math.floor(Math.random() * 100000000);
+            
+            if(product.category === 'Watch' || product.category === 'Mobiles' || product.category === 'Laptops') {
+                specsHTML = `
+                    <div class="spec-row"><span class="spec-label">Model Number:</span> <span>${product.name.split(' ')[0]}-X${product.id}00</span></div>
+                    <div class="spec-row"><span class="spec-label">Serial Number (Proof):</span> <span>${randomSerial}</span></div>
+                    <div class="spec-row"><span class="spec-label">Warranty:</span> <span>1 Year Brand Warranty</span></div>
+                    <div class="spec-row"><span class="spec-label">In The Box:</span> <span>Device, Charging Cable, Manual</span></div>
+                    <div class="spec-row"><span class="spec-label">Authenticity:</span> <span>Verified Seller Badge</span></div>
+                `;
+            } else if (product.category === 'Fashion') {
+                specsHTML = `
+                    <div class="spec-row"><span class="spec-label">Material:</span> <span>Premium Grade</span></div>
+                    <div class="spec-row"><span class="spec-label">Authenticity:</span> <span>Brand Tag Intact</span></div>
+                    <div class="spec-row"><span class="spec-label">Return Policy:</span> <span>30 Days No Questions Asked</span></div>
+                    <div class="spec-row"><span class="spec-label">Country of Origin:</span> <span>Vietnam/India</span></div>
+                `;
+            } else {
+                 specsHTML = `
+                    <div class="spec-row"><span class="spec-label">Condition:</span> <span>Brand New (Sealed)</span></div>
+                    <div class="spec-row"><span class="spec-label">Warranty:</span> <span>Standard Manufacturer Warranty</span></div>
+                    <div class="spec-row"><span class="spec-label">Quality Check:</span> <span>Passed QC-102</span></div>
+                `;
+            }
+
+            document.getElementById('dt-specs-content').innerHTML = specsHTML;
+            document.getElementById('product-detail-modal').style.display = 'block';
+        }
+
+        function closeDetailModal() {
+            document.getElementById('product-detail-modal').style.display = 'none';
+        }
+
+        function addToCartFromDetail() {
+            addToCart(currentDetailId);
+            closeDetailModal();
+        }
+
+        function buyNowFromDetail() {
+            closeDetailModal();
+            buyNow(currentDetailId);
         }
 
         // --- CART ---
