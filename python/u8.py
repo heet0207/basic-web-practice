@@ -33,3 +33,10 @@ import df # type: ignore
 
 while True:
     pass
+
+
+a=12345
+s=str(a)
+d=s[:1]+s[1:]
+print(d)
+
