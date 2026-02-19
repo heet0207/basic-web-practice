@@ -1,564 +1,765 @@
-// ===== DATA with RANDOM stock quantity (11 to 24) =====
-const productsData = [
+/* =========================================
+   1. MOCK DATA & STATE MANAGEMENT
+   ========================================= */
+
+// Mock Product Database
+const products = [
     {
-        id: 1, name: "Apple iPhone 15 Pro", category: "Mobiles", price: 134900, img: "i15p.jpeg", discount: 8, rating: 4.8, reviews: "12,340 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["6.1-inch Super Retina XDR ProMotion display", "A17 Pro chip — industry-first 3nm processor", "48MP Main + 12MP Ultra Wide + 12MP 3x Telephoto", "Titanium design — lighter yet stronger than steel", "Action Button for instant one-press shortcuts"]
+        id: 1,
+        name: "Sony WH-1000XM5 Wireless Headphones",
+        category: "Electronics",
+        price: 24990,
+        mrp: 29990,
+        image: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&w=500&q=80",
+        rating: 4.8,
+        reviews: 1240,
+        stock: 15,
+        highlights: ["Industry-leading noise canceling", "30-hour battery life", "Crystal clear hands-free calling"]
     },
     {
-        id: 2, name: "Samsung Galaxy S24 Ultra", category: "Mobiles", price: 129999, img: "s24u.jpeg", discount: 10, rating: 4.7, reviews: "9,820 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["6.8-inch Dynamic AMOLED 2X, 120Hz adaptive", "200MP main camera with 10x Optical Zoom", "Snapdragon 8 Gen 3 — fastest Android chip", "Built-in S Pen with enhanced AI writing tools", "5000mAh + 45W wired / 15W wireless charging"]
+        id: 2,
+        name: "Apple iPhone 15 (128GB) - Black",
+        category: "Mobiles",
+        price: 72999,
+        mrp: 79900,
+        image: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=500&q=80",
+        rating: 4.6,
+        reviews: 850,
+        stock: 5,
+        highlights: ["Dynamic Island", "48MP Main Camera", "A16 Bionic chip"]
     },
     {
-        id: 3, name: "Google Pixel 8 Pro", category: "Mobiles", price: 106999, img: "gp8p.jpeg", discount: 12, rating: 4.6, reviews: "5,210 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["6.7-inch LTPO OLED, 1-120Hz variable refresh", "Google Tensor G3 chip with on-device AI", "50MP + 48MP + 48MP triple camera system", "7 years of Android OS & security updates", "Magic Eraser, Photo Unblur & Best Take AI features"]
+        id: 3,
+        name: "Nike Air Jordan 1 Retro High",
+        category: "Fashion",
+        price: 13995,
+        mrp: 16995,
+        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80",
+        rating: 4.9,
+        reviews: 2100,
+        stock: 3, // Low stock
+        highlights: ["Premium leather upper", "Air-Sole unit for cushioning", "Classic high-top support"]
     },
     {
-        id: 4, name: "Apple MacBook Air M2", category: "Laptops", price: 94900, img: "Mac.jpeg", discount: 5, rating: 4.9, reviews: "18,540 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["Apple M2 chip — up to 18 hours battery life", "13.6-inch Liquid Retina display, 500 nits brightness", "8GB unified memory, 256GB SSD storage", "Fanless, completely silent operation", "MagSafe 3 + two Thunderbolt / USB 4 ports"]
+        id: 4,
+        name: "Samsung 4K Smart LED TV (55 Inch)",
+        category: "Electronics",
+        price: 45990,
+        mrp: 65900,
+        image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=500&q=80",
+        rating: 4.5,
+        reviews: 320,
+        stock: 0, // Out of stock
+        highlights: ["Crystal Processor 4K", "Tizen™ OS", "HDR 10+ Support"]
     },
     {
-        id: 5, name: "Dell XPS 13 Plus", category: "Laptops", price: 159990, img: "Dell.jpeg", discount: 7, rating: 4.5, reviews: "3,670 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["13.4-inch OLED 3.5K touch display, 60Hz", "13th Gen Intel Core i7-1360P processor", "16GB LPDDR5 RAM + 512GB NVMe PCIe SSD", "Capacitive function row with seamless touchpad", "Ultra-compact 1.26 kg chassis"]
+        id: 5,
+        name: "Men's Cotton Casual Shirt",
+        category: "Fashion",
+        price: 899,
+        mrp: 1999,
+        image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=500&q=80",
+        rating: 4.2,
+        reviews: 540,
+        stock: 50,
+        highlights: ["100% Cotton", "Slim Fit", "Machine Washable"]
     },
     {
-        id: 6, name: "Sony WH-1000XM5", category: "Audio", price: 24990, img: "He.jpeg", discount: 15, rating: 4.8, reviews: "22,100 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["Industry-leading ANC with 8 microphones", "30-hour battery + 3-min quick charge for 3 hours", "Multipoint Bluetooth — connect 2 devices at once", "Speak-to-Chat pauses music when you talk", "Soft fit leather for all-day comfort"]
+        id: 6,
+        name: "Logitech MX Master 3S Mouse",
+        category: "Electronics",
+        price: 8995,
+        mrp: 10995,
+        image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=500&q=80",
+        rating: 4.9,
+        reviews: 4000,
+        stock: 22,
+        highlights: ["8K DPI sensor", "Quiet clicks", "Magspeed scrolling"]
     },
     {
-        id: 7, name: "JBL Flip 6", category: "Audio", price: 9999, img: "JBLF6.jpeg", discount: 20, rating: 4.6, reviews: "14,230 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["JBL Original Pro Sound with racetrack-shaped driver", "IP67 rated — waterproof, dustproof, mudproof", "12 hours of continuous playtime", "PartyBoost — sync 2 JBL speakers wirelessly", "USB-C fast charging"]
+        id: 7,
+        name: "Instant Pot Duo 7-in-1 Pressure Cooker",
+        category: "Home",
+        price: 8499,
+        mrp: 11999,
+        image: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?auto=format&fit=crop&w=500&q=80",
+        rating: 4.7,
+        reviews: 5000,
+        stock: 12,
+        highlights: ["7 Functions in 1", "Stainless Steel Inner Pot", "Safety Features"]
     },
     {
-        id: 8, name: "Apple Watch Series 9", category: "Watch", price: 41900, img: "aws9.jpeg", discount: 6, rating: 4.8, reviews: "8,990 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["New S9 chip with Double Tap gesture control", "Always-On Retina display — 2000 nits brightness", "Blood Oxygen app + ECG + Crash Detection", "watchOS 10 with new Smart Stack widgets", "Up to 18-hour battery, 36hr Low Power Mode"]
-    },
-    {
-        id: 9, name: "Samsung Galaxy Watch 6", category: "Watch", price: 29999, img: "sgw6.jpeg", discount: 12, rating: 4.5, reviews: "6,120 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["Advanced sleep coaching with sleep score", "BioActive Sensor — heart rate, ECG, body fat", "40mm Super AMOLED display, 2000 nits", "Sapphire Crystal glass for scratch resistance", "40 hours typical battery life"]
-    },
-    {
-        id: 10, name: "Canon EOS R6 Mark II", category: "Cameras", price: 215995, img: "Canon.jpeg", discount: 4, rating: 4.9, reviews: "2,340 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["40fps continuous RAW burst shooting", "6K oversampled 4K 60p video, no crop", "Dual UHS-II SD card slots", "In-body 8-stop image stabilization (IBIS)", "Advanced animal, vehicle & eye-tracking AF"]
-    },
-    {
-        id: 11, name: "Nike Air Jordan 1", category: "Fashion", price: 16995, img: "NAJ1.jpeg", discount: 10, rating: 4.7, reviews: "31,400 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["Premium full-grain leather upper", "Iconic Wings logo on the ankle collar", "Encapsulated Nike Air heel cushioning", "Rubber outsole with herringbone traction pattern", "OG colourway inspired by Michael Jordan's 1985 debut"]
-    },
-    {
-        id: 12, name: "Ray-Ban Aviator", category: "Fashion", price: 8590, img: "RBA.jpeg", discount: 5, rating: 4.6, reviews: "19,880 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["Classic teardrop lens — 100% UV protection", "Lightweight gold-tone metal frame", "Iconic double bridge design since 1937", "Crystal lenses for superior optical clarity", "Adjustable nose pads for a custom fit"]
-    },
-    {
-        id: 13, name: "Logitech MX Master 3S", category: "Accessories", price: 9995, img: "LMM3S.jpeg", discount: 18, rating: 4.8, reviews: "11,230 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["MagSpeed electromagnetic scrolling — whisper quiet", "8000 DPI high-precision sensor on any surface", "Silent clicks — 90% noise reduction vs standard", "Connect up to 3 devices, switch with one button", "USB-C quick charge: 1 min = 3 hours of use"]
-    },
-    {
-        id: 14, name: "Keychron Q1 Pro", category: "Accessories", price: 18999, img: "Kq1P.jpeg", discount: 8, rating: 4.7, reviews: "3,410 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["QMK/VIA fully programmable with any key remap", "Bluetooth 5.1 wireless + USB-C wired dual mode", "Gasket-mount design for a soft, bouncy typing feel", "CNC machined full-aluminium body", "Hot-swappable PCB — swap switches without soldering"]
-    },
-    {
-        id: 15, name: "Nespresso Coffee Machine", category: "Home", price: 18500, img: "NCM.jpeg", discount: 14, rating: 4.5, reviews: "7,600 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["19-bar high-pressure pump for rich espresso", "Rapid heat-up in just 25 seconds", "Compact design — fits any kitchen countertop", "Compatible with all Original Nespresso capsules", "Energy-saving auto off after 9 minutes"]
-    },
-    {
-        id: 16, name: "Dyson V12 Detect Slim", category: "Home", price: 42900, img: "DV12DS.jpeg", discount: 9, rating: 4.7, reviews: "4,980 ratings", stock: Math.floor(Math.random() * 14) + 11,
-        highlights: ["Laser Slim Fluffy head reveals microscopic dust", "HEPA filtration captures 99.97% of particles", "Up to 60 minutes run time on eco mode", "LCD screen shows real-time suction & motor data", "5 power modes for carpet, hard floor & crevices"]
+        id: 8,
+        name: "OnePlus 11R 5G",
+        category: "Mobiles",
+        price: 39999,
+        mrp: 44999,
+        image: "https://images.unsplash.com/photo-1690312781476-06830575d563?auto=format&fit=crop&w=500&q=80",
+        rating: 4.4,
+        reviews: 670,
+        stock: 8,
+        highlights: ["Snapdragon 8+ Gen 1", "100W SUPERVOOC", "120Hz Super Fluid AMOLED"]
     }
 ];
 
-// cart = { productId: quantity }  (map for easy qty management)
-let cartMap = JSON.parse(localStorage.getItem('shopCartMap')) || {};
-let registeredUsers = JSON.parse(localStorage.getItem('shopUsers')) || {};
-let currentUser = localStorage.getItem('activeUser') || null;
-let userOrders = JSON.parse(localStorage.getItem('shopOrders')) || {};
-let activeCategory = 'All', searchQuery = '', pendingCheckout = false;
-let generatedOTP = null, tempSignupData = {}, pendingReturnIndex = null;
-let detailProductId = null, detailQty = 1;
+// State
+let cart = [];
+let orders = [];
+let currentUser = null; // { name: string, mobile: string }
+let currentCategory = 'All';
+let currentSearch = '';
+let activeDiscount = 0; // % discount
+let detailProductId = null;
 
-// COUPON SYSTEM VARS
-let currentCouponCode = null;
-let currentDiscountRate = 0;
-// 1. ADDED MORE COUPONS HERE
-const VALID_COUPONS = {
-    "WELCOME10": 0.10,
-    "SALE20": 0.20,
-    "FLASH30": 0.30,
-    "NEWUSER50": 0.50,
-    "FESTIVE15": 0.15
-};
+/* =========================================
+   2. INITIALIZATION & RENDERING
+   ========================================= */
 
-window.onload = () => { renderCategories(); renderProducts(); updateCartUI(); checkUser(); };
-
-function formatPrice(p) { return "₹" + p.toLocaleString('en-IN'); }
-function getMRP(price, disc) { return Math.round(price / (1 - disc / 100)); }
-function genStars(r) {
-    const full = Math.floor(r);
-    return '★'.repeat(full) + (r % 1 >= 0.5 ? '⯨' : '') + '☆'.repeat(5 - full - (r % 1 >= 0.5 ? 1 : 0));
-}
-
-// --- Stock helpers ---
-function availableStock(p) {
-    return Math.max(0, p.stock - (cartMap[p.id] || 0));
-}
-function getStockInfo(p) {
-    const avail = availableStock(p);
-    if (p.stock === 0) return { label: 'Out of Stock', cls: 'out-of-stock', badgeCls: 'out-of-stock' };
-    if (avail === 0) return { label: 'All in your cart!', cls: 'low-stock', badgeCls: 'low-stock' };
-    if (p.stock <= 3) return { label: `Only ${p.stock} left!`, cls: 'low-stock', badgeCls: 'low-stock' };
-    return { label: `In Stock (${p.stock})`, cls: 'in-stock', badgeCls: 'in-stock' };
-}
-
-// --- Cart quantity in cart (how many of this product are in cart) ---
-function cartQtyForProduct(id) { return cartMap[id] || 0; }
-function totalCartItems() { return Object.values(cartMap).reduce((a, b) => a + b, 0); }
+document.addEventListener('DOMContentLoaded', () => {
+    renderCategories();
+    renderProducts();
+    updateCartUI();
+});
 
 function renderCategories() {
-    const cats = ['All', ...new Set(productsData.map(p => p.category))];
-    document.getElementById('category-list').innerHTML = cats.map(c =>
-        `<div class="filter-option ${c === activeCategory ? 'active' : ''}" onclick="setCategory('${c}')">${c}</div>`
-    ).join('');
+    const categories = ['All', ...new Set(products.map(p => p.category))];
+    const container = document.getElementById('category-list');
+    
+    container.innerHTML = categories.map(cat => `
+        <div class="filter-option ${cat === 'All' ? 'active' : ''}" 
+             onclick="setCategory('${cat}', this)">
+            ${cat}
+            ${cat !== 'All' ? '›' : ''}
+        </div>
+    `).join('');
 }
-function setCategory(c) { activeCategory = c; renderCategories(); renderProducts(); }
-function handleSearch() { searchQuery = document.getElementById('search-input').value.toLowerCase(); renderProducts(); }
+
+function setCategory(cat, element) {
+    currentCategory = cat;
+    // Update active UI
+    document.querySelectorAll('.filter-option').forEach(el => el.classList.remove('active'));
+    element.classList.add('active');
+    renderProducts();
+}
+
+function handleSearch() {
+    currentSearch = document.getElementById('search-input').value.toLowerCase();
+    renderProducts();
+}
 
 function renderProducts() {
-    const container = document.getElementById('product-grid');
-    const filtered = productsData.filter(p =>
-        (activeCategory === 'All' || p.category === activeCategory) && p.name.toLowerCase().includes(searchQuery)
-    );
-    document.getElementById('result-count').innerText = filtered.length;
-    if (!filtered.length) { container.innerHTML = "<p>No products found.</p>"; return; }
-    container.innerHTML = filtered.map(p => {
-        const mrp = getMRP(p.price, p.discount);
-        const si = getStockInfo(p);
-        const oos = p.stock === 0;
-        const avail = availableStock(p);
-        const inCart = cartQtyForProduct(p.id);
-        const canAdd = !oos && avail > 0;
-        return `<div class="product-card ${oos ? 'out-of-stock' : ''}" onclick="openDetail(${p.id})">
-            <div class="card-img">
-                <img src="${p.img}" alt="${p.name}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://placehold.co/400?text=Image+Unavailable';">
-                ${oos ? '<div class="oos-overlay">OUT OF STOCK</div>' : ''}
-            </div>
-            <span class="stock-badge ${si.badgeCls}">${si.label}</span>
-            <div class="p-cat">${p.category}</div>
-            <div class="p-title" title="${p.name}">${p.name}</div>
-            <div class="p-price">${formatPrice(p.price)} <span style="font-size:12px;color:#888;font-weight:400;text-decoration:line-through;">${formatPrice(mrp)}</span>
-                <span style="font-size:11px;color:#007600;font-weight:600;margin-left:4px;">${p.discount}% off</span>
-            </div>
-            <div class="btn-group">
-                ${inCart > 0 && !oos ? `
-                <div class="card-qty-control" onclick="event.stopPropagation()">
-                    <button onclick="event.stopPropagation();cardDecreaseQty(${p.id})">−</button>
-                    <span class="qty-num">${inCart}</span>
-                    <button onclick="event.stopPropagation();cardIncreaseQty(${p.id})" ${!canAdd ? 'disabled' : ''}>+</button>
-                </div>` : ''}
-                <div class="btn-row">
-                    ${oos
-                ? `<button class="add-btn" disabled>Out of Stock</button><button class="buy-btn" disabled>Unavailable</button>`
-                : inCart > 0
-                    ? `<button class="buy-btn" style="flex:1" onclick="event.stopPropagation();buyNow(${p.id})">Buy Now</button>`
-                    : `<button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id},1)">Add to Cart</button>
-                    <button class="buy-btn" onclick="event.stopPropagation();buyNow(${p.id})">Buy Now</button>`
-            }
-                </div>
-            </div>
+    const grid = document.getElementById('product-grid');
+    const resultCount = document.getElementById('result-count');
+    
+    // Filter Logic
+    const filtered = products.filter(p => {
+        const matchCat = currentCategory === 'All' || p.category === currentCategory;
+        const matchSearch = p.name.toLowerCase().includes(currentSearch) || 
+                            p.category.toLowerCase().includes(currentSearch);
+        return matchCat && matchSearch;
+    });
+
+    resultCount.innerText = filtered.length;
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:50px;color:#777;">
+            <h3>No products found matching your criteria.</h3>
         </div>`;
-    }).join('');
-}
-
-// Card-level qty controls
-function cardIncreaseQty(id) {
-    const p = productsData.find(x => x.id === id);
-    if (!p) return;
-    const avail = availableStock(p);
-    if (avail > 0) {
-        cartMap[id] = (cartMap[id] || 0) + 1;
-        saveCart(); updateCartUI(); renderProducts();
-    }
-}
-function cardDecreaseQty(id) {
-    const cur = cartQtyForProduct(id);
-    if (cur <= 1) {
-        delete cartMap[id];
-    } else {
-        cartMap[id] = cur - 1;
-    }
-    saveCart(); updateCartUI(); renderProducts();
-}
-
-// ===== PRODUCT DETAIL =====
-function openDetail(id) {
-    const p = productsData.find(x => x.id === id);
-    if (!p) return;
-    detailProductId = id;
-    detailQty = 1;
-    const mrp = getMRP(p.price, p.discount);
-    const oos = p.stock === 0;
-    const avail = availableStock(p);
-
-    document.getElementById('dtop-cat').innerText = p.category;
-    document.getElementById('d-cat').innerText = p.category;
-    document.getElementById('d-name').innerText = p.name;
-    const img = document.getElementById('d-img');
-    img.src = p.img; img.alt = p.name;
-    img.onerror = function () { this.src = 'https://placehold.co/400?text=Image'; };
-    document.getElementById('d-oos-overlay').style.display = (oos || avail === 0) ? 'flex' : 'none';
-    if (!oos && avail === 0) {
-        document.getElementById('d-oos-overlay').innerText = 'ALL STOCK IN CART';
-        document.getElementById('d-oos-overlay').style.fontSize = '13px';
-    } else {
-        document.getElementById('d-oos-overlay').innerText = 'OUT OF STOCK';
-        document.getElementById('d-oos-overlay').style.fontSize = '15px';
-    }
-
-    document.getElementById('d-stars').innerText = genStars(p.rating);
-    document.getElementById('d-rnum').innerText = p.rating;
-    document.getElementById('d-rcnt').innerText = '(' + p.reviews + ')';
-    document.getElementById('d-price').innerText = formatPrice(p.price);
-    document.getElementById('d-mrp').innerText = 'M.R.P: ' + formatPrice(mrp);
-    document.getElementById('d-save').innerText = `Save ${formatPrice(mrp - p.price)} (${p.discount}% off)`;
-
-    const stockEl = document.getElementById('d-stock-status');
-    if (oos) {
-        stockEl.className = 'detail-stock-status out';
-        stockEl.innerText = 'Out of Stock';
-    } else if (avail === 0) {
-        stockEl.className = 'detail-stock-status low';
-        stockEl.innerText = `All ${p.stock} units are in your cart`;
-    } else if (p.stock <= 3) {
-        stockEl.className = 'detail-stock-status low';
-        stockEl.innerText = `Only ${avail} left available (${cartQtyForProduct(id)} in cart)`;
-    } else {
-        stockEl.className = 'detail-stock-status in';
-        stockEl.innerText = `In Stock — ${avail} available`;
-    }
-
-    const qtyWrapper = document.getElementById('d-qty-wrapper');
-    const canAdd = !oos && avail > 0;
-    qtyWrapper.style.display = canAdd ? 'flex' : 'none';
-    if (canAdd) {
-        if (detailQty > avail) detailQty = avail;
-        updateDetailQtyUI(p);
-    }
-
-    document.getElementById('d-highlights').innerHTML = p.highlights.map(h => `<li>${h}</li>`).join('');
-
-    const addBtn = document.getElementById('d-add');
-    const buyBtn = document.getElementById('d-buy');
-    const effectiveOos = oos || avail === 0;
-    addBtn.disabled = effectiveOos; buyBtn.disabled = oos;
-
-    addBtn.onclick = (e) => { e.stopPropagation(); if (!effectiveOos) { addToCart(id, detailQty); closeDetail(); } };
-    buyBtn.onclick = (e) => { e.stopPropagation(); if (!oos) { if (!effectiveOos) addToCart(id, detailQty); closeDetail(); initiateCheckout(); } };
-
-    document.getElementById('detail-modal').classList.add('open');
-    document.body.style.overflow = 'hidden';
-}
-function updateDetailQtyUI(p) {
-    if (!p) p = productsData.find(x => x.id === detailProductId);
-    const avail = availableStock(p);
-    document.getElementById('d-qty-num').innerText = detailQty;
-    document.getElementById('d-qty-minus').disabled = detailQty <= 1;
-    document.getElementById('d-qty-plus').disabled = detailQty >= avail;
-    const maxNote = avail <= 5 ? `Max ${avail} more available` : '';
-    document.getElementById('d-qty-max').innerText = maxNote;
-}
-function changeDetailQty(delta) {
-    const p = productsData.find(x => x.id === detailProductId);
-    if (!p) return;
-    const avail = availableStock(p);
-    detailQty = Math.max(1, Math.min(avail, detailQty + delta));
-    updateDetailQtyUI(p);
-}
-function closeDetail() {
-    document.getElementById('detail-modal').classList.remove('open');
-    document.body.style.overflow = '';
-}
-function handleDetailBgClick(e) { if (e.target === document.getElementById('detail-modal')) closeDetail(); }
-
-// --- CART LOGIC ---
-function addToCart(id, qty = 1) {
-    const p = productsData.find(x => x.id === id);
-    if (!p || p.stock === 0) return;
-    const cur = cartQtyForProduct(id);
-    const newQty = Math.min(p.stock, cur + qty);
-    cartMap[id] = newQty;
-    saveCart(); updateCartUI(); renderProducts();
-}
-function buyNow(id, qty = 1) { addToCart(id, qty); initiateCheckout(); }
-function saveCart() { localStorage.setItem('shopCartMap', JSON.stringify(cartMap)); }
-
-function updateCartUI() {
-    const totalItems = totalCartItems();
-    document.getElementById('cart-badge').innerText = totalItems;
-    const container = document.getElementById('cart-items');
-    let total = 0;
-    const ids = Object.keys(cartMap).map(Number);
-
-    if (!ids.length) {
-        container.innerHTML = '<p style="text-align:center;color:#888;padding:30px 0;">Your cart is empty</p>';
-        document.getElementById('cart-item-count').innerText = '';
-        document.getElementById('cart-total').innerText = '₹0';
         return;
     }
 
-    container.innerHTML = ids.map(id => {
-        const p = productsData.find(x => x.id === id);
-        if (!p) return '';
-        const qty = cartMap[id];
-        const lineTotal = p.price * qty;
-        total += lineTotal;
-        return `<div class="cart-item">
-            <img class="cart-item-img" src="${p.img}" referrerpolicy="no-referrer" onerror="this.src='https://placehold.co/54'">
-            <div class="cart-item-info">
-                <div class="cart-item-name">${p.name}</div>
-                <div class="cart-item-price">${formatPrice(p.price)} each</div>
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <div class="cart-qty-control">
-                        <button onclick="cartChangeQty(${id},-1)" ${qty <= 1 ? '' : ''}>−</button>
-                        <span class="cqty-num">${qty}</span>
-                        <button onclick="cartChangeQty(${id},1)" ${qty >= p.stock ? 'disabled' : ''}>+</button>
-                    </div>
-                    <span style="font-size:12px;color:#555;">= <strong>${formatPrice(lineTotal)}</strong></span>
-                </div>
-                ${p.stock <= 3 ? `<div style="font-size:11px;color:#e65100;margin-top:4px;">⚠ Only ${p.stock} in stock</div>` : ''}
+    grid.innerHTML = filtered.map(p => {
+        const isOOS = p.stock === 0;
+        const stockBadge = getStockBadge(p.stock);
+        const discount = Math.round(((p.mrp - p.price) / p.mrp) * 100);
+
+        return `
+        <div class="product-card ${isOOS ? 'out-of-stock' : ''}" onclick="openDetail(${p.id})">
+            ${stockBadge}
+            <div class="card-img">
+                <img src="${p.image}" alt="${p.name}">
             </div>
-            <span style="color:red;cursor:pointer;font-size:22px;line-height:1;padding:2px 4px;" onclick="removeCartItem(${id})">&times;</span>
+            <div class="p-cat">${p.category}</div>
+            <div class="p-title">${p.name}</div>
+            <div class="detail-rating" style="margin-bottom:5px;font-size:12px;">
+                 <span class="stars">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5-Math.round(p.rating))}</span> 
+                 <span style="color:#007185;margin-left:4px;">${p.reviews}</span>
+            </div>
+            <div class="p-price">
+                ₹${p.price.toLocaleString()} 
+                <span style="font-size:12px;color:#777;text-decoration:line-through;font-weight:400">₹${p.mrp.toLocaleString()}</span>
+                <span style="font-size:12px;color:#c62828;font-weight:400">(${discount}% off)</span>
+            </div>
+            <div class="btn-group">
+                <button class="add-btn" onclick="event.stopPropagation(); addToCart(${p.id})" ${isOOS ? 'disabled' : ''}>
+                    ${isOOS ? 'Out of Stock' : 'Add to Cart'}
+                </button>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+function getStockBadge(stock) {
+    if (stock === 0) return `<div class="stock-badge out-of-stock">Out of Stock</div>`;
+    if (stock < 5) return `<div class="stock-badge low-stock">Only ${stock} left</div>`;
+    return ''; // Don't show badge if stock is plentiful
+}
+
+/* =========================================
+   3. PRODUCT DETAILS MODAL
+   ========================================= */
+
+function openDetail(id) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+    detailProductId = id;
+
+    // Reset Quantity
+    document.getElementById('d-qty-num').innerText = '1';
+
+    // Populate Data
+    document.getElementById('dtop-cat').innerText = p.category;
+    document.getElementById('d-img').src = p.image;
+    document.getElementById('d-cat').innerText = p.category;
+    document.getElementById('d-name').innerText = p.name;
+    document.getElementById('d-stars').innerText = '★'.repeat(Math.round(p.rating)) + '☆'.repeat(5-Math.round(p.rating));
+    document.getElementById('d-rnum').innerText = p.rating;
+    document.getElementById('d-rcnt').innerText = `(${p.reviews} ratings)`;
+    
+    document.getElementById('d-price').innerText = `₹${p.price.toLocaleString()}`;
+    document.getElementById('d-mrp').innerText = `₹${p.mrp.toLocaleString()}`;
+    const savings = p.mrp - p.price;
+    const savePercent = Math.round((savings / p.mrp) * 100);
+    document.getElementById('d-save').innerText = `Save ₹${savings.toLocaleString()} (${savePercent}%)`;
+
+    // Stock Status
+    const stockEl = document.getElementById('d-stock-status');
+    const oosOverlay = document.getElementById('d-oos-overlay');
+    const addBtn = document.getElementById('d-add');
+    const buyBtn = document.getElementById('d-buy');
+
+    if (p.stock === 0) {
+        stockEl.className = 'detail-stock-status out';
+        stockEl.innerText = 'Currently Unavailable';
+        oosOverlay.style.display = 'flex';
+        addBtn.disabled = true;
+        buyBtn.disabled = true;
+        document.getElementById('d-qty-wrapper').style.opacity = '0.5';
+        document.getElementById('d-qty-wrapper').style.pointerEvents = 'none';
+    } else if (p.stock < 5) {
+        stockEl.className = 'detail-stock-status low';
+        stockEl.innerText = `Only ${p.stock} left in stock`;
+        oosOverlay.style.display = 'none';
+        addBtn.disabled = false;
+        buyBtn.disabled = false;
+        document.getElementById('d-qty-wrapper').style.opacity = '1';
+        document.getElementById('d-qty-wrapper').style.pointerEvents = 'auto';
+    } else {
+        stockEl.className = 'detail-stock-status in';
+        stockEl.innerText = 'In Stock';
+        oosOverlay.style.display = 'none';
+        addBtn.disabled = false;
+        buyBtn.disabled = false;
+        document.getElementById('d-qty-wrapper').style.opacity = '1';
+        document.getElementById('d-qty-wrapper').style.pointerEvents = 'auto';
+    }
+
+    // Highlights
+    const ul = document.getElementById('d-highlights');
+    ul.innerHTML = p.highlights.map(h => `<li>${h}</li>`).join('');
+
+    // Set Button Actions
+    addBtn.onclick = () => {
+        const qty = parseInt(document.getElementById('d-qty-num').innerText);
+        addToCart(p.id, qty);
+        closeDetail();
+    };
+    
+    buyBtn.onclick = () => {
+        const qty = parseInt(document.getElementById('d-qty-num').innerText);
+        addToCart(p.id, qty);
+        closeDetail();
+        toggleCart();
+        setTimeout(initiateCheckout, 500); // Small delay for UX
+    };
+
+    document.getElementById('detail-modal').classList.add('open');
+}
+
+function closeDetail() {
+    document.getElementById('detail-modal').classList.remove('open');
+}
+
+function handleDetailBgClick(e) {
+    if (e.target.id === 'detail-modal') {
+        closeDetail();
+    }
+}
+
+function changeDetailQty(change) {
+    const numEl = document.getElementById('d-qty-num');
+    let current = parseInt(numEl.innerText);
+    const p = products.find(x => x.id === detailProductId);
+    
+    let newVal = current + change;
+    if (newVal < 1) newVal = 1;
+    if (newVal > p.stock) newVal = p.stock;
+    
+    numEl.innerText = newVal;
+}
+
+/* =========================================
+   4. CART MANAGEMENT
+   ========================================= */
+
+function addToCart(productId, qty = 1) {
+    const product = products.find(p => p.id === productId);
+    
+    // Check Stock
+    if (product.stock === 0) {
+        alert("Sorry, this item is out of stock.");
+        return;
+    }
+
+    const existingItem = cart.find(item => item.id === productId);
+
+    if (existingItem) {
+        if (existingItem.qty + qty > product.stock) {
+            alert(`Cannot add more. We only have ${product.stock} in stock.`);
+            return;
+        }
+        existingItem.qty += qty;
+    } else {
+        cart.push({ ...product, qty: qty });
+    }
+
+    // Animation visual cue
+    const badge = document.getElementById('cart-badge');
+    badge.style.transform = "scale(1.5)";
+    setTimeout(() => badge.style.transform = "scale(1)", 200);
+
+    updateCartUI();
+    renderCart(); // Update panel if open
+}
+
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    updateCartUI();
+    renderCart();
+}
+
+function updateCartQty(productId, change) {
+    const item = cart.find(i => i.id === productId);
+    const product = products.find(p => p.id === productId);
+
+    if (item) {
+        const newQty = item.qty + change;
+        if (newQty > product.stock) {
+            alert(`Max stock limit reached (${product.stock})`);
+            return;
+        }
+        if (newQty <= 0) {
+            removeFromCart(productId);
+        } else {
+            item.qty = newQty;
+            updateCartUI();
+            renderCart();
+        }
+    }
+}
+
+function updateCartUI() {
+    const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+    const badge = document.getElementById('cart-badge');
+    badge.innerText = totalQty;
+    badge.style.display = totalQty > 0 ? 'flex' : 'none';
+}
+
+function toggleCart() {
+    const modal = document.getElementById('cart-modal');
+    if (modal.style.display === 'block') {
+        modal.style.display = 'none';
+    } else {
+        renderCart();
+        modal.style.display = 'block';
+    }
+}
+
+function renderCart() {
+    const container = document.getElementById('cart-items');
+    const countEl = document.getElementById('cart-item-count');
+    const totalEl = document.getElementById('cart-total');
+
+    if (cart.length === 0) {
+        container.innerHTML = `<div style="text-align:center;padding:40px;color:#888;">
+            <p style="font-size:50px;margin-bottom:10px;">🛒</p>
+            Your cart is empty
         </div>`;
+        countEl.innerText = "";
+        totalEl.innerText = "₹0";
+        return;
+    }
+
+    let total = 0;
+    container.innerHTML = cart.map(item => {
+        total += item.price * item.qty;
+        return `
+        <div class="cart-item">
+            <img src="${item.image}" class="cart-item-img">
+            <div class="cart-item-info">
+                <div class="cart-item-name">${item.name}</div>
+                <div class="cart-item-price">₹${item.price.toLocaleString()}</div>
+                <div class="cart-qty-control">
+                    <button onclick="updateCartQty(${item.id}, -1)">−</button>
+                    <div class="cqty-num">${item.qty}</div>
+                    <button onclick="updateCartQty(${item.id}, 1)">+</button>
+                </div>
+            </div>
+            <span style="color:#999;cursor:pointer;font-size:18px;" onclick="removeFromCart(${item.id})">&times;</span>
+        </div>
+        `;
     }).join('');
 
-    document.getElementById('cart-item-count').innerText = `${totalItems} item${totalItems !== 1 ? 's' : ''} in cart`;
-    document.getElementById('cart-total').innerText = formatPrice(total);
+    countEl.innerText = `Subtotal (${cart.reduce((a,b)=>a+b.qty,0)} items):`;
+    totalEl.innerText = `₹${total.toLocaleString()}`;
 }
 
-function cartChangeQty(id, delta) {
-    const p = productsData.find(x => x.id === id);
-    if (!p) return;
-    const cur = cartMap[id] || 0;
-    const newQty = cur + delta;
-    if (newQty <= 0) { delete cartMap[id]; }
-    else if (newQty <= p.stock) { cartMap[id] = newQty; }
-    saveCart(); updateCartUI(); renderProducts();
-}
-function removeCartItem(id) { delete cartMap[id]; saveCart(); updateCartUI(); renderProducts(); }
-function toggleCart() { const el = document.getElementById('cart-modal'); el.style.display = el.style.display === 'block' ? 'none' : 'block'; }
+/* =========================================
+   5. AUTHENTICATION (MOBILE VALIDATION)
+   ========================================= */
 
-// --- AUTH ---
 function handleAuthClick() {
-    if (currentUser) { if (confirm("Logout from ShopSphere?")) { localStorage.removeItem('activeUser'); currentUser = null; checkUser(); alert("Logged out."); } }
-    else { document.getElementById('auth-modal').style.display = 'block'; toggleAuthView('login'); }
+    if (currentUser) {
+        // If logged in, maybe show profile or logout logic (simplified here to alert)
+        const logout = confirm(`Logged in as ${currentUser.name}. Do you want to logout?`);
+        if (logout) {
+            currentUser = null;
+            document.getElementById('user-greeting').innerText = "Hello, Sign in";
+            // Clear orders/cart if desired (optional)
+            alert("Logged out successfully.");
+        }
+    } else {
+        toggleAuthView('login');
+        document.getElementById('auth-modal').style.display = 'block';
+    }
 }
-function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
-function toggleAuthView(v) {
-    document.getElementById('login-view').style.display = v === 'login' ? 'block' : 'none';
-    document.getElementById('signup-view').style.display = v === 'signup' ? 'block' : 'none';
-    ['login-step-1', 'signup-step-1'].forEach(id => document.getElementById(id).style.display = 'block');
-    ['login-step-2', 'signup-step-2'].forEach(id => document.getElementById(id).style.display = 'none');
+
+function closeAuthModal() {
+    document.getElementById('auth-modal').style.display = 'none';
 }
-function generateOTP() { generatedOTP = Math.floor(1000 + Math.random() * 9000); setTimeout(() => alert(`Your OTP is: ${generatedOTP}`), 500); }
+
+function toggleAuthView(view) {
+    if (view === 'signup') {
+        document.getElementById('login-view').style.display = 'none';
+        document.getElementById('signup-view').style.display = 'block';
+    } else {
+        document.getElementById('signup-view').style.display = 'none';
+        document.getElementById('login-view').style.display = 'block';
+    }
+}
+
+/* --- Validation Logic --- */
+function validateIndianMobile(mobile) {
+    // Regex: Starts with 6, 7, 8, or 9, followed by exactly 9 digits
+    const regex = /^[6-9]\d{9}$/;
+    return regex.test(mobile);
+}
+
+// LOGIN FLOW
+let tempMobile = '';
 function getLoginOTP() {
-    const m = document.getElementById('login-mobile').value;
-    if (!m || m.length !== 10) return alert("Enter valid 10-digit mobile number");
-    if (!registeredUsers[m]) return alert("Account not found. Please Sign Up first.");
-    generateOTP(); document.getElementById('login-step-1').style.display = 'none'; document.getElementById('login-step-2').style.display = 'block';
+    const mobile = document.getElementById('login-mobile').value;
+    
+    if (!validateIndianMobile(mobile)) {
+        alert("Invalid Mobile Number. It must be 10 digits and start with 6, 7, 8, or 9.");
+        return;
+    }
+    
+    tempMobile = mobile;
+    // Simulate API call
+    document.getElementById('login-step-1').style.display = 'none';
+    document.getElementById('login-step-2').style.display = 'block';
+    alert(`OTP sent to ${mobile}: 1234`);
 }
+
 function verifyLoginOTP() {
-    if (document.getElementById('login-otp').value == generatedOTP) {
-        currentUser = document.getElementById('login-mobile').value; localStorage.setItem('activeUser', currentUser);
-        checkUser(); closeAuthModal(); if (pendingCheckout) { pendingCheckout = false; openPaymentModal(); }
-    } else alert("Invalid OTP");
+    const otp = document.getElementById('login-otp').value;
+    if (otp === '1234') {
+        // Successful login
+        currentUser = { name: "User", mobile: tempMobile };
+        document.getElementById('user-greeting').innerText = `Hello, ${currentUser.name}`;
+        closeAuthModal();
+        alert("Login Successful!");
+    } else {
+        alert("Incorrect OTP");
+    }
 }
+
+// SIGNUP FLOW
 function getSignupOTP() {
-    const n = document.getElementById('signup-name').value, m = document.getElementById('signup-mobile').value;
-    if (!n || !m || m.length !== 10) return alert("Enter valid details");
-    if (registeredUsers[m]) return alert("Account already exists!");
-    tempSignupData = { name: n, mobile: m }; generateOTP(); document.getElementById('signup-step-1').style.display = 'none'; document.getElementById('signup-step-2').style.display = 'block';
+    const name = document.getElementById('signup-name').value;
+    const mobile = document.getElementById('signup-mobile').value;
+    
+    if (name.length < 2) {
+        alert("Please enter a valid name.");
+        return;
+    }
+    if (!validateIndianMobile(mobile)) {
+        alert("Invalid Mobile Number. It must be 10 digits and start with 6, 7, 8, or 9.");
+        return;
+    }
+    
+    tempMobile = mobile;
+    // Simulate API call
+    document.getElementById('signup-step-1').style.display = 'none';
+    document.getElementById('signup-step-2').style.display = 'block';
+    alert(`OTP sent to ${mobile}: 1234`);
 }
+
 function verifySignupOTP() {
-    if (document.getElementById('signup-otp').value == generatedOTP) {
-        registeredUsers[tempSignupData.mobile] = tempSignupData.name; localStorage.setItem('shopUsers', JSON.stringify(registeredUsers));
-        currentUser = tempSignupData.mobile; localStorage.setItem('activeUser', currentUser);
-        checkUser(); closeAuthModal(); alert("Account Created!"); if (pendingCheckout) { pendingCheckout = false; openPaymentModal(); }
-    } else alert("Invalid OTP");
+    const otp = document.getElementById('signup-otp').value;
+    const name = document.getElementById('signup-name').value;
+    
+    if (otp === '1234') {
+        currentUser = { name: name, mobile: tempMobile };
+        document.getElementById('user-greeting').innerText = `Hello, ${currentUser.name}`;
+        closeAuthModal();
+        alert("Account created successfully!");
+    } else {
+        alert("Incorrect OTP");
+    }
 }
-function resendOTP() { generateOTP(); }
-function checkUser() { document.getElementById('user-greeting').innerText = currentUser ? "Hello, " + registeredUsers[currentUser] : "Hello, Sign in"; }
 
-// --- CHECKOUT & COUPONS ---
+function resendOTP() {
+    alert(`OTP resent to ${tempMobile}: 1234`);
+}
+
+/* =========================================
+   6. CHECKOUT & PAYMENT
+   ========================================= */
+
 function initiateCheckout() {
-    if (!totalCartItems()) return alert("Cart is empty");
-    if (!currentUser) { pendingCheckout = true; document.getElementById('cart-modal').style.display = 'none'; handleAuthClick(); }
-    else openPaymentModal();
-}
+    if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+    
+    if (!currentUser) {
+        alert("Please login to proceed.");
+        handleAuthClick();
+        return;
+    }
 
-function getCartTotalValue() {
-    const ids = Object.keys(cartMap).map(Number);
-    let total = 0;
-    ids.forEach(id => {
-        const p = productsData.find(x => x.id === id);
-        if (p) total += p.price * cartMap[id];
-    });
-    return total;
-}
-
-function openPaymentModal() {
+    // Close Cart
     document.getElementById('cart-modal').style.display = 'none';
 
+    // Calculate Totals
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    document.getElementById('pay-subtotal').innerText = `₹${subtotal.toLocaleString()}`;
+    
     // Reset Coupon
-    currentCouponCode = null;
-    currentDiscountRate = 0;
-    document.getElementById('coupon-input').value = "";
-    document.getElementById('coupon-msg').innerHTML = "";
-    document.getElementById('coupon-msg').style.color = "#555";
+    activeDiscount = 0;
+    document.getElementById('coupon-msg').innerText = '';
+    document.getElementById('coupon-msg').style.color = '#333';
+    document.getElementById('coupon-input').value = '';
+    updatePaymentTotal(subtotal);
 
-    updatePaymentModalTotals();
+    // Open Modal
     document.getElementById('payment-modal').style.display = 'block';
 }
 
+function closePaymentModal() {
+    document.getElementById('payment-modal').style.display = 'none';
+}
+
 function applyCoupon() {
-    const input = document.getElementById('coupon-input').value.trim().toUpperCase();
+    const code = document.getElementById('coupon-input').value.toUpperCase();
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
     const msg = document.getElementById('coupon-msg');
+    
+    // Coupon Logic
+    const coupons = {
+        'NEWUSER50': 50,
+        'FLASH30': 30,
+        'SALE20': 20,
+        'WELCOME10': 10
+    };
 
-    if (!input) {
-        msg.innerHTML = "Please enter a code.";
-        msg.style.color = "red";
-        return;
-    }
-
-    // 2. CHECK IF USER LOGGED IN
-    if (!currentUser) {
-        msg.innerHTML = "Please login to use coupons.";
-        msg.style.color = "red";
-        return;
-    }
-
-    // 3. CHECK HISTORY (One-Time Use)
-    const usedCoupons = JSON.parse(localStorage.getItem('shopUsedCoupons')) || {};
-    const userHistory = usedCoupons[currentUser] || [];
-
-    if (userHistory.includes(input)) {
-        currentCouponCode = null;
-        currentDiscountRate = 0;
-        msg.innerHTML = `This coupon has already been used by you.`;
-        msg.style.color = "red";
-        updatePaymentModalTotals();
-        return;
-    }
-
-    if (VALID_COUPONS[input]) {
-        currentCouponCode = input;
-        currentDiscountRate = VALID_COUPONS[input];
-        msg.innerHTML = `Success! Coupon <strong>${input}</strong> applied.`;
-        msg.style.color = "green";
-        updatePaymentModalTotals();
+    if (coupons[code]) {
+        activeDiscount = coupons[code];
+        msg.innerText = `Success! ${activeDiscount}% discount applied.`;
+        msg.style.color = 'green';
     } else {
-        currentCouponCode = null;
-        currentDiscountRate = 0;
-        msg.innerHTML = `Invalid coupon code.`;
-        msg.style.color = "red";
-        updatePaymentModalTotals();
+        activeDiscount = 0;
+        msg.innerText = 'Invalid Coupon Code';
+        msg.style.color = 'red';
     }
+    updatePaymentTotal(subtotal);
 }
 
-function updatePaymentModalTotals() {
-    const subtotal = getCartTotalValue();
-    const discountAmount = Math.round(subtotal * currentDiscountRate);
-    const total = subtotal - discountAmount;
-
-    document.getElementById('pay-subtotal').innerText = formatPrice(subtotal);
-    document.getElementById('pay-discount').innerText = "- " + formatPrice(discountAmount);
-    document.getElementById('pay-total').innerText = formatPrice(total);
+function updatePaymentTotal(subtotal) {
+    const discountAmount = Math.round(subtotal * (activeDiscount / 100));
+    const finalTotal = subtotal - discountAmount;
+    
+    document.getElementById('pay-discount').innerText = `-₹${discountAmount.toLocaleString()}`;
+    document.getElementById('pay-total').innerText = `₹${finalTotal.toLocaleString()}`;
 }
 
-function closePaymentModal() { document.getElementById('payment-modal').style.display = 'none'; }
-function selectPayment(m, el) {
-    document.querySelectorAll('.payment-details').forEach(e => e.style.display = 'none');
-    document.querySelectorAll('.payment-option').forEach(e => e.classList.remove('selected'));
-    document.querySelectorAll('input[name="payment"]').forEach(e => e.checked = false);
-    el.classList.add('selected'); el.querySelector('input').checked = true;
-    if (m === 'upi') document.getElementById('upi-fields').style.display = 'block';
-    if (m === 'card') document.getElementById('card-fields').style.display = 'block';
+function selectPayment(method, element) {
+    // Styling
+    document.querySelectorAll('.payment-option').forEach(el => {
+        el.classList.remove('selected');
+        el.querySelector('input').checked = false;
+    });
+    element.classList.add('selected');
+    element.querySelector('input').checked = true;
+
+    // Show Details
+    document.querySelectorAll('.payment-details').forEach(el => el.style.display = 'none');
+    if (method === 'upi') document.getElementById('upi-fields').style.display = 'block';
+    if (method === 'card') document.getElementById('card-fields').style.display = 'block';
 }
 
 function confirmOrder() {
-    const btn = document.getElementById('pay-btn'); btn.innerText = "Processing..."; btn.disabled = true;
+    const paymentMethod = document.querySelector('input[name="payment"]:checked');
+    if (!paymentMethod) {
+        alert("Please select a payment method.");
+        return;
+    }
+
+    // Processing Simulation
+    const btn = document.getElementById('pay-btn');
+    const originalText = btn.innerText;
+    btn.innerText = "Processing...";
+    btn.disabled = true;
+
     setTimeout(() => {
-        // Build items
-        const items = Object.keys(cartMap).map(id => {
-            const p = productsData.find(x => x.id == id);
-            return { ...p, qty: cartMap[id] };
-        }).filter(Boolean);
-
-        // Calculate Final Paid Amount
-        const finalTotalStr = document.getElementById('pay-total').innerText;
-
-        const o = {
-            id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
-            date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-            total: finalTotalStr,
-            items,
-            status: 'Delivered',
-            returnable: true
+        const orderId = 'ORD-' + Date.now().toString().slice(-6);
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        const discountAmount = Math.round(subtotal * (activeDiscount / 100));
+        
+        // Move Cart to Orders
+        const newOrder = {
+            id: orderId,
+            date: new Date().toLocaleDateString(),
+            items: [...cart],
+            total: subtotal - discountAmount,
+            status: 'Arriving by ' + new Date(Date.now() + 2*86400000).toLocaleDateString('en-IN', {weekday:'short', day:'numeric', month:'short'})
         };
 
-        if (!userOrders[currentUser]) userOrders[currentUser] = [];
-        userOrders[currentUser].unshift(o);
-        localStorage.setItem('shopOrders', JSON.stringify(userOrders));
+        orders.unshift(newOrder); // Add to top
+        cart = []; // Clear Cart
+        updateCartUI();
 
-        // 4. SAVE USED COUPON TO HISTORY
-        if (currentCouponCode) {
-            const usedCoupons = JSON.parse(localStorage.getItem('shopUsedCoupons')) || {};
-            if (!usedCoupons[currentUser]) usedCoupons[currentUser] = [];
-            usedCoupons[currentUser].push(currentCouponCode);
-            localStorage.setItem('shopUsedCoupons', JSON.stringify(usedCoupons));
-        }
-
-        // ✅ DEDUCT STOCK
-        Object.keys(cartMap).forEach(id => {
-            const p = productsData.find(x => x.id == id);
-            if (p) p.stock = Math.max(0, p.stock - cartMap[id]);
+        // Stock Update (Simulation in local mock data only)
+        newOrder.items.forEach(orderItem => {
+            const product = products.find(p => p.id === orderItem.id);
+            if(product) product.stock -= orderItem.qty;
         });
+        
+        // Re-render product grid to show updated stock
+        renderProducts();
 
-        alert("Order Placed Successfully! 🎉");
-        cartMap = {}; saveCart(); updateCartUI(); renderProducts(); closePaymentModal();
-        btn.innerText = "Place Order"; btn.disabled = false; toggleOrders();
+        btn.innerText = originalText;
+        btn.disabled = false;
+        closePaymentModal();
+        alert(`Order Placed Successfully! Order ID: ${orderId}`);
+        toggleOrders(); // Show orders
     }, 2000);
 }
 
-// --- ORDERS ---
+/* =========================================
+   7. ORDERS & RETURNS
+   ========================================= */
+
 function toggleOrders() {
-    if (!currentUser) return alert("Please login");
-    const el = document.getElementById('orders-modal'); el.style.display = el.style.display === 'block' ? 'none' : 'block';
-    if (el.style.display === 'block') renderOrders();
+    if (!currentUser) {
+        alert("Please login to view orders.");
+        handleAuthClick();
+        return;
+    }
+    const modal = document.getElementById('orders-modal');
+    if (modal.style.display === 'block') {
+        modal.style.display = 'none';
+    } else {
+        renderOrders();
+        modal.style.display = 'block';
+    }
 }
+
 function renderOrders() {
-    const list = document.getElementById('orders-list'); const orders = userOrders[currentUser] || [];
-    if (!orders.length) { list.innerHTML = "<p style='text-align:center;'>No orders yet.</p>"; return; }
-    list.innerHTML = orders.map((o, i) => `<div class="order-card">
-        <div class="order-header">
-            <div><span>ORDER PLACED</span><br><strong>${o.date}</strong></div>
-            <div><span>TOTAL</span><br><strong>${o.total}</strong></div>
-            <div><span>ORDER # ${o.id}</span></div>
-        </div>
-        <div class="order-body">
-            <div style="flex-grow:1;">
-                <div class="order-status" style="color:${o.status === 'Returned' ? '#B12704' : '#007600'}">${o.status === 'Returned' ? 'Refund Processed' : 'Delivered'}</div>
-                <div style="font-size:13px;margin-bottom:10px;">${o.items.map(x => x.name + (x.qty > 1 ? ' ×' + x.qty : '')).join(', ')}</div>
-                <div style="display:flex;gap:5px;">${o.items.map(x => `<img src="${x.img}" style="width:40px;height:40px;border:1px solid #eee;object-fit:contain;" referrerpolicy="no-referrer" onerror="this.src='https://placehold.co/50'">`).join('')}</div>
+    const container = document.getElementById('orders-list');
+    
+    if (orders.length === 0) {
+        container.innerHTML = `<div style="text-align:center;padding:30px;color:#777;">No past orders.</div>`;
+        return;
+    }
+
+    container.innerHTML = orders.map(order => `
+        <div class="order-card">
+            <div class="order-header">
+                <div>
+                    <span>ORDER PLACED</span><br>
+                    <strong>${order.date}</strong>
+                </div>
+                <div>
+                    <span>TOTAL</span><br>
+                    <strong>₹${order.total.toLocaleString()}</strong>
+                </div>
+                <div>
+                    <span>ORDER # ${order.id}</span>
+                </div>
             </div>
-            <div>${o.status !== 'Returned' ? `<button class="return-btn" onclick="initiateReturn(${i})">Return Item</button>` : ''}</div>
+            <div class="order-body">
+                <div style="flex:1;">
+                    <div class="order-status">${order.status}</div>
+                    ${order.items.map(i => `
+                        <div style="display:flex;gap:10px;margin-bottom:10px;">
+                            <img src="${i.image}" style="width:40px;height:40px;object-fit:contain;">
+                            <div style="font-size:13px;">
+                                <a href="#" style="color:#007185;font-weight:600;">${i.name}</a>
+                                <div style="color:#555;">Qty: ${i.qty}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="width:120px;text-align:right;">
+                     ${order.status.includes('Returned') ? 
+                        '<span style="color:#c62828;font-size:12px;font-weight:bold;">Returned</span>' : 
+                        `<button class="return-btn" onclick="initiateReturn('${order.id}')">Return Items</button>`
+                     }
+                </div>
+            </div>
         </div>
-    </div>`).join('');
+    `).join('');
 }
-function initiateReturn(i) { pendingReturnIndex = i; generateOTP(); document.getElementById('return-modal').style.display = 'block'; }
-function closeReturnModal() { document.getElementById('return-modal').style.display = 'none'; }
+
+// Return Logic
+let returnOrderId = null;
+function initiateReturn(oid) {
+    returnOrderId = oid;
+    document.getElementById('return-modal').style.display = 'block';
+    // Simulate OTP sent
+    alert(`Return OTP sent to ${currentUser.mobile}: 9999`);
+}
+
+function closeReturnModal() {
+    document.getElementById('return-modal').style.display = 'none';
+    returnOrderId = null;
+}
+
 function verifyReturnOTP() {
-    if (document.getElementById('return-otp-input').value == generatedOTP) {
-        userOrders[currentUser][pendingReturnIndex].status = "Returned";
-        userOrders[currentUser][pendingReturnIndex].returnable = false;
-        localStorage.setItem('shopOrders', JSON.stringify(userOrders));
-        closeReturnModal(); renderOrders();
-        setTimeout(() => alert("Return initiated.\n\nPickup & Refund will take 3–7 days."), 200);
-    } else alert("Invalid OTP. Please try again.");
+    const otp = document.getElementById('return-otp-input').value;
+    if (otp === '9999') {
+        const order = orders.find(o => o.id === returnOrderId);
+        if (order) {
+            order.status = 'Returned - Refund Processing';
+            renderOrders();
+            closeReturnModal();
+            alert("Return initiated successfully. Pickup scheduled.");
+        }
+    } else {
+        alert("Invalid OTP");
+    }
 }
