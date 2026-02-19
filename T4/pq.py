@@ -201,20 +201,60 @@ def main():
                     st.error(f"Consensus Failed: Only {approvals}/5 Nodes Approved.")
 
     # TAB 3: LIVE DB VIEW
+    # TAB 3: LIVE DB VIEW
     with tab3:
         st.header("Live MySQL Database Tables")
         try:
             conn = get_db_connection()
+            
+            # --- Transactions Table ---
             st.subheader("📋 Transactions Table (`transactions`)")
-            a=st.dataframe(pd.read_sql("SELECT * FROM transactions", conn), use_container_width=True)
+            df_transactions = pd.read_sql("SELECT * FROM transactions", conn)
+            st.dataframe(df_transactions, use_container_width=True)
+            
+            # Add Download Button for Transactions
+            st.download_button(
+                label="⬇️ Download Transactions as CSV",
+                data=df_transactions.to_csv(index=False).encode('utf-8'),
+                file_name='transactions_log.csv',
+                mime='text/csv',
+                key='dl_transactions'
+            )
         
+            st.divider() # Visual separator
             
+            # --- Consensus Logs Table ---
             st.subheader("🛡️ Consensus Logs (`consensus_logs`)")
-            st.dataframe(pd.read_sql("SELECT * FROM consensus_logs", conn), use_container_width=True)
+            df_consensus = pd.read_sql("SELECT * FROM consensus_logs", conn)
+            st.dataframe(df_consensus, use_container_width=True)
             
+            # Add Download Button for Consensus Logs
+            st.download_button(
+                label="⬇️ Download Consensus Logs as CSV",
+                data=df_consensus.to_csv(index=False).encode('utf-8'),
+                file_name='consensus_logs.csv',
+                mime='text/csv',
+                key='dl_consensus'
+            )
+            
+            st.divider() # Visual separator
+            
+            # --- Finalized Blocks Table ---
             st.subheader("📦 Finalized Blocks (`blocks`)")
-            st.dataframe(pd.read_sql("SELECT * FROM blocks", conn), use_container_width=True)
+            df_blocks = pd.read_sql("SELECT * FROM blocks", conn)
+            st.dataframe(df_blocks, use_container_width=True)
+            
+            # Add Download Button for Blocks
+            st.download_button(
+                label="⬇️ Download Blocks as CSV",
+                data=df_blocks.to_csv(index=False).encode('utf-8'),
+                file_name='blocks_log.csv',
+                mime='text/csv',
+                key='dl_blocks'
+            )
+            
             conn.close()
+            
         except Exception as e:
             st.error(f"Connection Error: {e}")
 

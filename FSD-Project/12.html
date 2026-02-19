@@ -217,6 +217,8 @@
 <body>
 
 <header>
+
+    <!-- Nav-bar -->
     <div class="header-inner">
         <a href="#" class="logo">Shop<span>Sphere</span></a>
         <div class="search-wrapper">
@@ -345,8 +347,9 @@
 </div>
 
 <div id="payment-modal" class="modal-overlay">
+    <div class="side-panel" style="overflow-y: auto;">
     <div class="auth-box">
-        <span style="position:absolute;right:15px;top:10px;cursor:pointer;font-size:24px;" onclick="closePaymentModal()">&times;</span>
+        <span style="position:absolute;right:15px;top:10px;cursor:pointer;font-size:24px; display: flex;justify-content: start;" onclick="closePaymentModal()">&times;</span>
         <h2 style="margin-bottom:15px;">Checkout</h2>
         
         <div style="margin-bottom:15px;background:#f9f9f9;padding:10px;border-radius:4px;border:1px dashed #ccc;">
@@ -376,6 +379,7 @@
         </div>
         <div class="payment-option" onclick="selectPayment('cod',this)"><input type="radio" name="payment" value="cod"><span>Cash on Delivery</span></div>
         <button id="pay-btn" class="add-btn" style="padding:12px;font-weight:bold;width:100%;" onclick="confirmOrder()">Place Order</button>
+    </div>
     </div>
 </div>
 
@@ -460,6 +464,8 @@ const productsData = [
       highlights:["Laser Slim Fluffy head reveals microscopic dust","HEPA filtration captures 99.97% of particles","Up to 60 minutes run time on eco mode","LCD screen shows real-time suction & motor data","5 power modes for carpet, hard floor & crevices"] }
 ];
 
+// JSON
+
 // cart = { productId: quantity }  (map for easy qty management)
 let cartMap = JSON.parse(localStorage.getItem('shopCartMap')) || {};
 let registeredUsers = JSON.parse(localStorage.getItem('shopUsers')) || {};
@@ -494,6 +500,9 @@ function genStars(r) {
 function availableStock(p) {
     return Math.max(0, p.stock - (cartMap[p.id] || 0));
 }
+
+//Stock Info
+
 function getStockInfo(p) {
     const avail = availableStock(p);
     if (p.stock === 0) return { label: 'Out of Stock', cls: 'out-of-stock', badgeCls: 'out-of-stock' };
@@ -553,7 +562,7 @@ function renderProducts() {
                         : inCart > 0
                             ? `<button class="buy-btn" style="flex:1" onclick="event.stopPropagation();buyNow(${p.id})">Buy Now</button>`
                             : `<button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id},1)">Add to Cart</button>
-                               <button class="buy-btn" onclick="event.stopPropagation();buyNow(${p.id})">Buy Now</button>`
+                            <button class="buy-btn" onclick="event.stopPropagation();buyNow(${p.id})">Buy Now</button>`
                     }
                 </div>
             </div>
@@ -685,7 +694,7 @@ function saveCart() { localStorage.setItem('shopCartMap', JSON.stringify(cartMap
 
 function updateCartUI() {
     const totalItems = totalCartItems();
-    document.getElementById('cart-badge').innerText = totalItems;
+    document.getElementById('cart-badge').innerText = totalItems; 
     const container = document.getElementById('cart-items');
     let total = 0;
     const ids = Object.keys(cartMap).map(Number);
