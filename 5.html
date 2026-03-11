@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <script>
+            const sub = {
+                'FSD':[{'Topic':'HTML','Course':'Begineer','Content':['tags','table','form']},
+                {'Topic':'CSS','Course':'Advance','Content':['tags','table','form']}
+            ]
+            }
+
+            for(x in sub.FSD){
+                for(y in sub.FSD[x]){
+                    document.write(sub.FSD[x][y]+ '<br>');
+                }
+            }
+            for(x1 of sub.FSD){
+                document.write(x1.Topic + '<br>');
+                document.write(x1.Course + '<br>');
+                document.write(x1.Content + '<br>');
+            }
+        </script>
+    </head>
+</html>
