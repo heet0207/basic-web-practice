@@ -62,3 +62,96 @@ data = [
 ]
 df=pd.DataFrame(data)
 print(df)
+print()
+
+# DataFrame Creation Using Dictionary of Series
+
+import pandas as pd # type: ignore
+import numpy as np # type: ignore
+
+Name= pd.Series(['John', 'Alice', 'Bob'])
+Age= pd.Series([25, 30, 22])
+data = {
+    'Name': Name,
+    'Age': Age,
+}
+df=pd.DataFrame(data)
+print(df)
+print()
+
+
+# DataFrame Creation Using NP Array
+
+import pandas as pd # type: ignore
+import numpy as np # type: ignore
+
+data = np.array([
+    ['John', 25],
+    ['Alice', 30],
+    ['Bob', 22],
+])
+df=pd.DataFrame(data, columns=['Name', 'Age'])
+print(df)
+print()
+
+
+# Task : Dataframe Creation Using Dictoinary of List
+
+import pandas as pd # type: ignore
+import numpy as np # type: ignore
+
+data = {
+        'Name':['Pranav','Meet','Rutu','Neelkanth','Riya','Kalpesh'],
+        'Age':[17,18,17,18,17,18],
+        'City':['Ahmdabad','Surat','Rajkot','Anand','Anand','Jamnagar'],
+        'Salary':[1000,2000,3000,4000,5000,6000]
+    }
+
+df=pd.DataFrame(data)
+print(df)
+print()
+
+import pandas as pd # type: ignore
+import numpy as np # type: ignore
+
+data = {
+        'Name':['Pranav','Meet','Rutu','Neelkanth','Riya','Kalpesh'],
+        'Age':[17,18,17,18,17,18],
+        'City':['Ahmdabad','Surat','Rajkot','Anand','Anand','Jamnagar'],
+        'Salary':[1000,2000,3000,4000,5000,6000]
+    }
+
+df=pd.DataFrame(data,index=['A','B','C','D','E','F'])
+print(df)
+
+
+# Attribute Of DataFrame
+
+
+print(df.shape)
+print(df.size)
+print(df.ndim)
+print(df.columns)
+print(df.index)
+print(df.dtypes)
+print(df.values)
+print(df.info())
+print(df.head())
+print(df.tail())
+print(df.describe())
+print(df.sample(3))
+
+import pandas as pd # type: ignore
+import numpy as np # type: ignore
+
+data = {
+        'Name':['Pranav', np.nan,'Rutu','Neelkanth','Riya','Kalpesh'],
+        'Age':[17,np.nan,17,18,17,18],
+        'City':['Ahmdabad',np.nan,'Rajkot','Anand','Anand','Jamnagar'],
+        'Salary':[1000,2000,3000,4000,5000,np.nan]
+    }
+df=pd.DataFrame(data)
+print(df.loc[1])
+print(df.iloc[1])
+print(df.loc[2,'Salary'])
+print(df.iloc[2,1])
