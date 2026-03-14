@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Artisan | Premium Bakery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fdfbf7; }
+        .bakery-card:hover img { transform: scale(1.05); }
+    </style>
+</head>
+<body class="text-stone-800">
+
+    <nav class="flex justify-between items-center px-8 py-6 max-w-7xl mx-auto">
+        <h1 class="text-2xl font-bold tracking-tighter text-stone-900">L'ARTISAN</h1>
+        <div class="relative cursor-pointer" onclick="toggleCart()">
+            <span class="bg-stone-900 text-white px-3 py-1 rounded-full text-sm">Cart (<span id="cart-count">0</span>)</span>
+        </div>
+    </nav>
+
+    <header class="max-w-7xl mx-auto px-8 py-12 text-center">
+        <h2 class="text-6xl font-light mb-4">Baked with <span class="italic font-serif">Patience</span>.</h2>
+        <p class="text-stone-500 max-w-md mx-auto">Organic, stone-ground flour and 48-hour fermentation for the perfect crumb.</p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-3 gap-12 pb-20">
+        <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8" id="product-grid">
+            </div>
+
+        <aside class="bg-white border border-stone-100 p-8 rounded-3xl shadow-xl h-fit sticky top-8">
+            <h3 class="text-xl font-bold mb-6">Your Order</h3>
+            <div id="cart-items" class="space-y-4 mb-6">
+                <p class="text-stone-400 italic text-sm">Your basket is empty...</p>
+            </div>
+            
+            <div class="border-t border-stone-100 pt-4 flex justify-between items-end mb-8">
+                <span class="text-stone-500 uppercase text-xs tracking-widest font-bold">Total</span>
+                <span class="text-2xl font-bold" id="total-price">$0.00</span>
+            </div>
+
+            <div id="payment-section" class="hidden">
+                <div id="link-authentication-element"></div>
+                <div id="payment-element" class="my-4"></div>
+                <button id="submit-btn" onclick="processPayment()" class="w-full bg-stone-900 text-white py-4 rounded-xl font-bold hover:bg-stone-800 transition shadow-lg">
+                    Pay Securely
+                </button>
+            </div>
+            
+            <button id="checkout-btn" onclick="showPayment()" class="w-full bg-amber-800 text-white py-4 rounded-xl font-bold hover:bg-amber-900 transition">
+                Proceed to Checkout
+            </button>
+        </aside>
+    </main>
+
+    <script>
+        // 1. Setup Data
+        const products = [
+            { id: 1, name: "Country Sourdough", price: 12.00, emoji: "🥖", img: "https://images.unsplash.com/photo-1585478259715-876a6a81fc08?auto=format&fit=crop&q=80&w=400" },
+            { id: 2, name: "Honeycomb Croissant", price: 6.50, emoji: "🥐", img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=400" },
+            { id: 3, name: "Dark Chocolate Rye", price: 9.00, emoji: "🍫", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=400" }
+        ];
+
+        let cart = [];
+        const stripe = Stripe('pk_test_your_key'); // REPLACEME
+
+        // 2. Render Products
+        const grid = document.getElementById('product-grid');
+        products.forEach(p => {
+            grid.innerHTML += `
+                <div class="bakery-card bg-white rounded-3xl overflow-hidden border border-stone-100 transition duration-500">
+                    <div class="h-64 overflow-hidden">
+                        <img src="${p.img}" class="w-full h-full object-cover transition duration-700" alt="${p.name}">
+                    </div>
+                    <div class="p-6 flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-lg">${p.name}</h4>
+                            <p class="text-stone-500">$${p.price.toFixed(2)}</p>
+                        </div>
+                        <button onclick="addToCart(${p.id})" class="h-12 w-12 bg-stone-50 rounded-full flex items-center justify-center hover:bg-stone-900 hover:text-white transition">
+                            +
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+
+        // 3. Cart Logic
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            cart.push(product);
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const cartList = document.getElementById('cart-items');
+            const totalDisplay = document.getElementById('total-price');
+            
+            cartList.innerHTML = cart.map(item => `
+                <div class="flex justify-between text-sm">
+                    <span>${item.name}</span>
+                    <span class="font-bold">$${item.price.toFixed(2)}</span>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            totalDisplay.innerText = `$${total.toFixed(2)}`;
+        }
+
+        // 4. Advanced Payment Logic
+        async function showPayment() {
+            if (cart.length === 0) return alert("Your basket is empty!");
+            
+            document.getElementById('checkout-btn').classList.add('hidden');
+            document.getElementById('payment-section').classList.remove('hidden');
+
+            // In a real app, you would fetch a clientSecret from your server here
+            // const response = await fetch('/create-payment-intent', { method: 'POST' });
+            // const { clientSecret } = await response.json();
+            
+            // This is where Stripe Elements would initialize
+            console.log("Stripe Elements Initializing...");
+        }
+
+        function processPayment() {
+            alert("In a live environment, this would securely process the card via Stripe's encrypted vault.");
+        }
+    </script>
+</body>
+</html>
