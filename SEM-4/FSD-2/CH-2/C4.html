@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <script>
+            FontSize = 15
+            function f(){
+            setInterval(()=>{
+                document.body.style.fontSize = FontSize
+                if(FontSize<=50){
+                    FontSize++
+                }
+            }, 1000);
+        }
+        </script>
+    </head>
+    <body>
+        <div>Heet</div>
+        <button onclick="f()">Increase</button>
+    </body>
+</html>
+
+
+
+<html>
+    <head>
+        <script>
+            font=15
+            function fun(font){
+                document.body.style.fontSize = font
+            }
+
+            function f1(){
+                setInterval(()=>{
+                    if(font<=50){
+                        fun(font++)
+                    }
+                },1000)
+            }
+        </script>
+    </head>
+    <body>
+        <div>Heet</div>
+        <button onclick="f1()">Increase</button>
+    </body>
+</html>
