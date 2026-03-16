@@ -199,3 +199,55 @@ print(df['age'])
 # print(df.nunique())
 # print(df.isnull())
 # print(df.isnull().sum())
+
+
+import pandas as pd # type: ignore
+import numpy as np # type: ignore
+
+df=pd.read_csv('titanic.csv')
+
+df['embarked']=df['embarked'].fillna((df['embarked'].mode()[0]))
+df['cabin']=df['cabin'].fillna((df['cabin'].mode()[0]))
+df['fare']=df['fare'].fillna((df['fare'].mode()[0]))
+df['age']=df['age'].fillna(int(df['age'].mean()[0]))
+print(df.isnull().sum())
+
+
+
+import pandas as pd # type: ignore
+import numpy as np # type: ignore
+
+data={
+    'Name' : ['A','B','C','D'],
+    'City' : ['Ahmadabad','Surat','Rajkot',np.nan],
+    'Age' : [20,21,np.nan,np.nan]
+}
+df=pd.DataFrame(data)
+df.dropna(subset=['Name','City'])
+print(df.drop_duplicates(keep='first'))
+print()
+print(df.drop_duplicates(keep='last'))
+print()
+print(df.drop_duplicates(keep=False))
+print(df.duplicated())
+# print(df.dropna())
+# print()
+# print(df.dropna(axis=0)) # 0 => Rows
+# print()
+# print(df.dropna(axis=1)) # 1 => Columns
+df.sum(axis=1, numeric_only=True)
+
+import pandas as pd # type: ignore
+import numpy as np # type: ignore
+
+data={
+    'Name' : ['A','B','A','D'],
+    'City' : ['Ahmadabad','Surat','Ahmadabad','Rajkot'],
+    'Age' : [20,21,20,30]
+    }
+df=pd.DataFrame(data)
+print(df)
+print(df.drop_duplicates(keep='first'))
+print(df.drop_duplicates(keep='last'))
+print(df.drop_duplicates(keep=False))
+print(df.duplicated())

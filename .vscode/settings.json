@@ -9,5 +9,6 @@
         "Pranav",
         "Riya",
         "Rutu"
-    ]
+    ],
+    "python-envs.defaultEnvManager": "ms-python.python:system"
 }
