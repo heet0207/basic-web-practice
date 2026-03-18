@@ -1,0 +1,6 @@
+let fs = require('fs')
+fs.writeFileSync('q1.txt','1,2,3,4,5,6,7,8,9,10')
+let x = fs.readFileSync('q1.txt','utf-8')
+let b = x.split(',')
+let s = b.sort((a,b)=>a-b)
+console.log(s)
