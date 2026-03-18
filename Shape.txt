@@ -1,0 +1,3 @@
+[{"Name":"Circle","Diameter":8},{"Name":"Square","Side":10}]
+Perimeter of Circle: 25.12
+Perimeter of Square: 40
