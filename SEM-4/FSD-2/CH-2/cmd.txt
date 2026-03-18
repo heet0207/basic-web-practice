@@ -1,0 +1,39 @@
+ -->   Create Directory(folder)
+	fs.mkdirSync('myfolder')
+	fs.mkdir("myfolder",(err)=>{if(err)
+				   throw err;
+				   console.log("Successful")})
+ -->   Create File
+	fs.writeFileSync("s3.txt","Hello")
+	fs.writeFile("s3.txt","Hello",(err)=>{if(err)
+						                    throw err;
+						                    console.log('Successful')})
+ -->   Append File
+	fs.appendFileSync('s3.txt','How are you ?')
+	fs.appendFile('s3.txt','How are you ?',(err)=>{if(err)
+							throw err;
+							console.log('Successful')})
+ -->  Copy File
+	fs.copyFileSync('s1.txt','s2.txt')
+	fs.copyFile('s1.txt','s2.txt',(err)=>{if(err)
+						throw err})
+ -->  Read File
+	fs.readFileSync('s1.txt','utf-8')
+	fs.readFile('s1.txt',(err,data)=>{if(err)
+						     throw err;
+						     console.log(data)})
+ -->  Rename File
+	fs.renameSync('s1.txt','s2.txt')
+	fs.rename('s1.txt','s2.txt',(err)=>{if(err)
+					     throw err;
+					      console.log('Renamed')})
+ --> Delete File
+	fs.unlinkSync('s1.txt')
+	fs.unlink('s1.txt',(err)=>{if(err)
+					throw err;
+					console.log('Deleted'))
+ --> Remove Directory
+	fs.rmdirSync('myfolder')
+	fs.rmdir('myfolder',(err)=>{if(err)
+					throw err;
+					console.log('Removed'))
