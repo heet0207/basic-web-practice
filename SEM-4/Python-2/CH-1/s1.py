@@ -1,10 +1,8 @@
+import seaborn as sns # type: ignore
+import matplotlib.pyplot as plt # type: ignore
 import pandas as pd # type: ignore
-import numpy as np # type: ignore
 
-data = {
-    'Gender':['Male', 'Female', 'Male','Female','Male'],
-    'Result':['Pass', 'Fail', 'Pass', 'Fail', 'Pass']
-}
-df=pd.DataFrame(data)
-print(df)
-print(pd.crosstab(df['Gender'],df['Result'],margins=True))
+df = pd.read_csv('titanic.csv') # type: ignore
+corr = df.corr(numeric_only=True)
+sns.heatmap(corr, annot=True,cmap='coolwarm',cbar=True)
+plt.show()
