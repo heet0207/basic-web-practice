@@ -252,3 +252,4 @@ print(df.drop_duplicates(keep='last'))
 print(df.drop_duplicates(keep=False))
 print(df.duplicated())
 print(df.sort_values(by='Age',ascending=False))
+

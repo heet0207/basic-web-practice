@@ -16,3 +16,12 @@ upper = Q3 + 1.5 * IQR
 Outliers = df[(df['Age'] < lower) | (df['Age'] > upper)]
 print("Outliers:" + str(Outliers))
 print(IQR)
+print(df.groupby('Deptartment').agg({'Salary': ['sum', 'mean'], 'Age': ['count', 'max']}))
+print(df.groupby('Deptartment').agg({'Salary': ['sum', 'mean'], 'Age': ['min', 'max']}))
+print(df)
+print(df.groupby('Deptartment').sum())
+print(df.groupby('Deptartment')['Age'].sum())
+print(df.groupby('Deptartment')['Age'].mean())
+print(df.groupby('Deptartment')['Age'].median())
+print(df.groupby('Deptartment')['Age'].max())
+print(df.groupby('Deptartment').nth(0))
