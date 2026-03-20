@@ -13,6 +13,10 @@ Q3 = df['Age'].quantile(0.75)
 IQR = Q3 - Q1
 lower = Q1 - 1.5 * IQR
 upper = Q3 + 1.5 * IQR
+print(lower)
+print(upper)
 Outliers = df[(df['Age'] < lower) | (df['Age'] > upper)]
-print("Outliers:" + str(Outliers))
+print(Outliers)
 print(IQR)
+clean = df[(df['Age'] >= lower) & (df['Age'] <= upper)]
+print(clean)
