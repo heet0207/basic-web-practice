@@ -13,5 +13,9 @@ data = {
     'Fare':[200,300,150,400,500,550]
 }
 df = pd.DataFrame(data)
-fig = px.bar(df, x='Name', y='Age',color='PClass')
+# fig = px.bar(df, x='Name', y='Age',color='Fare',barmode='group',title='A Bar Chart',orientation='v')
+#fig = px.scatter(df,x='Age',y='Fare',color='Name',size='PClass',facet_row='Gender',facet_col='Gender')
+# fig = px.scatter_3d(df,x='PClass',y='Age',z='Fare',color='Gender')
+fig = px.pie(df,names='PClass',values='Age')
+fig = px.pie(df,names='Name',color_discrete_sequence=['blue','red','green'])
 fig.show()
